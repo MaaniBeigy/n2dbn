@@ -9,7 +9,7 @@ Reference implementation, benchmarks and evaluation protocol for [paper/WSDM/sig
 Everything runs through Docker Compose, so Docker and the compose plugin are the only local requirements.
 
 ```bash
-docker compose build tests paper   # n2dbn:cpu and n2dbn:paper
+docker compose build tests        # n2dbn:cpu
 docker compose run --rm cpu-info   # what this machine offers
 docker compose run --rm tests      # the suite, with coverage
 docker compose run --rm exp-quick  # every budgeted experiment on its quick grid
