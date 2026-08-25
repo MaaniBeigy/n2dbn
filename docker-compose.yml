@@ -436,22 +436,10 @@ services:
       --output ${OUTPUT:-data/observed_lifesnaps_event_log.csv}
 
   # ------------------------------------------------------------- PAPER ----
-  paper:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.paper
-    image: n2dbn:paper
-    working_dir: /workspace/paper
-    volumes:
-      - ./paper:/workspace/paper
-    command: >-
-      latexmk -pdf -interaction=nonstopmode ${TEX:-n2dbn.tex}
-
   # The submission carries its own class file, figure and bibliography beside
-  # it and names all three without a path, so latexmk has to run with that
-  # directory as its working directory.  The TEX variable above cannot supply
-  # one, which is why this is its own service.
-  paper-wsdm:
+  # it and names all three without a path, so latexmk runs with that directory
+  # as its working directory.
+  paper:
     build:
       context: .
       dockerfile: docker/Dockerfile.paper

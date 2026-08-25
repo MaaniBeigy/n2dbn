@@ -36,7 +36,7 @@ Prefix any experiment with `JOBS=7` to fit seven (scenario, replicate) pairs at 
 
 ## Supporting experiments
 
-These carry the long-form record in [paper/n2dbn.tex](paper/n2dbn.tex).
+These are not cited in the submission and are kept for the record.
 
 | Measures | Command |
 |---|---|
@@ -72,8 +72,7 @@ docker compose run --rm lifesnaps-build     # write data/observed_lifesnaps_even
 ## Building the paper
 
 ```bash
-docker compose run --rm paper        # paper/n2dbn.pdf, the long-form record
-docker compose run --rm paper-wsdm   # paper/WSDM/sigconf.pdf, the submission
+docker compose run --rm paper        # paper/WSDM/sigconf.pdf, the submission
 ```
 
 ## Notes on running
