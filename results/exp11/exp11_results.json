@@ -1,0 +1,2185 @@
+{
+  "csv": "data/dynamic_patterns/event_log.tsv",
+  "manifest": "data/dynamic_patterns/manifest_declared.json",
+  "slot_minutes": 1,
+  "branching": [
+    60,
+    24,
+    7
+  ],
+  "weeks": 12,
+  "horizon_arm": [],
+  "max_lag": 2,
+  "price": null,
+  "price_quantile": 0.9979166666666667,
+  "iters": 4,
+  "labels": [
+    "action_planning",
+    "alone",
+    "anxious",
+    "breakfast",
+    "calm",
+    "childcare",
+    "cleaning",
+    "cooking",
+    "coping_planning",
+    "cycling",
+    "dinner",
+    "disposition_to_attend_to_one_s_goals",
+    "drink_water",
+    "eldercare",
+    "energetic",
+    "external_regulation",
+    "gaming",
+    "going_out",
+    "groceries",
+    "gym",
+    "habitual_behaviour",
+    "happy",
+    "home",
+    "hungry",
+    "intend_to_walk",
+    "intention_not_to_enact_a_behaviour",
+    "intention_to_enact_a_behaviour",
+    "intrinsic_motivation",
+    "journaling",
+    "laundry",
+    "low_physical_opportunity_to_enact_a_behaviour",
+    "low_self_efficacy",
+    "lunch",
+    "meeting",
+    "napping",
+    "need_for_autonomy",
+    "office_work",
+    "physical_behavioural_opportunity",
+    "psychological_behavioural_capability",
+    "public_park",
+    "raining_or_snowing",
+    "reading",
+    "running",
+    "self_efficacy_belief_for_a_behaviour",
+    "shower",
+    "sleep",
+    "snacking",
+    "social_behavioural_opportunity",
+    "socialising",
+    "stress_episode",
+    "study_reading",
+    "studying",
+    "suitable_for_outdoor",
+    "swimming",
+    "tired",
+    "visit_friends_or_family",
+    "walking",
+    "with_family",
+    "workplace",
+    "yoga"
+  ],
+  "personas": [
+    "diligent_anxious_active",
+    "free_spirited_social_student",
+    "unemployed_family_caregiver"
+  ],
+  "day_scale": 3,
+  "candidate_scales": [
+    3,
+    4
+  ],
+  "n_candidates_per_target": 480,
+  "n_candidates_ledger": 120,
+  "placed": {
+    "3": [
+      "meeting|journaling|1d",
+      "office_work|sleep|1d",
+      "running|yoga|1d",
+      "sleep|walking|1d",
+      "walking|walking|1d"
+    ],
+    "4": [
+      "gym|gym|7d"
+    ]
+  },
+  "off_axis": [],
+  "off_grid": [],
+  "preregistered": [
+    {
+      "subjects": 1.0,
+      "day_epochs": 91.0,
+      "expected_recall": 0.0
+    },
+    {
+      "subjects": 5.0,
+      "day_epochs": 455.0,
+      "expected_recall": 0.139
+    },
+    {
+      "subjects": 10.0,
+      "day_epochs": 910.0,
+      "expected_recall": 0.265
+    },
+    {
+      "subjects": 20.0,
+      "day_epochs": 1820.0,
+      "expected_recall": 0.418
+    },
+    {
+      "subjects": 30.0,
+      "day_epochs": 2730.0,
+      "expected_recall": 0.604
+    }
+  ],
+  "preregistered_crossings": {
+    "recall_0.5": 24.395604395604394,
+    "recall_0.8": null
+  },
+  "subject_arm": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10,
+    12,
+    15,
+    18,
+    20,
+    24,
+    27,
+    30
+  ],
+  "cells": [
+    {
+      "arm": "subject",
+      "tag": "S=1 W=12 diligent_anxious_active_0000",
+      "subjects": [
+        "diligent_anxious_active_0000"
+      ],
+      "personas": [
+        "diligent_anxious_active"
+      ],
+      "n_subjects": 1,
+      "weeks": 12,
+      "subject_weeks": 12,
+      "claim": "n-of-1: diligent_anxious_active_0000 alone over 12 weeks, so every number here is one person's own history and none of it is a statement about a population",
+      "day_epochs": 84,
+      "measured_recall": 0.0,
+      "predicted_recall": {
+        "3": 0.0,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 0.7,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": true,
+          "epochs": 84
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 12
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 8,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.10374973893741382,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00014196222080406883,
+        "null_max": 1.3424622858682367,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=1 W=12 free_spirited_social_student_0000",
+      "subjects": [
+        "free_spirited_social_student_0000"
+      ],
+      "personas": [
+        "free_spirited_social_student"
+      ],
+      "n_subjects": 1,
+      "weeks": 12,
+      "subject_weeks": 12,
+      "claim": "n-of-1: free_spirited_social_student_0000 alone over 12 weeks, so every number here is one person's own history and none of it is a statement about a population",
+      "day_epochs": 84,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.0,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 0.7,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 84
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 12
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 4,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 2,
+          "labels_with_parents": [
+            "drink_water"
+          ]
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.09102585589986115,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 3.7503603039366513e-29,
+        "null_max": 1.5132537040809693,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=1 W=12 unemployed_family_caregiver_0000",
+      "subjects": [
+        "unemployed_family_caregiver_0000"
+      ],
+      "personas": [
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 1,
+      "weeks": 12,
+      "subject_weeks": 12,
+      "claim": "n-of-1: unemployed_family_caregiver_0000 alone over 12 weeks, so every number here is one person's own history and none of it is a statement about a population",
+      "day_epochs": 84,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.0,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 0.7,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 84
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 12
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 4,
+          "labels_with_parents": [
+            "drink_water",
+            "eldercare",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.15201643001108203,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 3.4245822056207656e-29,
+        "null_max": 1.434243342379453,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=2 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "free_spirited_social_student_0000"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student"
+      ],
+      "n_subjects": 2,
+      "weeks": 12,
+      "subject_weeks": 24,
+      "claim": "population: 2 subjects over 2 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 168,
+      "measured_recall": 0.0,
+      "predicted_recall": {
+        "3": 0.0,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 1.4,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": true,
+          "epochs": 168
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 24
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 6,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 3,
+          "labels_with_parents": [
+            "drink_water"
+          ]
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.10876138958913052,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0002025163235040581,
+        "null_max": 2.8196313503409587,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=3 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "free_spirited_social_student_0000",
+        "unemployed_family_caregiver_0000"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 3,
+      "weeks": 12,
+      "subject_weeks": 36,
+      "claim": "population: 3 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 252,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.0347,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 2.1,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 252
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 36
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 7,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 2,
+          "labels_with_parents": [
+            "drink_water"
+          ]
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.1209138879112087,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0002831951898630264,
+        "null_max": 4.228543315989728,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=4 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "free_spirited_social_student_0000",
+        "unemployed_family_caregiver_0000"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 4,
+      "weeks": 12,
+      "subject_weeks": 48,
+      "claim": "population: 4 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 336,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.0833,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 2.8,
+        "n_candidates": 120,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 336
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 48
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 8,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 2,
+          "labels_with_parents": [
+            "drink_water"
+          ]
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.1513547914136084,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00032038991604628963,
+        "null_max": 5.789987243576171,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=5 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "unemployed_family_caregiver_0000"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 5,
+      "weeks": 12,
+      "subject_weeks": 60,
+      "claim": "population: 5 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 420,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.1287,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 3.5,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 420
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 60
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 11,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry",
+            "laundry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.13583125553293118,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00031627187068328103,
+        "null_max": 5.921153726337794,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=6 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 6,
+      "weeks": 12,
+      "subject_weeks": 72,
+      "claim": "population: 6 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 504,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.1544,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 4.2,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 504
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 72
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 5,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.1514626532650448,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0003195114285293056,
+        "null_max": 6.17694219314737,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=8 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 8,
+      "weeks": 12,
+      "subject_weeks": 96,
+      "claim": "population: 8 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 672,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.2059,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 5.6,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 672
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 96
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 8,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry",
+            "laundry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.20184244847925198,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00038363909327418906,
+        "null_max": 8.671578106376424,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=10 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 10,
+      "weeks": 12,
+      "subject_weeks": 120,
+      "claim": "population: 10 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 840,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.2538,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 7.0,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 840
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 120
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 9,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.30597775542213534,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0004310156419598095,
+        "null_max": 11.553173012698785,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=12 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 12,
+      "weeks": 12,
+      "subject_weeks": 144,
+      "claim": "population: 12 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 1008,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.2803,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 8.4,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 1008
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 144
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 6,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.3487007830373931,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00044796942520388154,
+        "null_max": 13.162302519816173,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=15 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 15,
+      "weeks": 12,
+      "subject_weeks": 180,
+      "claim": "population: 15 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 1260,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.3201,
+        "4": 0.0
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 10.5,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 1260
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 180
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 4,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.4176200781145441,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00043046314085007874,
+        "null_max": 16.153671064605987,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=18 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "diligent_anxious_active_0005",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "free_spirited_social_student_0005",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004",
+        "unemployed_family_caregiver_0005"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 18,
+      "weeks": 12,
+      "subject_weeks": 216,
+      "claim": "population: 18 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 1512,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.3598,
+        "4": 0.0139
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 12.6,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 1512
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 216
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 6,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.4782945430954787,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00042100559115788145,
+        "null_max": 18.122900663124444,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=20 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "diligent_anxious_active_0005",
+        "diligent_anxious_active_0006",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "free_spirited_social_student_0005",
+        "free_spirited_social_student_0006",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004",
+        "unemployed_family_caregiver_0005"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 20,
+      "weeks": 12,
+      "subject_weeks": 240,
+      "claim": "population: 20 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 1680,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.3897,
+        "4": 0.0278
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 14.0,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 1680
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 240
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 3,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.5532589585981175,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0004532627371398679,
+        "null_max": 19.900763836809904,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=24 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "diligent_anxious_active_0005",
+        "diligent_anxious_active_0006",
+        "diligent_anxious_active_0007",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "free_spirited_social_student_0005",
+        "free_spirited_social_student_0006",
+        "free_spirited_social_student_0007",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004",
+        "unemployed_family_caregiver_0005",
+        "unemployed_family_caregiver_0006",
+        "unemployed_family_caregiver_0007"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 24,
+      "weeks": 12,
+      "subject_weeks": 288,
+      "claim": "population: 24 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 2016,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.4583,
+        "4": 0.0556
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 16.8,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 2016
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 288
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 3,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.6337633954012792,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.000449467268796046,
+        "null_max": 22.77950160974632,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=27 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "diligent_anxious_active_0005",
+        "diligent_anxious_active_0006",
+        "diligent_anxious_active_0007",
+        "diligent_anxious_active_0008",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "free_spirited_social_student_0005",
+        "free_spirited_social_student_0006",
+        "free_spirited_social_student_0007",
+        "free_spirited_social_student_0008",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004",
+        "unemployed_family_caregiver_0005",
+        "unemployed_family_caregiver_0006",
+        "unemployed_family_caregiver_0007",
+        "unemployed_family_caregiver_0008"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 27,
+      "weeks": 12,
+      "subject_weeks": 324,
+      "claim": "population: 27 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 2268,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.5098,
+        "4": 0.0764
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 18.9,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 2268
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 324
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 3,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.6815017813640848,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.00045528906580708797,
+        "null_max": 25.133171612194097,
+        "cleared": 0.0020833333333333333
+      }
+    },
+    {
+      "arm": "subject",
+      "tag": "S=30 W=12",
+      "subjects": [
+        "diligent_anxious_active_0000",
+        "diligent_anxious_active_0001",
+        "diligent_anxious_active_0002",
+        "diligent_anxious_active_0003",
+        "diligent_anxious_active_0004",
+        "diligent_anxious_active_0005",
+        "diligent_anxious_active_0006",
+        "diligent_anxious_active_0007",
+        "diligent_anxious_active_0008",
+        "diligent_anxious_active_0009",
+        "free_spirited_social_student_0000",
+        "free_spirited_social_student_0001",
+        "free_spirited_social_student_0002",
+        "free_spirited_social_student_0003",
+        "free_spirited_social_student_0004",
+        "free_spirited_social_student_0005",
+        "free_spirited_social_student_0006",
+        "free_spirited_social_student_0007",
+        "free_spirited_social_student_0008",
+        "free_spirited_social_student_0009",
+        "unemployed_family_caregiver_0000",
+        "unemployed_family_caregiver_0001",
+        "unemployed_family_caregiver_0002",
+        "unemployed_family_caregiver_0003",
+        "unemployed_family_caregiver_0004",
+        "unemployed_family_caregiver_0005",
+        "unemployed_family_caregiver_0006",
+        "unemployed_family_caregiver_0007",
+        "unemployed_family_caregiver_0008",
+        "unemployed_family_caregiver_0009"
+      ],
+      "personas": [
+        "diligent_anxious_active",
+        "free_spirited_social_student",
+        "unemployed_family_caregiver"
+      ],
+      "n_subjects": 30,
+      "weeks": 12,
+      "subject_weeks": 360,
+      "claim": "population: 30 subjects over 3 personas and 12 weeks, so the graph is a statement about the cohort and about no single person's history",
+      "day_epochs": 2520,
+      "measured_recall": 0.3333333333333333,
+      "predicted_recall": {
+        "3": 0.5613,
+        "4": 0.0972
+      },
+      "ledger_verdict": {
+        "epochs_per_candidate": 21.0,
+        "n_candidates": 120,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      "recall": {
+        "3": {
+          "placed": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d",
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "universal": [
+            "office_work|sleep|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "off_quantity": [
+            "meeting|journaling|1d",
+            "office_work|sleep|1d"
+          ],
+          "scorable": [
+            "running|yoga|1d",
+            "sleep|walking|1d",
+            "walking|walking|1d"
+          ],
+          "found": [
+            "walking|walking|1d"
+          ],
+          "missed": [
+            "running|yoga|1d",
+            "sleep|walking|1d"
+          ],
+          "recall": 0.3333333333333333,
+          "is_day_scale": true,
+          "epochs": 2520
+        },
+        "4": {
+          "placed": [
+            "gym|gym|7d"
+          ],
+          "universal": [],
+          "off_quantity": [],
+          "scorable": [
+            "gym|gym|7d"
+          ],
+          "found": [],
+          "missed": [
+            "gym|gym|7d"
+          ],
+          "recall": 0.0,
+          "is_day_scale": false,
+          "epochs": 360
+        }
+      },
+      "stationary": {
+        "3": {
+          "n_stationary": 42,
+          "edges": 3,
+          "labels_with_parents": [
+            "drink_water",
+            "hungry"
+          ]
+        },
+        "4": {
+          "n_stationary": 42,
+          "edges": 0,
+          "labels_with_parents": []
+        }
+      },
+      "holds_key_rule": false,
+      "price": {
+        "price": 0.7517149832821042,
+        "quantile": 0.9979166666666667,
+        "null_draws": 28800,
+        "null_median": 0.0004890675838372695,
+        "null_max": 29.366582846439222,
+        "cleared": 0.0020833333333333333
+      }
+    }
+  ],
+  "crossing": {
+    "rungs": {
+      "1": {
+        "cells": 3,
+        "holding": 0
+      },
+      "2": {
+        "cells": 1,
+        "holding": 0
+      },
+      "3": {
+        "cells": 1,
+        "holding": 0
+      },
+      "4": {
+        "cells": 1,
+        "holding": 0
+      },
+      "5": {
+        "cells": 1,
+        "holding": 0
+      },
+      "6": {
+        "cells": 1,
+        "holding": 0
+      },
+      "8": {
+        "cells": 1,
+        "holding": 0
+      },
+      "10": {
+        "cells": 1,
+        "holding": 0
+      },
+      "12": {
+        "cells": 1,
+        "holding": 0
+      },
+      "15": {
+        "cells": 1,
+        "holding": 0
+      },
+      "18": {
+        "cells": 1,
+        "holding": 0
+      },
+      "20": {
+        "cells": 1,
+        "holding": 0
+      },
+      "24": {
+        "cells": 1,
+        "holding": 0
+      },
+      "27": {
+        "cells": 1,
+        "holding": 0
+      },
+      "30": {
+        "cells": 1,
+        "holding": 0
+      }
+    },
+    "first_hold": null,
+    "stable_hold": null,
+    "first_and_stable_differ": false,
+    "n_of_1_cells": 3,
+    "n_of_1_holding": 0,
+    "recall_half": null
+  },
+  "population_vs_n_of_1": "sleep|walking|1 was recovered at no rung of this arm, so the arm separates nothing and the roster sizes it swept were all too small",
+  "cost": {
+    "n_cells": 17,
+    "subject_weeks": 2244,
+    "largest_cell_subject_weeks": 360,
+    "full_cohort_equivalents": 6.23,
+    "serial_hours": 2.49,
+    "parallel_hours": 0.4,
+    "workers": 8,
+    "cohort_passes_per_cell": 127
+  },
+  "shards": [
+    "results/exp11/shards/s12_10",
+    "results/exp11/shards/s15_8",
+    "results/exp11/shards/s18_5",
+    "results/exp11/shards/s1_2_3_6",
+    "results/exp11/shards/s20_4",
+    "results/exp11/shards/s24",
+    "results/exp11/shards/s27",
+    "results/exp11/shards/s30"
+  ]
+}

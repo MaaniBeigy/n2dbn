@@ -1,0 +1,30 @@
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["src", "experiments", "tests"]
+skip = [".venv", "build", "dist", "results"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    "ignore::DeprecationWarning:pgmpy.*",
+    "ignore::FutureWarning:pgmpy.*",
+    # teneto 0.5.3 imports through the nilearn path retired at 0.13.
+    "ignore:The import path 'nilearn.input_data' is deprecated:DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = false
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]

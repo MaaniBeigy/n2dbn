@@ -1,0 +1,2303 @@
+{
+  "provenance": {
+    "csv": "data/observed_lifesnaps_event_log.csv",
+    "csv_sha256": "fe8a2b019cec94b78968a40f55245eb8f5a6e4b5919eb6e94155eaafce10fb06",
+    "window_weeks": 8,
+    "window_days": 56,
+    "n_subjects": 6,
+    "dropped": [],
+    "coverage_mean": 0.9940476190476191,
+    "axis_digest": "5475e730a69d690f",
+    "targets": [
+      "gym",
+      "mindfulness",
+      "nap",
+      "sleep",
+      "survey_response",
+      "walk"
+    ],
+    "exogenous": [
+      "hour_index",
+      "hour_cos",
+      "hour_sin",
+      "weekday_index",
+      "weekday_cos",
+      "weekday_sin",
+      "day_index",
+      "week_index",
+      "notification_received"
+    ],
+    "n_epochs": [
+      80640,
+      1344,
+      56,
+      8
+    ]
+  },
+  "participants_kept": 51,
+  "n_replicates": 2,
+  "compared_scales": [
+    "hour",
+    "day",
+    "week"
+  ],
+  "forms_run": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5"
+  ],
+  "forms_declared": [],
+  "legs": {
+    "home": {
+      "arm": "home",
+      "real_per_label": {
+        "gym": 124,
+        "mindfulness": 1,
+        "nap": 24,
+        "sleep": 238,
+        "survey_response": 1075,
+        "walk": 244
+      },
+      "drawn_per_label": {
+        "gym": 232,
+        "mindfulness": 1,
+        "nap": 1489,
+        "sleep": 470,
+        "survey_response": 991,
+        "walk": 586
+      },
+      "drawn_per_label_per_replicate": {
+        "gym": 116.0,
+        "mindfulness": 0.5,
+        "nap": 744.5,
+        "sleep": 235.0,
+        "survey_response": 495.5,
+        "walk": 293.0
+      },
+      "volume_departures": [
+        {
+          "label": "mindfulness",
+          "real": 1,
+          "drawn": 0,
+          "ratio": 0.0,
+          "absent": true
+        },
+        {
+          "label": "nap",
+          "real": 24,
+          "drawn": 744,
+          "ratio": 31.0,
+          "absent": false
+        }
+      ],
+      "eta_clips_per_label": {
+        "gym": 0,
+        "mindfulness": 0,
+        "nap": 494,
+        "sleep": 0,
+        "survey_response": 0,
+        "walk": 0
+      },
+      "edges": [
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=1, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=3, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=2, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=4, src_label=3, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=1, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=1, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        }
+      ],
+      "refused_columns": {},
+      "unsupported_self_candidates": {
+        "gym": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='duration', lag=1, basis=())"
+        ],
+        "mindfulness": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='duration', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=2, src_label=1, src_quantity='count', lag=1, basis=())"
+        ],
+        "nap": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='duration', lag=1, basis=())"
+        ],
+        "sleep": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='duration', lag=1, basis=())"
+        ],
+        "walk": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='duration', lag=1, basis=())"
+        ]
+      },
+      "n_edges": 20,
+      "same_epoch_edges": 0,
+      "finest_scale_edges": 0,
+      "regime_states": 2,
+      "level_sweeps": 60,
+      "unidentified_levels": [],
+      "level_loglik": -8436.333123075392,
+      "level_gain": 186.25812982467505,
+      "level_last_gain": 1.4357495372369158,
+      "n_replicates": 2,
+      "drawn": [
+        1609,
+        2160
+      ],
+      "copied": [
+        1048,
+        1048
+      ],
+      "reconciliation_error": 0.0,
+      "observed_days_left_empty": 17
+    },
+    "noregime": {
+      "arm": "noregime",
+      "real_per_label": {
+        "gym": 124,
+        "mindfulness": 1,
+        "nap": 24,
+        "sleep": 238,
+        "survey_response": 1075,
+        "walk": 244
+      },
+      "drawn_per_label": {
+        "gym": 245,
+        "mindfulness": 2,
+        "nap": 851,
+        "sleep": 469,
+        "survey_response": 1077,
+        "walk": 567
+      },
+      "drawn_per_label_per_replicate": {
+        "gym": 122.5,
+        "mindfulness": 1.0,
+        "nap": 425.5,
+        "sleep": 234.5,
+        "survey_response": 538.5,
+        "walk": 283.5
+      },
+      "volume_departures": [
+        {
+          "label": "nap",
+          "real": 24,
+          "drawn": 425,
+          "ratio": 17.708333333333332,
+          "absent": false
+        }
+      ],
+      "eta_clips_per_label": {
+        "gym": 0,
+        "mindfulness": 0,
+        "nap": 373,
+        "sleep": 0,
+        "survey_response": 0,
+        "walk": 0
+      },
+      "edges": [
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=1, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=3, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=2, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=4, src_label=3, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=1, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=0, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=1, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        }
+      ],
+      "refused_columns": {},
+      "unsupported_self_candidates": {
+        "gym": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='duration', lag=1, basis=())"
+        ],
+        "mindfulness": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='duration', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=2, src_label=1, src_quantity='count', lag=1, basis=())"
+        ],
+        "nap": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='duration', lag=1, basis=())"
+        ],
+        "sleep": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='duration', lag=1, basis=())"
+        ],
+        "walk": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='duration', lag=1, basis=())"
+        ]
+      },
+      "n_edges": 20,
+      "same_epoch_edges": 0,
+      "finest_scale_edges": 0,
+      "regime_states": 0,
+      "level_sweeps": 60,
+      "unidentified_levels": [],
+      "level_loglik": -8436.333123075387,
+      "level_gain": 186.2581298246805,
+      "level_last_gain": 1.4357495372423728,
+      "n_replicates": 2,
+      "drawn": [
+        1515,
+        1696
+      ],
+      "copied": [
+        1048,
+        1048
+      ],
+      "reconciliation_error": 0.0,
+      "observed_days_left_empty": 21
+    },
+    "absent": {
+      "arm": "absent",
+      "real_per_label": {
+        "gym": 124,
+        "mindfulness": 1,
+        "nap": 24,
+        "sleep": 238,
+        "survey_response": 1075,
+        "walk": 244
+      },
+      "drawn_per_label": {
+        "gym": 230,
+        "mindfulness": 0,
+        "nap": 390,
+        "sleep": 508,
+        "survey_response": 946,
+        "walk": 526
+      },
+      "drawn_per_label_per_replicate": {
+        "gym": 115.0,
+        "mindfulness": 0.0,
+        "nap": 195.0,
+        "sleep": 254.0,
+        "survey_response": 473.0,
+        "walk": 263.0
+      },
+      "volume_departures": [
+        {
+          "label": "mindfulness",
+          "real": 1,
+          "drawn": 0,
+          "ratio": 0.0,
+          "absent": true
+        },
+        {
+          "label": "nap",
+          "real": 24,
+          "drawn": 195,
+          "ratio": 8.125,
+          "absent": false
+        }
+      ],
+      "eta_clips_per_label": {
+        "gym": 0,
+        "mindfulness": 0,
+        "nap": 112,
+        "sleep": 0,
+        "survey_response": 0,
+        "walk": 0
+      },
+      "edges": [
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "gym",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "nap",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=2, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=3, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=3, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=4, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "sleep",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=3, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=1, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=4, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "survey_response",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=3, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=5, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=2, src_label=8, src_quantity='level', lag=0, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=5, src_quantity='duration', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='calendar', src_scale=4, src_label=8, src_quantity='level', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=3, src_label=0, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        },
+        {
+          "target": "walk",
+          "edge": "TypedEdge(src_kind='observed', src_scale=2, src_label=0, src_quantity='count', lag=1, basis=())",
+          "same_epoch": false
+        }
+      ],
+      "refused_columns": {},
+      "unsupported_self_candidates": {
+        "gym": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=0, src_quantity='duration', lag=1, basis=())"
+        ],
+        "mindfulness": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=1, src_quantity='duration', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=2, src_label=1, src_quantity='count', lag=1, basis=())"
+        ],
+        "nap": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=2, src_quantity='duration', lag=1, basis=())"
+        ],
+        "sleep": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=3, src_quantity='duration', lag=1, basis=())"
+        ],
+        "walk": [
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='count', lag=1, basis=())",
+          "TypedEdge(src_kind='observed', src_scale=1, src_label=5, src_quantity='duration', lag=1, basis=())"
+        ]
+      },
+      "n_edges": 23,
+      "same_epoch_edges": 0,
+      "finest_scale_edges": 0,
+      "regime_states": 2,
+      "level_sweeps": 60,
+      "unidentified_levels": [],
+      "level_loglik": -8832.547324370686,
+      "level_gain": 177.84912048568913,
+      "level_last_gain": 1.3806927497407742,
+      "n_replicates": 2,
+      "drawn": [
+        1416,
+        1184
+      ],
+      "copied": [
+        1048,
+        1048
+      ],
+      "reconciliation_error": 0.0,
+      "observed_days_left_empty": 32
+    },
+    "empty": {
+      "arm": "empty",
+      "real_per_label": {
+        "gym": 124,
+        "mindfulness": 1,
+        "nap": 24,
+        "sleep": 238,
+        "survey_response": 1075,
+        "walk": 244
+      },
+      "drawn_per_label": {
+        "gym": 264,
+        "mindfulness": 4,
+        "nap": 56,
+        "sleep": 521,
+        "survey_response": 1337,
+        "walk": 497
+      },
+      "drawn_per_label_per_replicate": {
+        "gym": 132.0,
+        "mindfulness": 2.0,
+        "nap": 28.0,
+        "sleep": 260.5,
+        "survey_response": 668.5,
+        "walk": 248.5
+      },
+      "volume_departures": [],
+      "eta_clips_per_label": {
+        "gym": 0,
+        "mindfulness": 0,
+        "nap": 0,
+        "sleep": 0,
+        "survey_response": 0,
+        "walk": 0
+      },
+      "edges": [],
+      "refused_columns": {},
+      "unsupported_self_candidates": {},
+      "n_edges": 0,
+      "same_epoch_edges": 0,
+      "finest_scale_edges": 0,
+      "regime_states": 0,
+      "level_sweeps": 60,
+      "unidentified_levels": [],
+      "level_loglik": -9341.979772148417,
+      "level_gain": 233.90302002785393,
+      "level_last_gain": 1.8555330464841973,
+      "n_replicates": 2,
+      "drawn": [
+        1250,
+        1429
+      ],
+      "copied": [
+        1048,
+        1048
+      ],
+      "reconciliation_error": 0.0,
+      "observed_days_left_empty": 11
+    }
+  },
+  "panels": {
+    "home": {
+      "n_cells": 228,
+      "n_tested": 0,
+      "descriptive_by_clause": {
+        "denominator": 228
+      },
+      "failed": [],
+      "tested_rows": [],
+      "by_form": {
+        "A01": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A02": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A03": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A04": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A05": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A06": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A07": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A08": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A09": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A10": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A11": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A12": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A13": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A15": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A16": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B2": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B1": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B3": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B4": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "A14": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        },
+        "B5": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        }
+      },
+      "passed": true
+    },
+    "noregime": {
+      "n_cells": 228,
+      "n_tested": 0,
+      "descriptive_by_clause": {
+        "denominator": 228
+      },
+      "failed": [],
+      "tested_rows": [],
+      "by_form": {
+        "A01": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A02": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A03": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A04": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A05": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A06": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A07": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A08": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A09": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A10": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A11": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A12": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A13": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A15": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A16": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B2": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B1": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B3": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B4": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "A14": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        },
+        "B5": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        }
+      },
+      "passed": true
+    },
+    "absent": {
+      "n_cells": 228,
+      "n_tested": 0,
+      "descriptive_by_clause": {
+        "denominator": 228
+      },
+      "failed": [],
+      "tested_rows": [],
+      "by_form": {
+        "A01": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A02": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A03": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A04": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A05": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A06": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A07": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A08": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A09": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A10": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A11": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A12": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A13": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A15": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A16": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B2": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B1": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B3": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B4": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "A14": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        },
+        "B5": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        }
+      },
+      "passed": true
+    },
+    "empty": {
+      "n_cells": 228,
+      "n_tested": 0,
+      "descriptive_by_clause": {
+        "denominator": 228
+      },
+      "failed": [],
+      "tested_rows": [],
+      "by_form": {
+        "A01": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A02": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A03": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A04": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A05": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A06": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A07": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A08": {
+          "cells": 18,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 18
+          }
+        },
+        "A09": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A10": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A11": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A12": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A13": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A15": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "A16": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B2": {
+          "cells": 12,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 12
+          }
+        },
+        "B1": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B3": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "B4": {
+          "cells": 2,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 2
+          }
+        },
+        "A14": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        },
+        "B5": {
+          "cells": 6,
+          "tested": 0,
+          "failed": 0,
+          "clauses": {
+            "denominator": 6
+          }
+        }
+      },
+      "passed": true
+    }
+  },
+  "controls": {
+    "no regime": {
+      "passed": true,
+      "broke": [],
+      "missed": [],
+      "spurious": [],
+      "untested": [
+        "A08",
+        "A09",
+        "A11",
+        "A14",
+        "B1",
+        "B5"
+      ],
+      "already_failing": []
+    },
+    "calendar nodes removed": {
+      "passed": true,
+      "broke": [],
+      "missed": [],
+      "spurious": [],
+      "untested": [
+        "A05",
+        "A06",
+        "A07"
+      ],
+      "already_failing": []
+    },
+    "label-shuffled cross-section": {
+      "passed": true,
+      "broke": [],
+      "missed": [],
+      "spurious": [],
+      "untested": [
+        "B3",
+        "B4"
+      ],
+      "already_failing": []
+    },
+    "within-participant time shuffle": {
+      "passed": true,
+      "broke": [],
+      "missed": [],
+      "spurious": [],
+      "untested": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16"
+      ],
+      "already_failing": []
+    }
+  },
+  "empty_graph_fails_the_panel": false,
+  "positive_control": {
+    "n_cells": 228,
+    "n_tested": 0,
+    "descriptive_by_clause": {
+      "denominator": 228
+    },
+    "failed": [],
+    "tested_rows": [],
+    "by_form": {
+      "A01": {
+        "cells": 18,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 18
+        }
+      },
+      "A02": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A03": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A04": {
+        "cells": 18,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 18
+        }
+      },
+      "A05": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A06": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A07": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A08": {
+        "cells": 18,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 18
+        }
+      },
+      "A09": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A10": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A11": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A12": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A13": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A15": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "A16": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "B2": {
+        "cells": 12,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 12
+        }
+      },
+      "B1": {
+        "cells": 2,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 2
+        }
+      },
+      "B3": {
+        "cells": 2,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 2
+        }
+      },
+      "B4": {
+        "cells": 2,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 2
+        }
+      },
+      "A14": {
+        "cells": 6,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 6
+        }
+      },
+      "B5": {
+        "cells": 6,
+        "tested": 0,
+        "failed": 0,
+        "clauses": {
+          "denominator": 6
+        }
+      }
+    },
+    "passed": true
+  },
+  "rows_failing_their_own_noise": [],
+  "home_failed_net_of_noise": [],
+  "changepoints": [
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "gym",
+      "scale": "hour",
+      "annotation_error": 0.16666666666666666,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.9167332840254158,
+      "hausdorff": 224.0,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "mindfulness",
+      "scale": "hour",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "nap",
+      "scale": "hour",
+      "annotation_error": 0.5,
+      "f1_margin": 0.6666666666666666,
+      "covering": 0.8813244047619048,
+      "hausdorff": 448.0,
+      "jump_ks": 0.3333333333333333,
+      "segment_ks": 0.3333333333333333
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "sleep",
+      "scale": "hour",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "survey_response",
+      "scale": "hour",
+      "annotation_error": 6.333333333333333,
+      "f1_margin": 0.16666666666666666,
+      "covering": 0.5087502052096639,
+      "hausdorff": 929.1666666666666,
+      "jump_ks": 0.8333333333333334,
+      "segment_ks": 0.7152777777777778
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "walk",
+      "scale": "hour",
+      "annotation_error": 0.5,
+      "f1_margin": 0.5,
+      "covering": 0.7873910660067023,
+      "hausdorff": 617.3333333333334,
+      "jump_ks": 0.5,
+      "segment_ks": 0.4166666666666667
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "gym",
+      "scale": "day",
+      "annotation_error": 0.16666666666666666,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.9167729591836734,
+      "hausdorff": 9.333333333333334,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "mindfulness",
+      "scale": "day",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "nap",
+      "scale": "day",
+      "annotation_error": 0.5,
+      "f1_margin": 0.6666666666666666,
+      "covering": 0.8779761904761904,
+      "hausdorff": 18.666666666666668,
+      "jump_ks": 0.3333333333333333,
+      "segment_ks": 0.3333333333333333
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "sleep",
+      "scale": "day",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "survey_response",
+      "scale": "day",
+      "annotation_error": 1.8333333333333333,
+      "f1_margin": 0.2333333333333333,
+      "covering": 0.5783221664789151,
+      "hausdorff": 43.166666666666664,
+      "jump_ks": 0.8333333333333334,
+      "segment_ks": 0.7999999999999999
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "walk",
+      "scale": "day",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.5,
+      "covering": 0.7969357385811467,
+      "hausdorff": 25.833333333333332,
+      "jump_ks": 0.5,
+      "segment_ks": 0.4166666666666667
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "gym",
+      "scale": "week",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "mindfulness",
+      "scale": "week",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "nap",
+      "scale": "week",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.6666666666666666,
+      "covering": 0.875,
+      "hausdorff": 2.6666666666666665,
+      "jump_ks": 0.3333333333333333,
+      "segment_ks": 0.3333333333333333
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "sleep",
+      "scale": "week",
+      "annotation_error": 0.0,
+      "f1_margin": 1.0,
+      "covering": 1.0,
+      "hausdorff": 0.0,
+      "jump_ks": 0.0,
+      "segment_ks": 0.0
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "survey_response",
+      "scale": "week",
+      "annotation_error": 0.6666666666666666,
+      "f1_margin": 0.4444444444444444,
+      "covering": 0.7256944444444445,
+      "hausdorff": 4.666666666666667,
+      "jump_ks": 0.6666666666666666,
+      "segment_ks": 0.5833333333333334
+    },
+    {
+      "form": "A08",
+      "cost": "poisson",
+      "series": "walk",
+      "scale": "week",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.6666666666666666,
+      "covering": 0.84375,
+      "hausdorff": 2.6666666666666665,
+      "jump_ks": 0.3333333333333333,
+      "segment_ks": 0.3333333333333333
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "gym",
+      "scale": "hour",
+      "annotation_error": 20.0,
+      "f1_margin": 0.13241395830681546,
+      "covering": 0.37558565123083193,
+      "hausdorff": 323.5,
+      "jump_ks": 0.22545968096108346,
+      "segment_ks": 0.3100631563149742
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "mindfulness",
+      "scale": "hour",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.9278755447491497,
+      "hausdorff": 224.0,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "nap",
+      "scale": "hour",
+      "annotation_error": 9.666666666666666,
+      "f1_margin": 0.0,
+      "covering": 0.43247990042689183,
+      "hausdorff": 1130.1666666666667,
+      "jump_ks": 0.5,
+      "segment_ks": 0.6663909567135374
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "sleep",
+      "scale": "hour",
+      "annotation_error": 7.333333333333333,
+      "f1_margin": 0.5299062340813092,
+      "covering": 0.6014392956855723,
+      "hausdorff": 78.16666666666667,
+      "jump_ks": 0.018784633110939565,
+      "segment_ks": 0.16236885954191602
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "survey_response",
+      "scale": "hour",
+      "annotation_error": 51.666666666666664,
+      "f1_margin": 0.27395345549523126,
+      "covering": 0.3158660731924862,
+      "hausdorff": 434.6666666666667,
+      "jump_ks": 0.877529469563577,
+      "segment_ks": 0.4152344291549758
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "walk",
+      "scale": "hour",
+      "annotation_error": 53.166666666666664,
+      "f1_margin": 0.25007137273213503,
+      "covering": 0.3504031245304852,
+      "hausdorff": 277.0,
+      "jump_ks": 0.16747521407254715,
+      "segment_ks": 0.2607177246628629
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "gym",
+      "scale": "day",
+      "annotation_error": 3.3333333333333335,
+      "f1_margin": 0.4407407407407407,
+      "covering": 0.44580886898595234,
+      "hausdorff": 24.166666666666668,
+      "jump_ks": 0.47883597883597884,
+      "segment_ks": 0.48392857142857143
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "mindfulness",
+      "scale": "day",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.9225127551020408,
+      "hausdorff": 9.333333333333334,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "nap",
+      "scale": "day",
+      "annotation_error": 3.3333333333333335,
+      "f1_margin": 0.1375291375291375,
+      "covering": 0.4662197260411545,
+      "hausdorff": 46.5,
+      "jump_ks": 0.7000000000000001,
+      "segment_ks": 0.7429653679653679
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "sleep",
+      "scale": "day",
+      "annotation_error": 3.1666666666666665,
+      "f1_margin": 0.15873015873015872,
+      "covering": 0.4784859324164448,
+      "hausdorff": 43.333333333333336,
+      "jump_ks": 0.875,
+      "segment_ks": 0.7861111111111111
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "survey_response",
+      "scale": "day",
+      "annotation_error": 2.8333333333333335,
+      "f1_margin": 0.2941798941798942,
+      "covering": 0.5436273453529973,
+      "hausdorff": 32.666666666666664,
+      "jump_ks": 0.7999999999999999,
+      "segment_ks": 0.5900793650793651
+    },
+    {
+      "form": "A09",
+      "cost": "variance",
+      "series": "walk",
+      "scale": "day",
+      "annotation_error": 1.1666666666666667,
+      "f1_margin": 0.43888888888888883,
+      "covering": 0.5160015435793085,
+      "hausdorff": 14.666666666666666,
+      "jump_ks": 0.7944444444444444,
+      "segment_ks": 0.4674603174603175
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "gym",
+      "scale": "hour",
+      "annotation_error": 19.666666666666668,
+      "f1_margin": 0.1509511817547532,
+      "covering": 0.37049762412546716,
+      "hausdorff": 323.6666666666667,
+      "jump_ks": 0.26285647498831227,
+      "segment_ks": 0.3129965766992151
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "mindfulness",
+      "scale": "hour",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.9275225281084656,
+      "hausdorff": 224.0,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "nap",
+      "scale": "hour",
+      "annotation_error": 10.666666666666666,
+      "f1_margin": 0.018518518518518517,
+      "covering": 0.4239918308915811,
+      "hausdorff": 1129.6666666666667,
+      "jump_ks": 0.5,
+      "segment_ks": 0.6663909567135374
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "sleep",
+      "scale": "hour",
+      "annotation_error": 7.0,
+      "f1_margin": 0.5916894575924225,
+      "covering": 0.5944358049428157,
+      "hausdorff": 77.83333333333333,
+      "jump_ks": 0.016174544131350315,
+      "segment_ks": 0.15707035574522965
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "survey_response",
+      "scale": "hour",
+      "annotation_error": 50.333333333333336,
+      "f1_margin": 0.2787011185590609,
+      "covering": 0.3149991404457358,
+      "hausdorff": 435.6666666666667,
+      "jump_ks": 0.8675984450366535,
+      "segment_ks": 0.4137609877814328
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "walk",
+      "scale": "hour",
+      "annotation_error": 48.666666666666664,
+      "f1_margin": 0.2547974468973782,
+      "covering": 0.3480002832603812,
+      "hausdorff": 277.0,
+      "jump_ks": 0.23017908368810347,
+      "segment_ks": 0.2619820027188658
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "gym",
+      "scale": "day",
+      "annotation_error": 2.3333333333333335,
+      "f1_margin": 0.3814814814814815,
+      "covering": 0.4625981636442571,
+      "hausdorff": 22.166666666666668,
+      "jump_ks": 0.5555555555555556,
+      "segment_ks": 0.4500000000000001
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "mindfulness",
+      "scale": "day",
+      "annotation_error": 0.3333333333333333,
+      "f1_margin": 0.8333333333333334,
+      "covering": 0.921343537414966,
+      "hausdorff": 9.333333333333334,
+      "jump_ks": 0.16666666666666666,
+      "segment_ks": 0.16666666666666666
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "nap",
+      "scale": "day",
+      "annotation_error": 3.1666666666666665,
+      "f1_margin": 0.12424242424242422,
+      "covering": 0.45006333341417376,
+      "hausdorff": 46.333333333333336,
+      "jump_ks": 0.8444444444444444,
+      "segment_ks": 0.8412698412698413
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "sleep",
+      "scale": "day",
+      "annotation_error": 2.5,
+      "f1_margin": 0.16666666666666666,
+      "covering": 0.4994670780211397,
+      "hausdorff": 43.666666666666664,
+      "jump_ks": 0.8611111111111112,
+      "segment_ks": 0.8277777777777778
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "survey_response",
+      "scale": "day",
+      "annotation_error": 2.1666666666666665,
+      "f1_margin": 0.4295843045843046,
+      "covering": 0.5804951397808541,
+      "hausdorff": 21.833333333333332,
+      "jump_ks": 0.5801587301587302,
+      "segment_ks": 0.5190476190476191
+    },
+    {
+      "form": "A10",
+      "cost": "slope",
+      "series": "walk",
+      "scale": "day",
+      "annotation_error": 2.8333333333333335,
+      "f1_margin": 0.4506993006993007,
+      "covering": 0.43173634001406563,
+      "hausdorff": 16.333333333333332,
+      "jump_ks": 0.515079365079365,
+      "segment_ks": 0.439484126984127
+    }
+  ],
+  "heterogeneity": [
+    {
+      "series": "gym",
+      "real_cqv": 0.4054,
+      "real_lower": 0.1852,
+      "real_upper": 0.4615,
+      "real_undefined_sparse": 0.16666666666666663,
+      "real_pinned_share": 0.0,
+      "drawn_cqv": 0.4286,
+      "drawn_lower": 0.2903,
+      "drawn_upper": 0.5,
+      "drawn_undefined_sparse": 0.0,
+      "drawn_pinned_share": 0.08333333333333333,
+      "comparable": false,
+      "separation": 0.0,
+      "sparse_gap": 0.16666666666666663,
+      "replicates": 999,
+      "seed": 0
+    },
+    {
+      "series": "mindfulness",
+      "refused": "no participant of 6 defines a CQV for 'mindfulness', so the label is undefined_sparse on the whole roster"
+    },
+    {
+      "series": "nap",
+      "real_cqv": 0.3846,
+      "real_lower": 0.3846,
+      "real_upper": 0.3846,
+      "real_undefined_sparse": 0.5,
+      "real_pinned_share": 0.3333333333333333,
+      "drawn_cqv": 0.9564,
+      "drawn_lower": 0.0405,
+      "drawn_upper": 0.9801,
+      "drawn_undefined_sparse": 0.25,
+      "drawn_pinned_share": 0.5,
+      "comparable": false,
+      "separation": 0.0,
+      "sparse_gap": 0.25,
+      "replicates": 999,
+      "seed": 0
+    },
+    {
+      "series": "sleep",
+      "real_cqv": 0.0909,
+      "real_lower": 0.0182,
+      "real_upper": 0.1915,
+      "real_undefined_sparse": 0.16666666666666663,
+      "real_pinned_share": 0.0,
+      "drawn_cqv": 0.1154,
+      "drawn_lower": 0.08745,
+      "drawn_upper": 0.19874999999999998,
+      "drawn_undefined_sparse": 0.0,
+      "drawn_pinned_share": 0.16666666666666666,
+      "comparable": false,
+      "separation": 0.0,
+      "sparse_gap": 0.16666666666666663,
+      "replicates": 999,
+      "seed": 0
+    },
+    {
+      "series": "survey_response",
+      "real_cqv": 0.1555,
+      "real_lower": 0.0386,
+      "real_upper": 0.443,
+      "real_undefined_sparse": 0.16666666666666663,
+      "real_pinned_share": 0.16666666666666666,
+      "drawn_cqv": 0.23520000000000002,
+      "drawn_lower": 0.1537,
+      "drawn_upper": 0.41664999999999996,
+      "drawn_undefined_sparse": 0.0,
+      "drawn_pinned_share": 0.0,
+      "comparable": false,
+      "separation": 0.0,
+      "sparse_gap": 0.16666666666666663,
+      "replicates": 999,
+      "seed": 0
+    },
+    {
+      "series": "walk",
+      "real_cqv": 0.30679999999999996,
+      "real_lower": 0.1034,
+      "real_upper": 0.5556,
+      "real_undefined_sparse": 0.0,
+      "real_pinned_share": 0.3333333333333333,
+      "drawn_cqv": 0.2834,
+      "drawn_lower": 0.19875,
+      "drawn_upper": 0.3778,
+      "drawn_undefined_sparse": 0.0,
+      "drawn_pinned_share": 0.0,
+      "comparable": true,
+      "separation": 0.0,
+      "sparse_gap": 0.0,
+      "replicates": 999,
+      "seed": 0
+    }
+  ],
+  "rows_separating_the_fit_from_the_empty_graph": [],
+  "home_failed_rows": [],
+  "home_tested_rows": []
+}

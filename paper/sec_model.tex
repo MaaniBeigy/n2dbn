@@ -1,0 +1,492 @@
+\section{Compact formulation}
+\label{sec:model}
+
+This section summarizes N\textsuperscript{2}DBN from an observed event log to
+the learned multiresolution graphs, conditional parameters, and generated
+event logs. The following sections retain derivations and implementation
+details. The construction combines DBN semantics
+\citep{dean1989model,murphy2002dbn}, multiscale temporal representations
+\citep{saria2007granularity,kang2022multiscale}, coherent probabilistic
+allocation \citep{das_topdown2023}, and coupling between related networks
+\citep{grzegorczyk2012globalcoupling,kamalabad2020edgewise}.
+
+\paragraph{Event log and temporal granularity.}
+\label{sec:model_scales}
+
+An event log is
+\(\mathcal D=\{(\ell_i,s_i,d_i)\}_{i=1}^N\), where \(\ell_i\in\mathcal L\)
+is an event label, \(s_i\) is its start time, and \(d_i\in\mathbb N\) is its
+duration in units of the finest epoch. Let \(k=1,\ldots,K\) index nested
+temporal partitions from finest to coarsest, with epochs
+\(\mathcal T^{(k)}=\{I_t^{(k)}\}\). Counts and total durations at each
+granularity are
+\begin{align}
+ X_t^{(k,\ell)}
+ &=\sum_{i=1}^N\mathbb{I}\{\ell_i=\ell,\ s_i\in I_t^{(k)}\},
+ &Y_t^{(k,\ell)}
+ &=\sum_{i=1}^Nd_i\mathbb{I}\{\ell_i=\ell,\ s_i\in I_t^{(k)}\}.
+ \label{eq:model_log_projection}
+\end{align}
+Write \(Z^{(k)}=(X^{(k)},Y^{(k)})\). The map \(\pi_k\) assigns an epoch to
+its containing epoch at scale \(k+1\). It induces the aggregation map, its
+fiber, and event-log reconstruction at the finest granularity,
+\begin{align}
+ (\mathcal A_kZ^{(k)})_c
+ &=\sum_{t:\pi_k(t)=c}Z_t^{(k)},
+ &Z^{(k+1)}&=\mathcal A_kZ^{(k)},
+ &\mathcal F_k(v)&=\{u:\mathcal A_ku=v\},
+ \label{eq:model_aggregation}\\
+ \mathcal E(Z^{(1)})
+ &=\{(\ell,t,t+Y_t^{(1,\ell)}-1):X_t^{(1,\ell)}=1\}.
+ \label{eq:model_episode}
+\end{align}
+Counts obey the capacity of their epochs, durations obey \(Y\geq X\), and
+\(X_t^{(1,\ell)}\in\{0,1\}\).
+
+Let \(\mathcal Q=\{\mathrm{cnt},\mathrm{dur}\}\). A learned edge is
+\(e=((a,q_s),(b,q_t),d)\), with \(1\leq d\leq p_k\). For its indicator
+\(w_{e,k}\), the lagged values available to target \((b,q)\) are
+\begin{align}
+ \mathcal P_{k,b,q}(t)
+ &=\{Z_{t-d,q'}^{(k,a)}:w_{((a,q'),(b,q),d),k}=1\}.
+ \label{eq:model_lag_values}
+\end{align}
+The learned event structure is
+\(\mathcal G=\{\mathcal G^{(k)}\}_{k=1}^K\). Its edges have positive lag, so
+every unrolled graph is acyclic. Aggregation and latent links are fixed parts
+of the model construction and are excluded from \(\mathcal G\).
+
+Let \(U_t^{(k)}=(S_t^{(k)},H_t^{(k)})\) combine a discrete regimen for
+persistent change and a continuous factor for same-epoch co-movement. Context
+is denoted by \(C_t^{(k)}\). Resolution-specific maps define the observation
+parameters and latent dynamics,
+\begin{align}
+ \eta_{t,b,q}^{(k)}
+ &=f_{k,b,q}(\mathcal P_{k,b,q}(t),U_t^{(k)},C_t^{(k)};\Theta^{(k)}),
+ \qquad q\in\mathcal Q,
+ \label{eq:model_count_score}\\
+ U_t^{(k)}
+ &\sim R_k(U_{t-1}^{(k)},U_{\pi_k(t)}^{(k+1)},C_t^{(k)};\Theta^{(k)}).
+ \label{eq:model_regime_init}
+\end{align}
+Boundary arguments are omitted at \(t=1\) and \(k=K\). At the coarsest scale,
+an emission map \(E_K\) specifies the count and duration-surplus families. At
+finer scales, a normalized allocation map \(W_k\) defines a child kernel,
+\begin{align}
+ P_K(Z^{(K)}\mid U^{(K)},C^{(K)})
+ &=E_K(\boldsymbol\eta^{(K)};\Theta^{(K)}),
+ \label{eq:model_coarse_count_mean}\\
+ K_k(Z^{(k)}\mid Z^{(k+1)},U^{(k)},C^{(k)})
+ &=W_k(\boldsymbol\eta^{(k)},Z^{(k+1)};\Theta^{(k)}),
+ \qquad \operatorname{supp}K_k=\mathcal F_k(Z^{(k+1)}).
+ \label{eq:model_count_omega}
+\end{align}
+The implemented \(E_K\) uses zero-inflated negative binomial counts and a
+negative binomial duration surplus. The map \(W_k\) uses constrained
+Dirichlet-Multinomial allocations for counts and duration surplus. It includes
+capacity, sequential depletion, the duration floor, the active-child set, and
+the block normalizer.
+
+Let \(\Psi_K\) contain the coarsest latent dynamics and emissions, and let
+\(\Psi_k\), \(k<K\), contain the child dynamics and kernel. The joint model is
+\begin{align}
+ p(\mathcal G,\Theta,Z^{(1:K)},U^{(1:K)}\mid C^{(1:K)})
+ &=p(\mathcal G)p(\Theta\mid\mathcal G)\,\Psi_K
+   \prod_{k=1}^{K-1}\Psi_k.
+ \label{eq:model_joint}
+\end{align}
+The fiber support gives exact reconciliation for every draw.
+
+\begin{proposition}[Exact multiresolution coherence]
+\label{prop:model_reconciliation}
+For every parameter value and every draw of the model,
+\begin{align}
+ \sum_{t:\pi_k(t)=c}X_t^{(k,\ell)}&=X_c^{(k+1,\ell)},
+ &\sum_{t:\pi_k(t)=c}Y_t^{(k,\ell)}&=Y_c^{(k+1,\ell)}
+ \quad\text{almost surely},
+ \label{eq:model_reconciliation}
+\end{align}
+and consequently \(\mathcal A_{j-1}\cdots\mathcal A_kZ^{(k)}=Z^{(j)}\) for
+every \(k<j\).
+\end{proposition}
+
+\begin{proof}
+\Cref{eq:model_count_omega} gives \(\operatorname{supp}K_k=\mathcal
+F_k(Z^{(k+1)})\), and \(u\in\mathcal F_k(v)\) means \(\mathcal A_ku=v\) by
+\cref{eq:model_aggregation}, which is the one-step claim. For \(j>k+1\),
+suppose \(\mathcal A_{j-2}\cdots\mathcal A_kZ^{(k)}=Z^{(j-1)}\); applying
+\(\mathcal A_{j-1}\) and using the one-step case at \(j-1\) gives the claim, so
+the identity composes by induction on \(j-k\).
+\end{proof}
+
+\Cref{prop:model_reconciliation} is a statement about the arrays \((X,Y)\). The
+reconstruction \(\mathcal E\) of \cref{eq:model_episode} additionally imposes a
+one-slot floor, a horizon clip and, where labels are declared mutually
+exclusive, an occupancy projection. \Cref{sec:identifiability} states each and
+bounds the trace-level discrepancy they introduce; the arrays are exact.
+
+\paragraph{What each resolution can identify.}
+\label{sec:model_blockconstant}
+
+The kernel \(W_k\) is normalized over a fiber, and that normalization removes a
+subspace of its own predictor from the likelihood at scale \(k\). Fix a parent
+epoch \(c\in\mathcal T^{(k+1)}\), write \(\child_k(c)=\{t:\pi_k(t)=c\}\), and
+decompose the coordinates on that block orthogonally,
+\begin{align}
+ \sR^{\child_k(c)}
+ &=\mathcal N_c^{(k)}\oplus\mathcal V_c^{(k)},
+ &\mathcal N_c^{(k)}&=\operatorname{span}\{\mathbf 1_{\child_k(c)}\},
+ &\mathcal V_c^{(k)}&=\Bigl\{v:\textstyle\sum_{t\in\child_k(c)}v_t=0\Bigr\},
+ \label{eq:model_block_split}
+\end{align}
+with \(\Pi_k\) the block-averaging projector onto the block-constant
+directions,
+\((\Pi_kv)_t=|\child_k(\pi_k(t))|^{-1}\sum_{s\in\child_k(\pi_k(t))}v_s\).
+
+\begin{proposition}[Block-constant invariance]
+\label{prop:model_block_invariance}
+For every parent epoch \(c\), every \(a\in\sR\) and every predictor
+\(\boldsymbol\eta^{(k)}\),
+\begin{align}
+ W_k(\boldsymbol\eta^{(k)}+a\mathbf 1_{\child_k(c)},Z^{(k+1)})
+ &=W_k(\boldsymbol\eta^{(k)},Z^{(k+1)}).
+ \label{eq:model_block_invariance}
+\end{align}
+Hence \(\Pi_k\boldsymbol\eta^{(k)}\) is unidentified from \(\Psi_k\), and only
+\((I-\Pi_k)\boldsymbol\eta^{(k)}\) is.
+\end{proposition}
+
+\begin{proof}
+Within block \(c\) the allocation concentrations are
+\(\alpha_t=\kappa_k\,\sigma_t(\boldsymbol\eta^{(k)})\) with \(\sigma\) the
+softmax over \(\child_k(c)\). The softmax is invariant to a constant added to
+every coordinate of the block, so \(\alpha\) is unchanged, and the constrained
+Dirichlet-Multinomial density on \(\mathcal F_k(Z^{(k+1)})\) depends on
+\(\boldsymbol\eta^{(k)}\) only through \(\alpha\).
+\end{proof}
+
+Three consequences organize the model.
+
+First, \(\Pi_k\boldsymbol\eta^{(k)}\) is not lost. It acts on the data through
+the parent total \(Z^{(k+1)}\), so it is identified from
+\(\Psi_{k+1},\ldots,\Psi_K\). Every parameter has a resolution at which it is
+identified, and the two directions of the learning pass carry exactly these two
+components: the coarse-to-fine message supplies \(\Pi_k\boldsymbol\eta^{(k)}\)
+and the fine-to-coarse message supplies the sufficient statistics for
+\((I-\Pi_k)\boldsymbol\eta^{(k)}\). This is the sense in which the pass is
+bidirectional.
+
+Second, a term constant across a block contributes exactly zero at scale \(k\).
+A latent regimen entering additively is block-constant on every block over
+which its path does not switch, so at \(k<K\) it must act on a feature carrying
+within-block variation,
+\begin{align}
+ \eta_{t,b,q}^{(k)}
+ &\supseteq\beta_{S_t^{(k)},b,q}^{(k)}\,g_{t,b,q}^{(k)},
+ \qquad (I-\Pi_k)g^{(k)}\neq0,
+ \label{eq:model_regime_interaction}
+\end{align}
+with \(g\) prefix-measurable: the depletion feature, a lagged parent value, or
+the recency column below. An additive regimen level is admitted at \(k=K\)
+alone.
+
+Third, the cross-resolution prior acts on the block-constant component, which
+is the component two adjacent scales share.
+
+\paragraph{A covariate that is never block-constant.}
+
+The lag axis is the largest source of competing representations of one
+relation, and one prefix-measurable summary of it removes most of that
+competition. Let \(\delta_t^{(k,\ell)}=t-\max\{s<t:X_s^{(k,\ell)}>0\}\) be the
+recency of label \(\ell\) and \(M_t^{(k,\ell)}\) its geometric-lag counterpart,
+\begin{align}
+ M_t^{(k,\ell)}(\rho)
+ &=(1-\rho)\sum_{d\geq1}\rho^{\,d-1}Z_{t-d}^{(k,\ell)},
+ \qquad\text{columns }
+ \log\bigl(1+\delta_t^{(k,\ell)}\bigr),\;M_t^{(k,\ell)}.
+ \label{eq:model_recency}
+\end{align}
+Both are measurable with respect to the strict past, so they preserve
+acyclicity, and neither is block-constant at an interior scale, so both stay
+identified under \cref{prop:model_block_invariance}.
+
+\paragraph{The ladder is a band-pass decomposition.}
+\label{sec:model_bands}
+
+Summing over the children of a block is a low-pass filter, so
+\cref{prop:model_block_invariance} has a spectral reading. Let \(n_k\) be the
+number of finest slots in one scale-\(k\) epoch. A signal supported on
+frequencies above \(1/n_{k+1}\) has zero average on every scale-\(k+1\) block
+and is therefore pure detail at scale \(k\); a signal supported below
+\(1/n_k\) is constant across each scale-\(k\) block and is pure shadow there.
+The detail at scale \(k\) is the band
+\begin{align}
+ \mathcal B_k=\Bigl[\tfrac{1}{n_{k+1}},\ \tfrac{1}{n_k}\Bigr),
+ \qquad
+ \bigoplus_{k=1}^{K}\mathcal B_k=\text{the whole spectrum},
+ \label{eq:model_bands}
+\end{align}
+so the resolutions partition frequency, and each one estimates the part of the
+signal that lives in its own band. Two bases realize this, and the structure decides
+which one applies.
+
+\emph{Periodic structure takes a Fourier basis.} A calendar effect of period
+\(P\) enters as a few harmonics,
+\begin{align}
+ \gamma_{P}(t)=\sum_{h=1}^{H}\Bigl[a_h\cos\tfrac{2\pi ht}{P}+b_h\sin\tfrac{2\pi ht}{P}\Bigr],
+ \label{eq:model_harmonic}
+\end{align}
+which costs \(2H\) parameters where a free profile costs \(P-1\), and which is
+smooth by construction. Harmonic \(h\) has frequency \(h/P\) and is therefore
+identified at the unique scale whose band contains it. \Cref{eq:model_harmonic}
+with \(H\) at its maximum recovers the free profile exactly, so the harmonic
+order is a smoothness dial and not a modelling commitment. This matters most
+where epochs are few: a week-scale effect estimated from nine epochs per
+participant cannot afford a free profile and can afford two harmonics.
+
+\emph{Localized structure takes a Haar basis.} A level shift is not periodic,
+and a Fourier expansion represents it badly. In the block decomposition of
+\cref{eq:model_block_split} the detail coefficients are Haar coefficients on
+the block tree, and a level shift at scale \(k\) is exactly a large one,
+\begin{align}
+ \delta_t^{(k)}=\bigl\langle\eta^{(k)},\psi_t^{(k)}\bigr\rangle,
+ \qquad
+ \psi_t^{(k)}\in\mathcal V_{\pi_k(t)}^{(k)} .
+ \label{eq:model_haar}
+\end{align}
+So a changepoint has a home scale in the same sense a calendar node does: a
+shift that persists longer than one scale-\(k\) block appears as shadow there
+and as detail above, and one that decays inside a block appears as detail
+there and is invisible above. The latent regimen \(S^{(k)}\) is the
+probabilistic version of the same object, with the switch times its
+changepoints, and reading them off the posterior at each scale returns the
+shifts the ladder can resolve.
+
+\paragraph{Calendar quantities are nodes, and each has a home scale.}
+\label{sec:model_calendar}
+
+Hour of day, weekday, day index and week index are vertices of
+\(\mathcal G\). Each is a known function of the clock
+and has no parents, so an edge from one into a label may carry lag zero without
+threatening acyclicity, and the conditional
+\(P_{\mathrm{day}}(\text{walk}\mid\text{weekday}=0)\) becomes a table the model
+reports. Whether such a node earns its place is decided by the same price as
+any other candidate.
+
+\Cref{prop:model_block_invariance} says where each can be earned. A calendar
+node \(A\) is a deterministic function of the epoch, so it enters \(\Psi_k\)
+only through \((I-\Pi_k)A\); it is therefore identified at scale \(k\) exactly
+when it varies inside a scale-\(k\) parent block, and contributes nothing at any
+coarser scale where it does not.
+
+\begin{corollary}[Home scale of a calendar node]
+\label{cor:model_calendar_home}
+Let \(A\) have period \(P_A\) in finest slots and let \(n_k\) be the number of
+finest slots in one scale-\(k\) epoch. Then \(A\) is identified at scale \(k\)
+if and only if \(n_{k+1}>P_A\) is false and \(n_k<P_A\); equivalently, its home
+scale is the finest \(k\) whose parent epoch spans at least one full period of
+\(A\).
+\end{corollary}
+
+So hour of day is identified where a day is the parent, weekday where a week is
+the parent, and a trend index wherever the horizon is the parent. Placing a
+calendar node above its home scale buys nothing, and the price it would pay
+there is wasted. This turns a modelling convention into a consequence of the
+kernel.
+
+For a typed relation \(r\), let \(z_{r,k}\) indicate that some lag is active.
+Adjacent structures and standardized active effects evolve according to
+\begin{align}
+ \Pr(z_{r,k}=1\mid z_{r,k+1}=1)&=\pi_{r,k}^{\mathrm{keep}},
+ &\Pr(z_{r,k}=1\mid z_{r,k+1}=0)&=\pi_{r,k}^{\mathrm{appear}},
+ \label{eq:model_scale_coupling}\\
+ \Pi_k\alpha_{r,k}\mid\alpha_{r,k+1}
+ &\sim\mathcal N(\mathcal B_{k+1\to k}(\alpha_{r,k+1}),\tau_{r,k}^2I),
+ &(I-\Pi_k)\alpha_{r,k}
+ &\sim\mathcal N(0,\tau_{r,k,\perp}^2I).
+ \label{eq:model_parameter_evolution}
+\end{align}
+The tie is on the block-constant component alone, because by
+\cref{prop:model_block_invariance} that is the component the parent scale
+identifies and the child scale does not. The within-block component has no
+parent counterpart and carries its own prior.
+
+The broadcast \(\mathcal B_{k+1\to k}\) is the adjoint of block averaging,
+rescaled to the child's feature units,
+\begin{align}
+ \bigl(\mathcal B_{k+1\to k}\alpha\bigr)_{t}
+ &=\frac{\operatorname{sd}(F_{r,k})}{\operatorname{sd}(F_{r,k+1})}\,
+ \alpha_{\pi_k(t)}\,\frac{d_{k+1}}{d_k},
+ \qquad
+ \mathcal B_{k+1\to k}=\Pi_k\mathcal B_{k+1\to k},
+ \label{eq:model_broadcast}
+\end{align}
+where \(d_k\) is the lag at which \(r\) is active at scale \(k\), so the ratio
+\(d_{k+1}/d_k\) converts a parent-scale lag into the child's clock. Relations
+and lag sets may change by resolution; when \(z_{r,k+1}=0\) the first line of
+\cref{eq:model_parameter_evolution} is dropped and \(\alpha_{r,k}\) carries the
+second prior alone. A Bernoulli gate on the tie, with a Beta-conjugate update
+for \(\pi_{r,k}^{\mathrm{keep}}\) and \(\pi_{r,k}^{\mathrm{appear}}\), lets an
+abrupt resolution change escape the coupling; \(\tau_{r,k}\) and the gate are
+estimated, and \cref{sec:learning} gives their updates.
+
+\paragraph{One price per relation.}
+
+Scale, lag, quantity pairing and basis are alternative representations of one
+scientific relation, and pricing each separately makes a simple relation
+compete against its own alternatives. Let \(r=(a,b)\) be an ordered label pair
+and let \(g\in\mathcal R(r)\) index a representation of it. The structural
+penalty in \cref{eq:model_elbo} is nested,
+\begin{align}
+ \sum_k\lambda_k|\mathcal E^{(k)}|
+ \;\longrightarrow\;
+ \sum_k\Bigl[
+ \lambda_k^{\mathrm{rel}}\sum_r z_{r,k}
+ +\lambda_k^{\mathrm{rep}}\sum_r z_{r,k}\bigl(|\mathcal R_k(r)|-1\bigr)
+ \Bigr],
+ \qquad
+ \lambda_k^{\mathrm{rel}}\gg\lambda_k^{\mathrm{rep}},
+ \label{eq:model_group_price}
+\end{align}
+so a relation is bought once and its further representations are cheap
+refinements. The search of \cref{sec:learning} accordingly proposes relations
+and reads the lag, quantity and basis out inside the accepted group. Self-lags
+\(r=(a,a)\) are a declared part of the construction, exempt from
+\(\lambda^{\mathrm{rel}}\) and reported in their own stratum, so a label's own
+autocorrelation cannot outbid a cross-label relation for a slot under the
+in-degree bound.
+
+Because \(\lambda_k^{\mathrm{rel}}\) prices one purchase out of \(C_k\)
+candidate relations, it carries the search's own multiplicity. Under a
+marginal-uniform prior on the active set the \(j\)-th accepted relation is
+priced at
+\begin{align}
+ \lambda_k^{\mathrm{eff}}(j)
+ &=\lambda_k^{\mathrm{rel}}+\log\frac{C_k-j+1}{j},
+ \label{eq:model_multiplicity_price}
+\end{align}
+which is what makes a per-scale edge count comparable across resolutions whose
+candidate fields differ in size.
+
+\paragraph{Bidirectional structural EM.}
+
+For a structured posterior \(q(U^{(1:K)})\), learning maximizes the penalized
+evidence lower bound. An interior scale receives evidence from its own factor
+and the factor through which it generates its children,
+\begin{align}
+ \mathcal J(q,\Theta,\mathcal G)
+ &=\mathbb E_q[\log p(Z,U,\mathcal G,\Theta\mid C)]
+   +\mathbb H[q]
+   -\sum_{k=1}^K\lambda_k|\mathcal E^{(k)}|
+   -\lambda_\Theta\Omega(\Theta),
+ \label{eq:model_elbo}\\
+ \log q_k^*(U^{(k)})
+ &=\mathbb E_{q_{-k}}[\log\Psi_k+\log\Psi_{k-1}]+\mathrm{constant}.
+ \label{eq:model_bidirectional_update}
+\end{align}
+Fine-to-coarse and coarse-to-fine messages therefore precede the three
+structural EM coordinates \citep{friedman1998learning},
+\begin{align}
+ q^+&=\arg\max_q\mathcal J(q,\Theta,\mathcal G),
+ \label{eq:model_em_steps}\\
+ (\Theta^{(k)})^+
+ &=\arg\max_{\Theta^{(k)}}\left\{
+ \mathbb E_{q^+}[\log\Psi_k]+\Lambda_k(\Theta^{(k)})
+ -\lambda_\Theta\Omega_k(\Theta^{(k)})\right\},
+ \label{eq:model_parameter_step}\\
+ \mathcal P_{k,b}^+
+ &=\arg\max_{\substack{P\subseteq\mathcal C_{k,b}\\|P|\leq D_k}}
+ \left\{\max_{\beta_P}\mathbb E_{q^+}[\log\Psi_{k,b}(P,\beta_P)]
+ +\Gamma_k(P)-\lambda_k|P|\right\}.
+ \label{eq:model_structure_step}
+\end{align}
+These are respectively the E-step, M-step, and S-step. Here
+\(\Lambda_k(\Theta^{(k)})=\log p(\Theta^{(k)}\mid
+\Theta^{(k-1)},\Theta^{(k+1)})\) couples adjacent parameter blocks, and
+\(\Gamma_k(P)\) is the adjacent-graph log prior, with unavailable neighbors
+omitted at the boundary scales. The S-step profiles edge
+coefficients inside each normalized local likelihood. Search may be
+greedy or exhaustive under the in-degree bound \(D_k\). Each accepted edge is
+checked against shifted versions of its source. Regime count, factor dimension,
+and penalty are selected by held-out evidence. A sweep is retained only when
+its monitored penalized evidence improves; otherwise the best state is
+restored with a smaller M-step learning rate. Cells within one allocation
+block share a normalizer and active set, so their exact updates remain
+dependent. Participants and conditionally independent blocks can run in
+parallel.
+
+Regime permutations, factor-basis changes, and block-constant score shifts
+form observational equivalence classes. Parameter recovery is therefore
+reported on invariant contrasts and aligned latent states. Missing values are
+marginalized within the same fibers. Fitting returns a graph and conditional
+parameters at every resolution. Simulation returns one event log whose
+projected counts and durations reproduce all generated coarser views.
+
+\paragraph{A population of logs.}
+\label{sec:model_participants}
+
+A study observes \(n\) participants, and days inside one participant are
+repeated measures. Index participants by \(i\) and let the graph
+\(\mathcal G\) and the fixed effects be shared while the level of each
+predictor varies,
+\begin{align}
+ \eta_{i,t,b,q}^{(k)}
+ &=f_{k,b,q}\bigl(\mathcal P_{k,b,q}(t),U_{i,t}^{(k)},C_t^{(k)};\Theta^{(k)}\bigr)
+ +\bigl(B_i^{(k)}\bigr)_{b,q},
+ &B_i^{(k)}&\sim\mathcal N\bigl(0,\Sigma_B^{(k)}\bigr).
+ \label{eq:model_participant}
+\end{align}
+Latent paths are participant-specific; \(\Theta^{(k)}\) and
+\(\mathcal G^{(k)}\) are not. Two things follow. A relation shared across
+participants borrows strength, which is what makes a per-scale graph estimable
+from horizons that are short in epochs. And a label present for some
+participants and absent for others cannot enter another label's score through
+participant identity, because \(B_i^{(k)}\) absorbs the level that identity
+would otherwise supply. Lag histories never cross a participant boundary, and
+an epoch whose lagged predictors fall outside the observed interval has its
+emission factor masked while the epoch itself is retained, so the sums of
+\cref{prop:model_reconciliation} stay intact.
+
+\paragraph{Forecasting.}
+\label{sec:model_forecast}
+
+Let \(\mathcal H_T\) be the history through epoch \(T\) at every resolution.
+The \(h\)-step predictive distribution is generated by the same factorization,
+run forward at the coarsest scale and downward through the child kernels,
+\begin{align}
+ p\bigl(Z^{(1:K)}_{T+1:T+h}\mid\mathcal H_T,C\bigr)
+ &=\int\Bigl[\prod_{s=1}^{h}
+ E_K\bigl(\boldsymbol\eta^{(K)}_{T+s}\bigr)
+ \prod_{k=K-1}^{1}
+ W_k\bigl(\boldsymbol\eta^{(k)}_{T+s},Z^{(k+1)}_{T+s}\bigr)\Bigr]
+ \,dq\bigl(U^{(1:K)}_{T+1:T+h}\mid\mathcal H_T\bigr).
+ \label{eq:model_forecast}
+\end{align}
+Latent states are filtered to the origin and propagated by \(R_k\); no
+observation after \(T\) is read. Ancestral sampling draws each path by
+unrolling \(E_K\) and then descending the chain, and lagged predictors are
+replaced by the path's own earlier draws.
+
+\begin{corollary}[Coherent forecasts]
+\label{cor:model_coherent_forecast}
+Every draw from \cref{eq:model_forecast} satisfies
+\(\mathcal A_kZ^{(k)}_{T+s}=Z^{(k+1)}_{T+s}\) for all \(k\) and
+\(s\leq h\). The predictive distribution is therefore supported on the coherent
+set, and its per-resolution marginals require no reconciliation.
+\end{corollary}
+
+\begin{proof}
+Immediate from \cref{prop:model_reconciliation}, whose argument uses only the
+support of \(K_k\) and holds for any conditioning set.
+\end{proof}
+
+\Cref{cor:model_coherent_forecast} places the model with the methods that
+obtain coherence by construction \citep{pennings2017integrated,
+rangapuram2021hiere2e,das_topdown2023}, in contrast with the reconciliation
+projections that map incoherent base forecasts onto the coherent subspace
+\citep{hyndman2011optimal,wickramasuriya2019mint}. Two properties separate it
+inside that family. The support is the integer lattice intersected with the
+coherent set, so counts and durations stay whole and the zero atom is
+preserved; and the conditional law at each resolution is indexed by a graph
+\(\mathcal G^{(k)}\) that is learned, so the forecast carries a per-resolution
+structural account alongside its predictive distribution.

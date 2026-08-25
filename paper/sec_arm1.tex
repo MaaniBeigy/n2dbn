@@ -1,0 +1,380 @@
+\subsection{An observed log with no ground truth}
+\label{sec:results:arm1}
+
+The three preceding groups of tables score recovery against a truth the
+generator wrote or a manifest a benchmark declared. This subsection reports the
+one arm with neither. The log is LifeSnaps
+(\texttt{data/observed\_lifesnaps\_event\_log.csv}), a wearable and
+self-report study whose participants enter on their own dates. The panel is
+each participant's first eight complete calendar weeks measured from that
+participant's own first Monday, which all $51$ of the kept cohort clear, with a
+mean observed share of $0.985$ and a minimum of $0.88$. Six behavior labels are
+targets, nine columns are exogenous, and the four scales carry $80\,640$,
+$1344$, $56$ and $8$ epochs. Three survey columns collapse to one node, since
+\texttt{notification\_read} equals the sum of the two survey columns on
+$0.971$ of participant-days and no within-group edge is expressible after the
+collapse. No claim below is causal. What is claimed is that a graph priced on
+this log reaches every scale, that the log drawn back out of the fitted model
+reproduces the panel's marginal rates and its coarse-scale non-stationarity,
+and that the empty graph does not.
+
+Two stored runs carry the arm. The fit run
+(\texttt{results/exp15/exp15\_results.json}) searches one graph over the panel
+and grades it on a falsification ladder. The round-trip run
+(\texttt{results/exp16/exp16\_results.json}) refits the same search, draws five
+synthetic logs per leg from the fitted model, writes them in the raw event
+schema, reads them back through the same panel reader and compares them with
+the panel on an enumerated grid of non-stationarity forms. The two runs accept
+the same $23$ edges, edge for edge, so the logs are drawn from the graph the
+ladder grades.
+
+\paragraph{Both directions of the pass are used.}
+\Cref{prop:model_block_invariance} splits every per-scale parameter block into
+the component a scale identifies and the component it cannot, and the two
+directions of the learning pass carry one component each. A search that only
+ever bought at one scale would leave that split untested on real data.
+Table~\ref{tab:results:arm1_scales} reports where the $23$ accepted edges sit.
+
+\begin{table}[t]
+\centering
+\caption{The accepted graph by scale and by source, on $180$ priced
+candidates at an accepted price of $21.31$ nats against a permutation null
+whose median is $0.51$ and whose maximum is $1604.0$. A self edge reads a
+label's own past; an exogenous edge reads a calendar column or the scheduled
+notification; a cross-label edge reads a different behavior label. The price
+strata are self against everything else, so the first two columns together are
+the $12$ the run reports as cross. Source
+\texttt{results/exp15/exp15\_results.json}.}
+\label{tab:results:arm1_scales}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Scale & Exogenous & Self & Cross-label & Total \\
+\midrule
+$k=1$, minute & $0$ & $0$ & $0$ & $0$ \\
+$k=2$, hour   & $12$ & $4$ & $0$ & $16$ \\
+$k=3$, day    & $0$ & $4$ & $0$ & $4$ \\
+$k=4$, week   & $0$ & $3$ & $0$ & $3$ \\
+\midrule
+All           & $12$ & $11$ & $0$ & $23$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The search reaches three of the four scales and the split between them is
+clean. Every exogenous relation is bought at the hour scale and every edge
+bought at the day and week scales reads a label's own past. That is the pattern
+the block decomposition predicts. A calendar node is a deterministic function of
+the epoch, so by \cref{cor:model_calendar_home} it is identified only where it
+varies inside a parent block, and the hour-of-day harmonics have their home
+scale where a day is the parent. The scheduled notification is exogenous for a
+different reason, that the study delivers it on a schedule the participant does
+not set so no behavior precedes it, and it enters at the hour scale because that
+is where it varies inside a parent block. What the day and week scales carry
+is persistence, which is the component the fine-to-coarse direction supplies and
+which a fit at the hour scale alone cannot express. So the two directions of the
+pass each buy something on this log, and neither buys what the other does.
+
+The third column of Table~\ref{tab:results:arm1_scales} is the result the
+section is least able to soften. \textbf{No edge between two distinct behavior
+labels is bought at any scale.} The candidate space carries them and the price
+does not exclude them, and none survives the search. The declared anchor set
+cannot adjudicate this,
+because every positive it declares is the scheduled notification into the survey
+node, which is exogenous into a target and not a relation between two behaviors.
+Two readings are available and this panel does not separate them. Eight weeks of
+$51$ participants may not price a between-label relation above a null whose
+maximum is $1604$ nats when the same variance is available from the clock and
+from the label's own past, which is where
+\cref{sec:results:comparison} shows a latent-free criterion spending its budget.
+Or these six labels are conditionally independent given the clock, the
+participant level and their own histories, which is a substantive claim about
+this cohort and one this arm has no instrument for. The section reports the
+count and declines to choose.
+
+The finest scale is expressible and priced and this log does not buy it. A
+lag-one self column at the minute scale is identically zero on every scorable
+row for four of the six labels, because the risk set excludes exactly the slots
+where it would be one, and it is nonzero on $10$ rows of $3\,492\,956$ for a
+fifth. Those columns are refused at pool construction on their measured
+information, so the price is read on the pool the search actually walks.
+A read of one label by another inside the same epoch is admitted at the finest
+scale, where one epoch is one slot, and none is bought at $51$ participants,
+which repeats what a smaller panel showed. Every lag-zero edge in the tables
+above has a calendar source, which is a deterministic function of the epoch and
+is never drawn. A same-epoch association is symmetric in its two orientations, so the
+target order alone decides which way such an edge is written, and any claim
+about direction has to come from outside this fit.
+
+\paragraph{The falsification ladder.}
+With no truth to score against, the graph is graded by what it declines to
+select. Table~\ref{tab:results:arm1_rungs} reports the rungs, each with its own
+denominator printed, since a rate on six is not a performance number.
+
+\begin{table}[t]
+\centering
+\caption{The falsification rungs of the fit run. R1 and R2 are gates the graph
+must not trip; R3 and R9 are read as counts. The declared anchor set is frozen
+and hashed before the first scoring run. Source
+\texttt{results/exp15/exp15\_results.json}.}
+\label{tab:results:arm1_rungs}
+\small
+\begin{tabular}{llrl}
+\toprule
+Rung & What it counts & Value & Reading \\
+\midrule
+R1 & Declared protocol negatives selected & $0/6$ & gate held \\
+R2 & Sham-label candidates selected & $1/362$ & $0.003$ false positive rate \\
+R3 & Declared positives recovered & $2/6$ & $2$ of the $3$ at the hour scale \\
+R9 & Edges reselected on $\ge 0.75$ of $16$ half-panels & $8/23$ & bound of $0.66$ on false ones \\
+R7 & Invariant parent subsets for \texttt{gym} at the hour scale & $0/1$ & model rejected \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+R1 holds. Of the $78$ declared protocol negatives, $72$ are structural, because
+the scheduled label is an exogenous source and the axis cannot express an edge
+into it, so the rung stands on the remaining six and none is selected. R2 is
+the informative gate. A sham label is connected to nothing by construction and
+one of its $362$ candidates is bought, a false positive rate of $0.003$ inside
+the behavioral block. R3 recovers two of the six declared positives. Three of the
+six are declared at the minute scale and three at the hour scale, at lags one to
+three, and the two recovered are the hour-scale lags one and two; the run also
+buys the hour-scale lag zero, which the protocol does not declare. On six the
+binomial standard error at one half is $0.204$, so R3 is a gate with its
+denominator printed and never a performance number.
+
+R9 is what separates the receipt table from the accepted set. Refitting on
+$16$ complementary half-panels, eight of the $23$ edges are reselected on at
+least three quarters of them, where the complementary-pairs bound puts at most
+$0.66$ low-probability candidates above that threshold. The three
+edges with the largest standardized effects in the fit sit among the five with
+the lowest reselection rates. Two lag-two self edges into \texttt{nap} at the
+hour scale carry standardized effects of $19.2$ and $-145.0$ and are reselected
+on one of $16$ half-panels each; their columns clear the support floor and do
+not carry enough information to determine what they are given. A coefficient of that size
+is a report that its column is nearly empty, and the stability rung is what
+removes it. R7 rejects the model for \texttt{gym}. That target carries one
+accepted parent at the hour scale, and no subset of it leaves a residual
+distribution invariant across participant waves, so the intersection the rung
+reports is empty. On one column the rung is a weak test and it is reported with
+its width printed.
+
+\paragraph{A calendar node above its home scale buys nothing.}
+\Cref{cor:model_calendar_home} is a statement about the kernel and it has a
+direct empirical test. Table~\ref{tab:results:arm1_calendar} runs the search
+three times on the same panel, with the calendar nodes withheld, offered at
+their home scale, and offered at every scale.
+
+\begin{table}[t]
+\centering
+\caption{The calendar-node ablation, three pre-declared arms on one panel.
+The objective is the penalized log-likelihood the search maximizes, so a
+larger value is better. Source \texttt{results/exp15/exp15\_results.json}.}
+\label{tab:results:arm1_calendar}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Calendar nodes & Candidates & Edges & Objective & vs.\ home \\
+\midrule
+Withheld          & $172$ & $21$ & $-62\,217.47$ & $-2295.64$ \\
+At their home scale & $180$ & $23$ & $\mathbf{-59\,921.83}$ & $0.00$ \\
+At every scale    & $204$ & $25$ & $-59\,955.73$ & $-33.90$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Offering the calendar nodes at their home scale is worth $2295.64$ nats over
+withholding them. Offering them at every scale costs $33.90$ nats against
+offering them at their home scale, while buying two more edges. Both halves of
+the corollary hold on this log: the nodes are worth their price where they are
+identified, and the price paid above their home scale is wasted. The corollary
+turns what is usually a modeling convention into a consequence of the kernel,
+and this is the measurement that says the convention is the right one.
+
+\paragraph{The drawn log reproduces the panel's marginal rates.}
+The round trip refits the search, draws from the fitted model over the same
+roster, mask and window, writes raw events and reads them back. Reconciliation
+between counts and durations at adjacent scales is exactly $0$ on every leg and
+every replicate, as it is on the synthetic grid, and every drawn log reads back
+onto the same $51$ participants and the same observed slots it was drawn over.
+Table~\ref{tab:results:arm1_volume} reports the quantity the grid does not
+read. Every marginal form of the grid but one divides by the series mean, and
+the one exception reads the share of empty epochs, so a leg drawing a label at
+half its real rate can still pass every cell it is tested at.
+
+\begin{table}[t]
+\centering
+\caption{Episode counts on the real panel against the mean over five drawn
+replicates, restricted to the same observation mask. The drawn column is the
+fitted leg; the last three columns are the drawn-to-real ratio on the fitted
+leg, on the leg with the calendar nodes withheld, and on the empty graph. The
+summary row is the mean absolute log ratio over the four labels the panel
+supports well, which is symmetric in the direction of a miss. Source
+\texttt{results/exp16/exp16\_results.json}.}
+\label{tab:results:arm1_volume}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+ & & & \multicolumn{3}{c}{Drawn-to-real ratio} \\
+\cmidrule(lr){4-6}
+Label & Real & Drawn & Fitted & No calendar & Empty \\
+\midrule
+\texttt{gym} & $506$ & $498.6$ & $0.99$ & $1.00$ & $1.14$ \\
+\texttt{nap} & $214$ & $218.4$ & $1.02$ & $1.12$ & $1.24$ \\
+\texttt{sleep} & $1841$ & $1919.2$ & $1.04$ & $1.08$ & $1.12$ \\
+\texttt{walk} & $1243$ & $1321.0$ & $1.06$ & $0.95$ & $1.10$ \\
+\texttt{mindfulness} & $68$ & $132.2$ & $1.94$ & $1.80$ & $1.18$ \\
+\texttt{survey\_response} & $10\,162$ & $5418.4$ & $0.53$ & $0.57$ & $0.56$ \\
+\midrule
+Mean $|\log$ ratio$|$, top four & & & $\mathbf{0.034}$ & $0.061$ & $0.137$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Four of the six labels land within $6$ percent of their real volume. The two
+that do not are the two the panel supports least well, for different reasons.
+\texttt{mindfulness} occurs $68$ times over $2688$ observed participant-days,
+which is one episode per $40$ days, and the draw doubles it. The
+\texttt{survey\_response} node carries $72$ percent of the panel's behavioral
+episodes and $98.9$ percent of them are zero-duration, so it is a count-only
+label whose duration block is uninformative, and the draw reaches $53$ percent
+of its rate. Both misses are reported as they stand.
+
+Read as one number, the mean absolute log of the drawn-to-real ratio, which
+charges a miss the same in either direction, the volumes are where the graph
+separates from the empty one. Over the four well-supported labels the fitted
+leg sits at $0.034$, withholding the calendar nodes at $0.061$ and the empty
+graph at $0.137$, so the graph is four times closer to the panel than an
+intercept and a participant level, and the calendar nodes are half of that
+gain. Over all six labels the three legs are $0.239$, $0.232$ and $0.216$, and
+the ordering reverses, because the empty graph does not overshoot the label it
+has no information about. The two readings are reported together because the
+second is the reason for stating which labels the first is read over.
+
+The remaining departure is the share of days left empty. The real panel leaves
+$456$ of its $2688$ observed days with no behavioral episode, $17.0$ percent;
+the fitted leg leaves $142.8$ per replicate, $5.3$ percent, the no-calendar leg
+$133.6$ and the empty graph $89.8$. The ordering is the same one the volumes
+give, and no row of the grid reads this quantity.
+
+\paragraph{Non-stationarity is preserved at the coarse scales.}
+The comparison is an enumerated grid of $21$ forms over six labels and three
+calendar scales, $228$ cells, each an equivalence test at its own declared
+tolerance with the participant as the sampling unit. A cell is put to a test
+only when the real panel supports one, and $182$ of the $228$ are descriptive
+for a declared reason, $127$ of them because the tolerance is inside the
+precision the panel can resolve. Table~\ref{tab:results:arm1_grid} reports the
+four legs.
+
+\begin{table}[t]
+\centering
+\caption{The non-stationarity grid, four legs of five replicates each. The
+fitted leg carries the searched graph and an hour-scale regime chain; the
+no-regime leg is the same search with the chain given one state; the
+no-calendar leg is the same search with the clock nodes withheld; the empty
+leg carries an intercept and a participant level. Source
+\texttt{results/exp16/exp16\_results.json}.}
+\label{tab:results:arm1_grid}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Leg & Edges & Tested cells & Failing cells & Failing rows \\
+\midrule
+Fitted        & $23$ & $46$ & $12$ & $5$ \\
+No regime     & $23$ & $46$ & $13$ & $6$ \\
+No calendar   & $21$ & $46$ & $12$ & $5$ \\
+Empty graph   & $0$  & $46$ & $14$ & $6$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The panel fails the empty graph, which is the control that says it can fail at
+all. It also fails the fitted leg, since the verdict is a conjunction over every
+tested cell and twelve of the $46$ do not pass.
+
+The row-level reading is the informative one and it needs the positive control
+first. Grading one drawn replicate of the fitted leg against the other four,
+which nothing separates, five of the $11$ tested rows fail: the
+seasonality-amplitude drift, the dispersion, the factor share, the same-epoch
+dependence drift and the lagged dependence drift. A row that fails its own
+replicate noise has a tolerance narrower than the spread of the draw, so the
+fitted leg failing that same row says nothing about the fit. Six rows carry
+evidence once those five are removed, and \textbf{the fitted leg passes four of
+them}: the normalized trend, the unit-root pair, the share of Haar detail energy
+the coarsest level holds, and the windowed maximum mean discrepancy. It fails
+the within-day harmonic profile and the drift in persistence.
+
+The same reading bounds what the comparison against the empty graph can carry.
+The fitted leg fails two cells fewer of $46$, and the one row that separates
+them is the drift in same-epoch dependence, which is one of the five that fail
+their own noise. \textbf{On the six rows that carry evidence the two legs are
+identical}, passing the same four and failing the same two. So this grid, on
+this roster, does not separate a fitted graph from an intercept and a
+participant level, and the quantity that does is the volume comparison above,
+which the grid does not read.
+
+Table~\ref{tab:results:arm1_cuts} reads the same question as a segmentation.
+Both logs are cut independently at their own changepoints under a Poisson cost
+and the two cut sets are compared.
+
+\begin{table}[t]
+\centering
+\caption{Changepoint agreement between the real panel and the first drawn
+replicate of the fitted leg, per label and per scale, under a Poisson cost.
+Each participant's two series are cut independently and matched, and both
+columns are means over the $51$ participants. $F_1$ is scored inside a margin
+of three epochs; annotation error is the absolute difference in the number of
+cuts. Source \texttt{results/exp16/exp16\_results.json}.}
+\label{tab:results:arm1_cuts}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{2}{c}{Week} & \multicolumn{2}{c}{Day} & \multicolumn{2}{c}{Hour} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Label & $F_1$ & Ann.\ err. & $F_1$ & Ann.\ err. & $F_1$ & Ann.\ err. \\
+\midrule
+\texttt{gym}             & $0.961$ & $0.06$ & $0.784$ & $0.29$ & $0.765$ & $0.41$ \\
+\texttt{mindfulness}     & $0.954$ & $0.06$ & $0.915$ & $0.10$ & $0.890$ & $0.16$ \\
+\texttt{nap}             & $0.961$ & $0.04$ & $0.922$ & $0.08$ & $0.902$ & $0.12$ \\
+\texttt{sleep}           & $0.784$ & $0.24$ & $0.667$ & $0.41$ & $0.627$ & $0.51$ \\
+\texttt{walk}            & $0.706$ & $0.29$ & $0.588$ & $0.49$ & $0.471$ & $0.76$ \\
+\texttt{survey\_response} & $0.601$ & $0.53$ & $0.355$ & $1.41$ & $0.054$ & $6.27$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Agreement is highest at the week scale and falls monotonically toward the hour
+scale for all six labels. At the week scale five of the six reach $F_1$ above
+$0.70$, three of them above $0.95$, and those five miss the panel's cut count by
+under a third of a cut. At the hour scale three labels hold above $0.75$ and
+\texttt{survey\_response} collapses to $0.054$ at an annotation error of $6.27$
+cuts. So the departure grows toward the fine scale for every label, and it is
+larger by an order of magnitude for the one whose duration block carries
+nothing. That agrees with the grid, whose two evidence-bearing failures are the
+within-day harmonic profile and the drift in persistence.
+
+Between-participant dispersion is read as the coefficient of quartile
+variation over weekly totals, with a percentile bootstrap over participants.
+Three of the six labels are comparable, \texttt{nap} at $0.333$ against
+$0.333$, \texttt{walk} at $0.385$ against $0.385$ and \texttt{survey\_response}
+at $0.121$ against $0.243$ on overlapping intervals. \texttt{sleep} separates
+by $0.021$. \texttt{gym} has overlapping intervals and is called incomparable
+because the two panels define the measure for shares of the roster $0.388$
+apart. \texttt{mindfulness} is refused: every participant defining a value for
+it is pinned at $1.0$ by a zero lower quartile, so the label carries no
+dispersion to compare.
+
+\paragraph{What the controls establish and what they do not.}
+Four negative controls are declared against the grid. The no-regime control
+does its job, breaking every row it is declared against with nothing spurious.
+The other three do not. Withholding the calendar nodes leaves the
+seasonality-amplitude drift unbroken; shuffling labels across the cross-section
+leaves the same-epoch dependence drift unbroken; and a within-participant time
+shuffle, which has to break every marginal row, leaves five of them unbroken
+and eight untested. A control that fails to break a row it was declared against
+says the grid cannot reach that row on this roster, and the honest reading is
+that $46$ tested cells of $228$ is the sensitivity this panel supports. That
+bound, and not the fitted model, is what the three failing controls measure.
+It is also why the row-level reading above is reported net of the positive
+control and why the volume table is reported at all.

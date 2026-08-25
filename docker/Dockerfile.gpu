@@ -1,0 +1,49 @@
+# GPU image: the CPU image plus a CUDA build of torch, which the DYNOTEARS
+# solver and any other dense-linear-algebra learner can run on.
+# The CUDA runtime here is 12.8, so the host driver has to be 12.8 or newer.
+FROM nvidia/cuda:12.8.1-runtime-ubuntu24.04 AS base
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=0 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/workspace
+
+ENV OMP_NUM_THREADS=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    NUMEXPR_NUM_THREADS=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        graphviz \
+        python3.12 \
+        python3.12-dev \
+        python3.12-venv \
+        python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ubuntu 24.04 marks its system interpreter as externally managed, so the
+# project lives in its own virtual environment rather than in site-packages.
+RUN python3.12 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:${PATH}"
+
+WORKDIR /workspace
+
+COPY requirements.txt requirements-dev.txt requirements-gpu.txt ./
+# The CUDA wheel first, so the `torch` line of requirements-dev.txt is already
+# satisfied and pip never replaces it with the default build.
+RUN python -m pip install --upgrade pip \
+    && python -m pip install --index-url https://download.pytorch.org/whl/cu128 \
+        -r requirements-gpu.txt \
+    && python -m pip install -r requirements.txt -r requirements-dev.txt
+
+COPY . .
+
+# Stamp the image with a digest of the source it was built from, so a run can
+# say whether it executed this code or something mounted over it.
+ARG GIT_REV=unknown
+RUN python -m src.utils.provenance --write --git-rev "$GIT_REV"
+
+CMD ["python", "-m", "src.utils.resources"]

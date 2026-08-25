@@ -1,0 +1,404 @@
+{
+  "n_subjects": 30,
+  "roster": [
+    "diligent_anxious_active_0000",
+    "diligent_anxious_active_0001",
+    "diligent_anxious_active_0002",
+    "diligent_anxious_active_0003",
+    "diligent_anxious_active_0004",
+    "diligent_anxious_active_0005",
+    "diligent_anxious_active_0006",
+    "diligent_anxious_active_0007",
+    "diligent_anxious_active_0008",
+    "diligent_anxious_active_0009",
+    "free_spirited_social_student_0000",
+    "free_spirited_social_student_0001",
+    "free_spirited_social_student_0002",
+    "free_spirited_social_student_0003",
+    "free_spirited_social_student_0004",
+    "free_spirited_social_student_0005",
+    "free_spirited_social_student_0006",
+    "free_spirited_social_student_0007",
+    "free_spirited_social_student_0008",
+    "free_spirited_social_student_0009",
+    "unemployed_family_caregiver_0000",
+    "unemployed_family_caregiver_0001",
+    "unemployed_family_caregiver_0002",
+    "unemployed_family_caregiver_0003",
+    "unemployed_family_caregiver_0004",
+    "unemployed_family_caregiver_0005",
+    "unemployed_family_caregiver_0006",
+    "unemployed_family_caregiver_0007",
+    "unemployed_family_caregiver_0008",
+    "unemployed_family_caregiver_0009"
+  ],
+  "weeks": 12,
+  "basis_bins": 4,
+  "n_candidates": 1248,
+  "n_relations": 480,
+  "price_quantile": 0.999198717948718,
+  "price": 1.0191694853667872,
+  "price_quantile_log_only": 0.9979166666666667,
+  "price_log_only": 0.5151394677151467,
+  "null_draws": 74880,
+  "null_median": 0.0004056880276543105,
+  "null_max": 9.635204191966745,
+  "cleared": 0.0008012820512820513,
+  "rules": [
+    {
+      "rule": "meeting|journaling|1d",
+      "scale": 3,
+      "scorable": false,
+      "why": "the rule drives a duration and the fit forms a design for the count"
+    },
+    {
+      "rule": "office_work|sleep|1d",
+      "scale": 3,
+      "scorable": false,
+      "why": "the rule drives a duration and the fit forms a design for the count"
+    },
+    {
+      "rule": "running|yoga|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 1,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 0.04477094622099637,
+          "rank": 38
+        }
+      ],
+      "log_gain_before": 0.04477094622099637,
+      "log_rank_before": 29,
+      "log_rank_after": 38,
+      "best_term": "log",
+      "best_gain": 0.04477094622099637,
+      "best_rank": 38,
+      "top_gain_into_target": 0.3479685260050248,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=53, src_quantity='duration', lag=1, basis=())",
+      "bought": []
+    },
+    {
+      "rule": "sleep|walking|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 4,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 0.07252262684152022,
+          "rank": 443
+        },
+        {
+          "term": "[300,360)",
+          "gain": 0.05143885289047281,
+          "rank": 537
+        },
+        {
+          "term": "[360,440)",
+          "gain": 0.04148157442950946,
+          "rank": 599
+        },
+        {
+          "term": "[440,inf)",
+          "gain": 0.01254641204501219,
+          "rank": 902
+        }
+      ],
+      "log_gain_before": 0.07252262684152022,
+      "log_rank_before": 283,
+      "log_rank_after": 443,
+      "best_term": "log",
+      "best_gain": 0.07252262684152022,
+      "best_rank": 443,
+      "top_gain_into_target": 4.83513227486301,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=56, src_quantity='count', lag=1, basis=())",
+      "bought": []
+    },
+    {
+      "rule": "walking|walking|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 3,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 4.83513227486301,
+          "rank": 1
+        },
+        {
+          "term": "[4,inf)",
+          "gain": 3.6543881415658106,
+          "rank": 3
+        },
+        {
+          "term": "[1,4)",
+          "gain": 0.3375912386057531,
+          "rank": 122
+        }
+      ],
+      "log_gain_before": 4.83513227486301,
+      "log_rank_before": 1,
+      "log_rank_after": 1,
+      "best_term": "log",
+      "best_gain": 4.83513227486301,
+      "best_rank": 1,
+      "top_gain_into_target": 4.83513227486301,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=56, src_quantity='count', lag=1, basis=())",
+      "bought": [
+        "log"
+      ]
+    },
+    {
+      "rule": "gym|gym|7d",
+      "scale": 4,
+      "scorable": true,
+      "n_terms": 2,
+      "terms": [
+        {
+          "term": "[1,inf)",
+          "gain": 0.0006510939412394495,
+          "rank": 357
+        },
+        {
+          "term": "log",
+          "gain": 0.00013758423457484919,
+          "rank": 679
+        }
+      ],
+      "log_gain_before": 0.00013758423457484919,
+      "log_rank_before": 301,
+      "log_rank_after": 679,
+      "best_term": "[1,inf)",
+      "best_gain": 0.0006510939412394495,
+      "best_rank": 357,
+      "top_gain_into_target": 0.09198072493963186,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=7, src_quantity='duration', lag=1, basis=(10.0, 120.0))",
+      "bought": []
+    }
+  ],
+  "rules_before_search": [
+    {
+      "rule": "meeting|journaling|1d",
+      "scale": 3,
+      "scorable": false,
+      "why": "the rule drives a duration and the fit forms a design for the count"
+    },
+    {
+      "rule": "office_work|sleep|1d",
+      "scale": 3,
+      "scorable": false,
+      "why": "the rule drives a duration and the fit forms a design for the count"
+    },
+    {
+      "rule": "running|yoga|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 1,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 0.04477094622099637,
+          "rank": 38
+        }
+      ],
+      "log_gain_before": 0.04477094622099637,
+      "log_rank_before": 29,
+      "log_rank_after": 38,
+      "best_term": "log",
+      "best_gain": 0.04477094622099637,
+      "best_rank": 38,
+      "top_gain_into_target": 0.3479685260050248,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=53, src_quantity='duration', lag=1, basis=())",
+      "bought": []
+    },
+    {
+      "rule": "sleep|walking|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 4,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 0.07252262684152022,
+          "rank": 443
+        },
+        {
+          "term": "[300,360)",
+          "gain": 0.05143885289047281,
+          "rank": 537
+        },
+        {
+          "term": "[360,440)",
+          "gain": 0.04148157442950946,
+          "rank": 599
+        },
+        {
+          "term": "[440,inf)",
+          "gain": 0.01254641204501219,
+          "rank": 902
+        }
+      ],
+      "log_gain_before": 0.07252262684152022,
+      "log_rank_before": 283,
+      "log_rank_after": 443,
+      "best_term": "log",
+      "best_gain": 0.07252262684152022,
+      "best_rank": 443,
+      "top_gain_into_target": 4.83513227486301,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=56, src_quantity='count', lag=1, basis=())",
+      "bought": []
+    },
+    {
+      "rule": "walking|walking|1d",
+      "scale": 3,
+      "scorable": true,
+      "n_terms": 3,
+      "terms": [
+        {
+          "term": "log",
+          "gain": 4.83513227486301,
+          "rank": 1
+        },
+        {
+          "term": "[4,inf)",
+          "gain": 3.6543881415658106,
+          "rank": 3
+        },
+        {
+          "term": "[1,4)",
+          "gain": 0.3375912386057531,
+          "rank": 122
+        }
+      ],
+      "log_gain_before": 4.83513227486301,
+      "log_rank_before": 1,
+      "log_rank_after": 1,
+      "best_term": "log",
+      "best_gain": 4.83513227486301,
+      "best_rank": 1,
+      "top_gain_into_target": 4.83513227486301,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=56, src_quantity='count', lag=1, basis=())",
+      "bought": []
+    },
+    {
+      "rule": "gym|gym|7d",
+      "scale": 4,
+      "scorable": true,
+      "n_terms": 2,
+      "terms": [
+        {
+          "term": "[1,inf)",
+          "gain": 0.0006510939412394495,
+          "rank": 357
+        },
+        {
+          "term": "log",
+          "gain": 0.00013758423457484919,
+          "rank": 679
+        }
+      ],
+      "log_gain_before": 0.00013758423457484919,
+      "log_rank_before": 301,
+      "log_rank_after": 679,
+      "best_term": "[1,inf)",
+      "best_gain": 0.0006510939412394495,
+      "best_rank": 357,
+      "top_gain_into_target": 0.09198072493963186,
+      "top_edge_into_target": "TypedEdge(src_kind='observed', src_scale=3, src_label=7, src_quantity='duration', lag=1, basis=(10.0, 120.0))",
+      "bought": []
+    }
+  ],
+  "recall": {
+    "3": {
+      "placed": [
+        "meeting|journaling|1d",
+        "office_work|sleep|1d",
+        "running|yoga|1d",
+        "sleep|walking|1d",
+        "walking|walking|1d"
+      ],
+      "universal": [
+        "office_work|sleep|1d",
+        "sleep|walking|1d",
+        "walking|walking|1d"
+      ],
+      "off_quantity": [
+        "meeting|journaling|1d",
+        "office_work|sleep|1d"
+      ],
+      "scorable": [
+        "running|yoga|1d",
+        "sleep|walking|1d",
+        "walking|walking|1d"
+      ],
+      "found": [
+        "walking|walking|1d"
+      ],
+      "terms": {
+        "walking|walking|1d": [
+          "log"
+        ]
+      },
+      "missed": [
+        "running|yoga|1d",
+        "sleep|walking|1d"
+      ],
+      "recall": 0.3333333333333333
+    },
+    "4": {
+      "placed": [
+        "gym|gym|7d"
+      ],
+      "universal": [],
+      "off_quantity": [],
+      "scorable": [
+        "gym|gym|7d"
+      ],
+      "found": [],
+      "terms": {},
+      "missed": [
+        "gym|gym|7d"
+      ],
+      "recall": 0.0
+    }
+  },
+  "stationary": {
+    "3": {
+      "n_stationary": 42,
+      "edges": 2,
+      "labels_with_parents": [
+        "drink_water",
+        "hungry"
+      ]
+    },
+    "4": {
+      "n_stationary": 42,
+      "edges": 0,
+      "labels_with_parents": []
+    }
+  },
+  "total_edges": 5,
+  "edges_by_target": {
+    "12": [
+      "TypedEdge(src_kind='observed', src_scale=3, src_label=33, src_quantity='count', lag=1, basis=())"
+    ],
+    "22": [
+      "TypedEdge(src_kind='observed', src_scale=3, src_label=30, src_quantity='count', lag=1, basis=(2.0, inf))"
+    ],
+    "23": [
+      "TypedEdge(src_kind='observed', src_scale=3, src_label=23, src_quantity='count', lag=1, basis=())"
+    ],
+    "56": [
+      "TypedEdge(src_kind='observed', src_scale=3, src_label=28, src_quantity='duration', lag=1, basis=())",
+      "TypedEdge(src_kind='observed', src_scale=3, src_label=56, src_quantity='count', lag=1, basis=())"
+    ]
+  },
+  "seconds": {
+    "score": 460.4,
+    "null": 401.9,
+    "search": 451.4,
+    "total": 1313.7
+  }
+}

@@ -1,0 +1,1395 @@
+{
+  "action_planning": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "early_morning"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "alone": {
+    "category": "social_context",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "anxious": {
+    "category": "mood_emotion",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "breakfast": {
+    "category": "eat",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "early_morning",
+            "morning"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "calm": {
+    "category": "mood_emotion",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "evening",
+            "night"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 30,
+          "direction": "increasing",
+          "target": "duration",
+          "unit": "minutes",
+          "within": [
+            "Sat",
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "childcare": {
+    "category": "caregiving",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "cleaning": {
+    "category": "chores",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "cooking": {
+    "category": "chores",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "amount": 40,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "duration",
+          "within": [
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "coping_planning": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver"
+    ],
+    "stationary": true
+  },
+  "cycling": {
+    "category": "sports",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "dinner": {
+    "category": "eat",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "disposition_to_attend_to_one_s_goals": {
+    "category": "goal_intention",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "drink_water": {
+    "category": "wellbeing",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "eldercare": {
+    "category": "caregiving",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "energetic": {
+    "category": "energy_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 1,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "episodes",
+          "unit": "count",
+          "within": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "external_regulation": {
+    "category": "sdt_regulation",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "gaming": {
+    "category": "leisure",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "going_out": {
+    "category": "social",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "groceries": {
+    "category": "chores",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "gym": {
+    "category": "sports",
+    "edges_in": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 7,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "gym",
+        "source_quantity": "count",
+        "source_threshold": null,
+        "target": "gym",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "edges_out": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 7,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "gym",
+        "source_quantity": "count",
+        "source_threshold": null,
+        "target": "gym",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "amount": 30,
+          "direction": "increasing",
+          "end": 12,
+          "scale": "week",
+          "start": 1,
+          "target": "duration",
+          "unit": "minutes"
+        },
+        "mode": "trend"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "habitual_behaviour": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "happy": {
+    "category": "mood_emotion",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "amount": 30,
+          "direction": "increasing",
+          "target": "episodes",
+          "unit": "percent",
+          "within": [
+            "morning",
+            "afternoon"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "home": {
+    "category": "location",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "early_morning",
+            "morning",
+            "evening",
+            "night"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 60,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "duration",
+          "unit": "minutes",
+          "within": [
+            "Sat",
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "hungry": {
+    "category": "physiological",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "early_morning",
+            "morning",
+            "afternoon",
+            "evening",
+            "night"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "intend_to_walk": {
+    "category": "goal_intention",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "early_morning"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "intention_not_to_enact_a_behaviour": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "intention_to_enact_a_behaviour": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "intrinsic_motivation": {
+    "category": "sdt_regulation",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "journaling": {
+    "category": "wellbeing",
+    "edges_in": [
+      {
+        "amount": 15.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "meeting",
+        "source_quantity": "count",
+        "source_threshold": 3,
+        "target": "journaling",
+        "target_quantity": "duration",
+        "unit": "minutes"
+      }
+    ],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "evening",
+            "night"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 50,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "duration",
+          "unit": "minutes",
+          "within": [
+            "Sat",
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "laundry": {
+    "category": "chores",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "low_physical_opportunity_to_enact_a_behaviour": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "night"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver"
+    ],
+    "stationary": true
+  },
+  "low_self_efficacy": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver"
+    ],
+    "stationary": true
+  },
+  "lunch": {
+    "category": "eat",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "meeting": {
+    "category": "work",
+    "edges_in": [],
+    "edges_out": [
+      {
+        "amount": 15.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "meeting",
+        "source_quantity": "count",
+        "source_threshold": 3,
+        "target": "journaling",
+        "target_quantity": "duration",
+        "unit": "minutes"
+      }
+    ],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": false
+  },
+  "napping": {
+    "category": "sleep",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "need_for_autonomy": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "office_work": {
+    "category": "work",
+    "edges_in": [],
+    "edges_out": [
+      {
+        "amount": 30.0,
+        "direction": "decreasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "office_work",
+        "source_quantity": "total_duration",
+        "source_threshold": 360,
+        "target": "sleep",
+        "target_quantity": "duration",
+        "unit": "minutes"
+      }
+    ],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "amount": 100,
+          "scale": "weekday",
+          "target": "episodes",
+          "unit": "percent",
+          "within": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "physical_behavioural_opportunity": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "psychological_behavioural_capability": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "public_park": {
+    "category": "location",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "amount": 1,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "episodes",
+          "unit": "count",
+          "within": [
+            "Sat",
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "raining_or_snowing": {
+    "category": "weather_environment",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "reading": {
+    "category": "leisure",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "running": {
+    "category": "sports",
+    "edges_in": [],
+    "edges_out": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "running",
+        "source_quantity": "count",
+        "source_threshold": null,
+        "target": "yoga",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "amount": 2,
+          "direction": "increasing",
+          "end": 6,
+          "scale": "week",
+          "start": 1,
+          "target": "episodes",
+          "unit": "count"
+        },
+        "mode": "trend"
+      },
+      {
+        "details": {
+          "amount": 2,
+          "direction": "decreasing",
+          "end": 12,
+          "scale": "week",
+          "start": 6,
+          "target": "episodes",
+          "unit": "count"
+        },
+        "mode": "trend"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "self_efficacy_belief_for_a_behaviour": {
+    "category": "behaviour_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active"
+    ],
+    "stationary": true
+  },
+  "short_movement_break": {
+    "category": "wellbeing",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "shower": {
+    "category": "wellbeing",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "sleep": {
+    "category": "sleep",
+    "edges_in": [
+      {
+        "amount": 30.0,
+        "direction": "decreasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "office_work",
+        "source_quantity": "total_duration",
+        "source_threshold": 360,
+        "target": "sleep",
+        "target_quantity": "duration",
+        "unit": "minutes"
+      }
+    ],
+    "edges_out": [
+      {
+        "amount": 2.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "sleep",
+        "source_quantity": "max_duration",
+        "source_threshold": 390,
+        "target": "walking",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "night"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 90,
+          "direction": "increasing",
+          "end": 12,
+          "scale": "week",
+          "start": 1,
+          "target": "placement",
+          "unit": "minutes"
+        },
+        "mode": "trend"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "snacking": {
+    "category": "eat",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 2,
+          "direction": "decreasing",
+          "end": 12,
+          "scale": "week",
+          "start": 1,
+          "target": "episodes",
+          "unit": "count"
+        },
+        "mode": "trend"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "social_behavioural_opportunity": {
+    "category": "capability_opportunity",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "socialising": {
+    "category": "social",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "stress_episode": {
+    "category": "stress",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "study_reading": {
+    "category": "education",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "studying": {
+    "category": "education",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [],
+    "stationary": true
+  },
+  "suitable_for_outdoor": {
+    "category": "weather_environment",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon",
+            "evening"
+          ]
+        },
+        "mode": "fix"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "swimming": {
+    "category": "sports",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "amount": 50,
+          "direction": "increasing",
+          "scale": "quarter",
+          "target": "episodes",
+          "unit": "percent",
+          "within": [
+            "q2"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "tired": {
+    "category": "energy_state",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "night"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 20,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "duration",
+          "unit": "minutes",
+          "within": [
+            "Thu",
+            "Fri"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": false
+  },
+  "visit_friends_or_family": {
+    "category": "social",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": true
+  },
+  "walking": {
+    "category": "sports",
+    "edges_in": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "walking",
+        "source_quantity": "count",
+        "source_threshold": 4,
+        "target": "walking",
+        "target_quantity": "episodes",
+        "unit": "count"
+      },
+      {
+        "amount": 2.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "sleep",
+        "source_quantity": "max_duration",
+        "source_threshold": 390,
+        "target": "walking",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "edges_out": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": null,
+        "source": "walking",
+        "source_quantity": "count",
+        "source_threshold": 4,
+        "target": "walking",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "kind": "event",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "walk_morning",
+            "walk_midday",
+            "walk_evening"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 3,
+          "direction": "increasing",
+          "end": 12,
+          "scale": "week",
+          "start": 1,
+          "target": "episodes",
+          "unit": "count"
+        },
+        "mode": "trend"
+      },
+      {
+        "details": {
+          "amount": 25,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "episodes",
+          "unit": "percent",
+          "within": [
+            "Sat",
+            "Sun"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [],
+    "stationary": false
+  },
+  "with_family": {
+    "category": "social_context",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver",
+      "free_spirited_social_student"
+    ],
+    "stationary": true
+  },
+  "workplace": {
+    "category": "location",
+    "edges_in": [],
+    "edges_out": [],
+    "kind": "context",
+    "patterns": [
+      {
+        "details": {
+          "within": [
+            "morning",
+            "afternoon"
+          ]
+        },
+        "mode": "fix"
+      },
+      {
+        "details": {
+          "amount": 1,
+          "direction": "increasing",
+          "scale": "weekday",
+          "target": "episodes",
+          "unit": "count",
+          "within": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ]
+        },
+        "mode": "seasonality"
+      }
+    ],
+    "personas": [
+      "diligent_anxious_active",
+      "unemployed_family_caregiver"
+    ],
+    "stationary": false
+  },
+  "yoga": {
+    "category": "sports",
+    "edges_in": [
+      {
+        "amount": 1.0,
+        "direction": "increasing",
+        "lag_days": 1,
+        "personas": [
+          "diligent_anxious_active"
+        ],
+        "source": "running",
+        "source_quantity": "count",
+        "source_threshold": null,
+        "target": "yoga",
+        "target_quantity": "episodes",
+        "unit": "count"
+      }
+    ],
+    "edges_out": [],
+    "kind": "event",
+    "patterns": [],
+    "personas": [],
+    "stationary": false
+  }
+}

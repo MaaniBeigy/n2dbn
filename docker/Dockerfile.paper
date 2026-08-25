@@ -1,0 +1,21 @@
+# Manuscript image: LaTeX only, kept apart from the CPU image so that the one
+# used for the test suite and the experiments stays small.
+FROM debian:bookworm-slim AS base
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-fonts-extra \
+        texlive-bibtex-extra \
+        texlive-plain-generic \
+        texlive-science \
+        latexmk \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace/paper
+
+CMD ["latexmk", "-pdf", "-interaction=nonstopmode", "benchmark.tex"]

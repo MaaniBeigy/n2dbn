@@ -1,0 +1,225 @@
+# PDF fetch report
+
+Downloaded 68, already present 15, failed 54, out of 137 tried.
+
+## Downloaded
+
+- `cheng2023cuts.pdf` (1937 KB) from https://arxiv.org/pdf/2302.07458
+- `cheng2024cutsplus.pdf` (1356 KB) from https://arxiv.org/pdf/2305.05890
+- `lowe2022amortized.pdf` (564 KB) from https://proceedings.mlr.press/v177/lowe22a/lowe22a.pdf
+- `gao2025changepoint.pdf` (4229 KB) from https://raw.githubusercontent.com/mlresearch/v258/main/assets/gao25g/gao25g.pdf
+- `hulsman2026flowmsm.pdf` (2307 KB) from https://arxiv.org/pdf/2606.02231
+- `yi2026causalcompass.pdf` (9585 KB) from https://arxiv.org/pdf/2602.07915
+- `pamfil2020dynotears.pdf` (1279 KB) from https://proceedings.mlr.press/v108/pamfil20a/pamfil20a.pdf
+- `runge2020pcmciplus.pdf` (4649 KB) from https://proceedings.mlr.press/v124/runge20a/runge20a.pdf
+- `gerhardus2020lpcmci.pdf` (3212 KB) from https://proceedings.neurips.cc/paper_files/paper/2020/file/94e70705efae423efda1088614128d0b-Paper.pdf
+- `tank2022neuralgc.pdf` (7593 KB) from https://par.nsf.gov/servlets/purl/10490277
+- `hyvarinen2010varlingam.pdf` (490 KB) from https://www.jmlr.org/papers/volume11/hyvarinen10a/hyvarinen10a.pdf
+- `malinsky2018tsfci.pdf` (347 KB) from https://proceedings.mlr.press/v92/malinsky18a/malinsky18a.pdf
+- `yaman2025dbnscores.pdf` (1172 KB) from https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0336250&type=printable
+- `ouyang2023divideconquer.pdf` (541 KB) from https://arxiv.org/pdf/2312.01739
+- `ferdous2025timegraph.pdf` (1316 KB) from https://arxiv.org/pdf/2506.01361
+- `gamella2025causalchambers.pdf` (20533 KB) from https://arxiv.org/pdf/2404.11341
+- `stein2025causalrivers.pdf` (1307 KB) from https://arxiv.org/pdf/2503.17452
+- `cheng2024causaltime.pdf` (2892 KB) from https://arxiv.org/pdf/2310.01753
+- `herdeanu2025causaldynamics.pdf` (3560 KB) from https://arxiv.org/pdf/2505.16620
+- `menegozzo2022cipcad.pdf` (3324 KB) from https://arxiv.org/pdf/2208.01529
+- `runge2019causeme.pdf` (2267 KB) from https://www.nature.com/articles/s41467-019-10105-3.pdf
+- `chevalley2025causalbench.pdf` (2051 KB) from https://www.nature.com/articles/s42003-025-07764-y.pdf
+- `prill2010dream3.pdf` (1020 KB) from https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0009202&type=printable
+- `marbach2012dream5.pdf` (3551 KB) from https://dream.broadinstitute.org/papers/Marbach2012.pdf
+- `dibaeinia2020sergio.pdf` (1422 KB) from https://www.biorxiv.org/content/10.1101/716811v1.full.pdf
+- `rangel2004tcell.pdf` (163 KB) from https://cse.buffalo.edu/faculty/mbeal/papers/bioinfbeal04.pdf
+- `guo2007rewiring.pdf` (357 KB) from http://www.cs.cmu.edu/~epxing/papers/ICML2007_net.pdf
+- `scutari2010bnlearn.pdf` (619 KB) from https://www.jstatsoft.org/index.php/jss/article/view/v035i03/v35i03.pdf
+- `leonelli2025bnrep.pdf` (122 KB) from https://arxiv.org/pdf/2409.19158
+- `rios2025benchpress.pdf` (4992 KB) from https://arxiv.org/pdf/2107.03863
+- `ankan2024pgmpy.pdf` (200 KB) from https://www.jmlr.org/papers/volume25/23-0487/23-0487.pdf
+- `zheng2024causallearn.pdf` (201 KB) from https://www.jmlr.org/papers/volume25/23-0970/23-0970.pdf
+- `ramsey2023pytetrad.pdf` (815 KB) from https://arxiv.org/pdf/2301.08644
+- `zhang2021gcastle.pdf` (368 KB) from https://arxiv.org/pdf/2111.15155
+- `kalainathan2020cdt.pdf` (229 KB) from https://www.jmlr.org/papers/volume21/19-187/19-187.pdf
+- `murphy2001bnt.pdf` (263 KB) from https://www.cs.ubc.ca/~murphyk/Papers/bnt.pdf
+- `tsamardinos2006mmhc.pdf` (1361 KB) from https://pages.mtu.edu/~lebrown/supplements/mmhc_paper/paper_online.pdf
+- `peters2015sid.pdf` (759 KB) from https://arxiv.org/pdf/1306.1043
+- `davis2006prroc.pdf` (138 KB) from https://ftp.cs.wisc.edu/machine-learning/shavlik-group/davis.icml06.pdf
+- `schwarz1978bic.pdf` (328 KB) from https://projecteuclid.org/journals/annals-of-statistics/volume-6/issue-2/Estimating-the-Dimension-of-a-Model/10.1214/aos/1176344136.pdf
+- `heckerman1995bde.pdf` (182 KB) from https://arxiv.org/pdf/1302.6815
+- `reisach2021varsortability.pdf` (467 KB) from https://proceedings.neurips.cc/paper_files/paper/2021/file/e987eff4a7c7b7e580d659feb6f60c1a-Paper.pdf
+- `reisach2023r2sortability.pdf` (1177 KB) from https://proceedings.neurips.cc/paper_files/paper/2023/file/027e86facfe7c1ea52ca1fca7bc1402b-Paper-Conference.pdf
+- `runge2018pitfalls.pdf` (317 KB) from https://arxiv.org/pdf/1710.05609
+- `constantinou2021noisy.pdf` (5254 KB) from https://arxiv.org/pdf/2005.09020
+- `constantinou2019bsf.pdf` (1335 KB) from https://arxiv.org/pdf/1905.12666
+- `gentzel2019interventional.pdf` (426 KB) from https://proceedings.neurips.cc/paper_files/paper/2019/file/a87c11b9100c608b7f8e98cfa316ff7b-Paper.pdf
+- `faller2024selfcompatibility.pdf` (2192 KB) from https://proceedings.mlr.press/v238/faller24a/faller24a.pdf
+- `dejongh2009distances.pdf` (286 KB) from https://sites.pitt.edu/~druzdzel/ftp/iis09.pdf
+- `cheng2022evaluation.pdf` (5916 KB) from https://arxiv.org/pdf/2202.02896
+- `zheng2018notears.pdf` (1483 KB) from https://proceedings.neurips.cc/paper_files/paper/2018/file/e347c51419ffb23ca3fd5050202f9c3d-Paper.pdf
+- `kungurtsev2024dbnfoundations.pdf` (630 KB) from https://arxiv.org/pdf/2406.17585
+- `kitson2023bnsurvey.pdf` (2512 KB) from https://arxiv.org/pdf/2109.11415
+- `scanagatta2019bnsurvey.pdf` (337 KB) from https://faculty.ist.psu.edu/vhonavar/Courses/causality/bn-rev19.pdf
+- `vowels2022dags.pdf` (1371 KB) from https://arxiv.org/pdf/2103.02582
+- `hasan2023cdsurvey.pdf` (2266 KB) from https://arxiv.org/pdf/2303.15027
+- `gong2025temporalsurvey.pdf` (1493 KB) from https://arxiv.org/pdf/2303.10112
+- `shojaie2022granger.pdf` (3662 KB) from https://arxiv.org/pdf/2105.02675
+- `yfantidou2022lifesnaps.pdf` (2762 KB) from https://www.nature.com/articles/s41597-022-01764-x.pdf
+- `johnson2023mimiciv.pdf` (1349 KB) from https://www.nature.com/articles/s41597-022-01899-x.pdf
+- `xu2022globem.pdf` (1237 KB) from https://papers.nips.cc/paper_files/paper/2022/file/9c7e8a0821dfcb58a9a83cbd37cc8131-Paper-Datasets_and_Benchmarks.pdf
+- `guo2019astgcn.pdf` (1193 KB) from https://ojs.aaai.org/index.php/AAAI/article/view/3881/3759
+- `li2018dcrnn.pdf` (4182 KB) from https://arxiv.org/pdf/1707.01926
+- `wickramasuriya2019mint.pdf` (796 KB) from https://robjhyndman.com/papers/mint.pdf
+- `miller2020bdg2.pdf` (10812 KB) from https://www.nature.com/articles/s41597-020-00712-x.pdf
+- `murphy2002dbnthesis.pdf` (1777 KB) from https://www.cs.ubc.ca/~murphyk/Thesis/thesis.pdf
+- `friedman1998dbnstructure.pdf` (456 KB) from https://arxiv.org/pdf/1301.7374
+- `chickering2002ges.pdf` (511 KB) from https://www.jmlr.org/papers/volume3/chickering02b/chickering02b.pdf
+
+## Failed
+
+Open each of these by DOI in a browser on the VPN and save it into this folder as `<bibkey>.pdf`.
+
+- **jia2010flexiblelag** (open)
+    - https://link.springer.com/content/pdf/10.1186/1471-2105-11-S6-S27.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **grzegorczyk2008allocation** (pub)
+    - https://doi.org/10.1093/bioinformatics/btn367: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **lebre2010artiva** (open)
+    - https://link.springer.com/content/pdf/10.1186/1752-0509-4-130.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **grzegorczyk2011nhdbncontinuous** (pub)
+    - https://link.springer.com/content/pdf/10.1007/s10994-010-5230-7.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+    - https://doi.org/10.1007/s10994-010-5230-7: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **grzegorczyk2011dynprog** (pub)
+    - https://doi.org/10.1093/bioinformatics/btq711: HTTP 403, text/html; charset=UTF-8, 5841 bytes
+- **grzegorczyk2013hierarchical** (pub)
+    - https://link.springer.com/content/pdf/10.1007/s10994-012-5326-3.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+    - https://doi.org/10.1007/s10994-012-5326-3: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **dondelinger2013edison** (pub)
+    - https://link.springer.com/content/pdf/10.1007/s10994-012-5311-x.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+    - https://doi.org/10.1007/s10994-012-5311-x: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **kamalabad2020edgewise** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC7703764/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7703764/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1093/bioinformatics/btz690: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **zhang2023improvedmcmc** (open)
+    - https://link.springer.com/content/pdf/10.1186/s12859-023-05381-2.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **talih2005structural** (pub)
+    - https://doi.org/10.1111/j.1467-9868.2005.00504.x: HTTP 403, text/html; charset=UTF-8, 5798 bytes
+- **fearnhead2006changepoint** (pub)
+    - https://link.springer.com/content/pdf/10.1007/s11222-006-8450-8.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+    - https://doi.org/10.1007/s11222-006-8450-8: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **song2009keller** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC2687946/pdf/: HTTP 200, text/html; charset=utf-8, 1816 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2687946/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1093/bioinformatics/btp192: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **runge2019pcmci** (open)
+    - https://centaur.reading.ac.uk/89762/1/sciadv.aau4996.pdf: HTTP 404, text/html; charset=utf-8, 30534 bytes
+    - https://doi.org/10.1126/sciadv.aau4996: HTTP 403, text/html; charset=UTF-8, 5825 bytes
+- **nauta2019tcdf** (open)
+    - https://www.mdpi.com/2504-4990/1/1/19/pdf: HTTP 403, text/html, 406 bytes
+    - https://doi.org/10.3390/make1010019: HTTP 403, text/html, 398 bytes
+- **trabelsi2013benchmarking** (pub)
+    - https://doi.org/10.1109/ICMSAO.2013.6552549: HTTP 202, text/html; charset=UTF-8, 2055 bytes
+- **trabelsi2013dmmhc** (pub)
+    - https://link.springer.com/content/pdf/10.1007/978-3-642-41398-8_34.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+    - https://doi.org/10.1007/978-3-642-41398-8_34: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **rieth2017tep** (open)
+    - https://doi.org/10.7910/DVN/6C3JR1: HTTP 202, text/html; charset=UTF-8, 2071 bytes
+- **downs1993tep** (pub)
+    - https://doi.org/10.1016/0098-1354(93)80018-I: HTTP 200, text/html;charset=UTF-8, 2658 bytes
+- **smith2011netsim** (pub)
+    - https://doi.org/10.1016/j.neuroimage.2010.08.063: HTTP 200, text/html;charset=UTF-8, 2649 bytes
+- **marbach2010revealing** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC2851957/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2851957/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1073/pnas.0913357107: HTTP 403, text/html; charset=UTF-8, 5836 bytes
+- **marbach2009generating** (pub)
+    - https://doi.org/10.1089/cmb.2008.09TT: HTTP 403, text/html; charset=UTF-8, 5842 bytes
+- **schaffter2011gnw** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC3150036/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3150036/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1093/bioinformatics/btr373: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **vandenbulcke2006syntren** (open)
+    - https://link.springer.com/content/pdf/10.1186/1471-2105-7-43.pdf: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **cantone2009irma** (pub)
+    - https://doi.org/10.1016/j.cell.2009.01.055: HTTP 200, text/html;charset=UTF-8, 2708 bytes
+- **pratapa2020beeline** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC7098036/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7098036/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1038/s41592-019-0690-6: HTTP 200, text/html; charset=utf-8, 558065 bytes
+- **hill2016hpndream** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC4854847/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4854847/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1038/nmeth.3773: HTTP 200, text/html; charset=utf-8, 601024 bytes
+- **arbeitman2002drosophila** (pub)
+    - https://doi.org/10.1126/science.1072152: HTTP 403, text/html; charset=UTF-8, 5828 bytes
+- **edwards2006arabidopsis** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC1383640/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1383640/pdf/: HTTP 200, text/html; charset=utf-8, 1816 bytes
+    - https://doi.org/10.1105/tpc.105.038315: HTTP 403, text/html; charset=UTF-8, 5798 bytes
+- **mockler2007diurnal** (pub)
+    - https://doi.org/10.1101/sqb.2007.72.006: HTTP 403, text/html; charset=UTF-8, 5737 bytes
+- **spellman1998yeast** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC25624/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC25624/pdf/: HTTP 200, text/html; charset=utf-8, 1813 bytes
+    - https://doi.org/10.1091/mbc.9.12.3273: HTTP 403, text/html; charset=UTF-8, 5826 bytes
+- **sachs2005flowcytometry** (pub)
+    - https://doi.org/10.1126/science.1105809: HTTP 403, text/html; charset=UTF-8, 5828 bytes
+- **zhao2006mdl** (pub)
+    - https://doi.org/10.1093/bioinformatics/btl364: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **teixeira2023yeastract** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC9825609/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9825609/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1093/nar/gkac1041: HTTP 403, text/html; charset=UTF-8, 5795 bytes
+- **franzin2017bnstruct** (open)
+    - https://doi.org/10.1093/bioinformatics/btw807: HTTP 403, text/html; charset=UTF-8, 5847 bytes
+- **shiguihara2021dbnsurvey** (open)
+    - https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9514854: HTTP 200, text/html;charset=UTF-8, 6608 bytes
+    - https://doi.org/10.1109/ACCESS.2021.3105520: HTTP 200, text/html;charset=UTF-8, 54386 bytes
+- **mihajlovic2001dbnstate** (open)
+    - https://research.utwente.nl/files/27679465/0000006a.pdf: HTTP 403, text/html; charset=UTF-8, 5853 bytes
+- **assaad2022tssurvey** (open)
+    - https://www.jair.org/index.php/jair/article/download/13428/26913: HTTP 200, text/plain;charset=UTF-8, 1537 bytes
+    - https://doi.org/10.1613/jair.1.13428: HTTP 200, text/html; charset=utf-8, 23393 bytes
+- **nogueira2022cdtools** (pub)
+    - https://doi.org/10.1002/widm.1449: HTTP 403, text/html; charset=UTF-8, 5845 bytes
+- **runge2023causalinference** (pub)
+    - https://doi.org/10.1038/s43017-023-00431-y: HTTP 200, text/html; charset=utf-8, 416707 bytes
+- **cook2013casas** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC4130117/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4130117/pdf/: HTTP 200, text/html; charset=utf-8, 1816 bytes
+    - https://doi.org/10.1109/MC.2012.328: HTTP 200, text/html;charset=UTF-8, 49829 bytes
+- **chavarriaga2013opportunity** (pub)
+    - https://doi.org/10.1016/j.patrec.2012.12.014: HTTP 200, text/html;charset=UTF-8, 2708 bytes
+- **wang2014studentlife** (open)
+    - https://studentlife.cs.dartmouth.edu/studentlife.pdf: ConnectTimeout: HTTPSConnectionPool(host='studentlife.cs.dartmouth.edu', port=443): Max retries exceeded with url: /studentlife.pdf (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7fa93fbf9c40>, 'Connection to studentlife.cs.dartmouth.edu timed out. (connect timeout=45)'))
+    - https://doi.org/10.1145/2632048.2632054: HTTP 403, text/html; charset=UTF-8, 5823 bytes
+- **klasnja2019heartsteps** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC6546936/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6546936/pdf/: HTTP 200, text/html; charset=utf-8, 20389 bytes
+    - https://doi.org/10.1093/abm/kay067: HTTP 403, text/html; charset=UTF-8, 5789 bytes
+- **faltys2021hirid** (pub)
+    - https://doi.org/10.1038/s41591-020-0789-4: HTTP 200, text/html; charset=utf-8, 523380 bytes
+- **reyna2020sepsischallenge** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC6964870/pdf/: HTTP 200, text/html; charset=utf-8, 20401 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6964870/pdf/: HTTP 200, text/html; charset=utf-8, 20362 bytes
+    - https://doi.org/10.1097/CCM.0000000000004145: HTTP 403, text/html; charset=UTF-8, 5811 bytes
+- **bachlin2010daphnet** (pub)
+    - https://doi.org/10.1109/TITB.2009.2036165: HTTP 200, text/html;charset=UTF-8, 60037 bytes
+- **candanedo2016occupancy** (pub)
+    - https://doi.org/10.1016/j.enbuild.2015.11.071: HTTP 200, text/html;charset=UTF-8, 2750 bytes
+- **makridakis2022m5** (pub)
+    - https://doi.org/10.1016/j.ijforecast.2021.11.013: HTTP 200, text/html;charset=UTF-8, 2674 bytes
+- **athanasopoulos2009tourism** (open)
+    - https://robjhyndman.com/papers/hierarchical.pdf: HTTP 404, text/html, 22935 bytes
+    - https://doi.org/10.1016/j.ijforecast.2008.07.004: HTTP 200, text/html;charset=UTF-8, 2669 bytes
+- **benzeev2017crosscheck** (open)
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC5605409/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5605409/pdf/: HTTP 200, text/html; charset=utf-8, 1817 bytes
+    - https://doi.org/10.1037/prj0000243: HTTP 200, text/html, 1034 bytes
+- **du2016rmtpp** (open)
+    - https://www.cs.jhu.edu/~mdredze/teaching/cs650_2017/readings/du2016recurrent.pdf: HTTP 404, text/html; charset=UTF-8, 35878 bytes
+    - https://doi.org/10.1145/2939672.2939875: HTTP 403, text/html; charset=UTF-8, 5823 bytes
+- **granger1969causality** (pub)
+    - https://doi.org/10.2307/1912791: HTTP 200, text/html; charset=utf-8, 3038 bytes
+- **chowliu1968** (pub)
+    - https://doi.org/10.1109/TIT.1968.1054142: HTTP 200, text/html;charset=UTF-8, 50059 bytes
+- **dean1989persistence** (pub)
+    - https://doi.org/10.1111/j.1467-8640.1989.tb00324.x: HTTP 403, text/html; charset=UTF-8, 5890 bytes

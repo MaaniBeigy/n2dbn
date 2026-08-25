@@ -1,0 +1,691 @@
+\section{Benchmark design and experimental protocol}
+\label{sec:benchmark}
+
+The claims this model makes are recovery claims. It claims to find the lagged
+parent sets \(\gP_{k,\ell}\) that generated a multiscale log, to track the
+latent regime \(S_t^{(k)}\) and the latent factor \(H_t^{(k)}\) that drive it,
+and to do both while the counts and durations reconcile exactly across scales.
+None of these can be checked against a quantity the data supply, so the
+evaluation has to supply the quantity itself. This section states what the
+generated benchmark contains, how a scenario is configured, and, before any of
+that is used, how a scenario is screened for whether it contains anything to
+recover at all.
+
+\subsection{Why recovery is not measurable on an observed log}
+\label{sec:benchmark_why}
+
+On an observed event log the true parent sets, the true regime path and the
+true parameters \(\Theta^\star\) are all unavailable, and no amount of care in
+the fitting procedure produces them. A precision against \(\gP_{k,\ell}^\star\)
+is not a hard quantity to compute on such a log; it is an undefined one. What
+an observed log does support is prediction on held-out time, exact
+reconciliation, the stability of a selected edge across subsamples, and
+falsification tests that need no ground truth, such as checking whether graphs
+learned from different variable subsets agree. Those are necessary conditions
+and none of them is a recovery measurement.
+
+A generator removes the obstruction by construction. It yields the graph, the
+regime path, the factor trajectory and every conditional distribution exactly,
+so precision, recall, structural Hamming distance, regime accuracy and
+parameter error all become computable. It also yields something an observed log
+cannot give at any price, which is control over the difficulty of the problem.
+The generator can be interrogated about a scenario before an estimator is
+pointed at it, and \cref{sec:benchmark_identifiability} makes that
+interrogation part of the protocol rather than an afterthought.
+
+The cost is equally clear. A recovery number measured on data drawn from the
+model being evaluated establishes self-consistency and nothing wider. Two
+design decisions bound that cost. The first is a family of scenarios generated
+under deliberate violations of the modeling assumptions, so that graceful
+degradation rather than exact recovery is what is measured there. The second is
+running the identical evaluation code against networks released by others,
+where the ground truth was fixed by someone with no stake in this model.
+
+\subsection{The four generating families}
+\label{sec:benchmark_families}
+
+Four families span the axes the model is built around, and each one isolates a
+different component by removing the others.
+
+\paragraph{Family I, stationary and sparse.}
+Every scale carries a single regime and no factor, \(M_k = 1\) and \(r_k = 0\),
+with a fixed sparse lagged graph and parameters constant in time. What remains
+is structure recovery and the top-down allocation, with no latent dynamics to
+confound either.
+
+\paragraph{Family II, regime switching.}
+At least two regimes act at the coarsest scale and \(r_k = 0\) everywhere, with
+regime-specific count levels, duration levels and allocation scores, and a
+transition matrix built so that the regimes persist and occupy their states
+about equally. Which further scales carry a regime is not a free choice; it is
+whatever the screen of \cref{sec:benchmark_identifiability} admits. This family
+tests recovery of non-stationary behavior and is the one in which a persistent
+latent state is available to confound a latent-free structure criterion.
+
+\paragraph{Family III, shared latent factor.}
+A single regime and a factor of dimension at least one, \(M_k = 1\) and
+\(r_k \ge 1\), with a stable first-order factor dynamic per scale and loadings
+that put correlated same-slice fluctuations on every label. The lagged graph
+stays sparse, so the question is whether the factor absorbs contemporaneous
+co-movement without distorting recovery of the lagged structure.
+
+\paragraph{Family IV, deliberate misspecification.}
+The same structure with one generating assumption broken on purpose, in two
+variants. The heavier-tail variant fixes the coarsest-scale negative binomial
+dispersion at a large constant, which drives the generated counts toward the
+Poisson limit and leaves the fitted dispersion chasing a value the estimator
+cannot reach. The omitted-context variant enlarges the coarsest-scale context
+coefficients so that the context genuinely drives the emission level, and the
+fitted model has to absorb its effect elsewhere. A third setting names the
+reference scenario, the same structure with nothing misspecified, which is what
+makes the degradation measurable rather than merely observed.
+
+\paragraph{A family overrides the scenario it is given.}
+The family is not a label attached to a configuration; it is a projection of
+that configuration onto its own subfamily, applied before any parameter is
+drawn. Family I forces \(M_k = 1\) and \(r_k = 0\) at every scale. Family II
+forces \(r_k = 0\), raises the coarsest scale to \(\max(2, M_K)\), and leaves
+every other scale as the configuration states, so a scale asked to carry no
+regime carries none. Family III forces
+\(M_k = 1\) and \(r_k \gets \max(1, r_k)\). Asking family I for four regimes
+therefore returns one, and asking family II for a factor returns none. The
+consequence for the grid is that the regime count is a live axis only inside
+family II and the factor dimension only inside family III. A grid that swept
+\(M_k\) and \(r_k\) across all families would have generated many scenarios
+that are byte-identical to one another and reported them as independent
+evidence.
+
+\subsection{Scenario configuration and the two grids}
+\label{sec:benchmark_grid}
+
+A scenario fixes the tuple
+\begin{align}
+\bigl(
+K,\;
+T_1,\;
+(b_k)_{k=1}^{K-1},\;
+\gL,\;
+(M_k),\;
+(r_k),\;
+(p_k),\;
+(D_k^\star),\;
+\varpi_0,\;
+\text{family},\;
+\text{seed}
+\bigr),
+\label{eq:bench_scenario}
+\end{align}
+where \(b_k\) is the branching factor from scale \(k\) to scale \(k+1\),
+\(p_k\) is the maximum lag searched at scale \(k\) in
+\cref{eq:model_lag_values}, \(D_k^\star\) is the maximum
+in-degree of the true graph there, and \(\varpi_0\) is the structural zero
+probability that fixes the zero-inflation intercept, set to \(0.1\), \(0.35\)
+or \(0.65\) for the low, medium and high zero-inflation levels. The epoch
+counts follow from the branching,
+\begin{align}
+T_{k+1} = \left\lfloor T_k / b_k \right\rfloor,
+\qquad k = 1,\dots,K-1,
+\label{eq:bench_epochs}
+\end{align}
+and the wall-clock length of an epoch follows from the length of one finest
+slot together with the same branching.
+
+Two hierarchies are used, and both are aligned to a clock rather than chosen
+for arithmetic convenience. The minute grid sets \(K = 3\), \(T_1 = 20{,}160\)
+and branching \((10, 6)\) at a one-minute finest slot, giving \(20{,}160\),
+\(2{,}016\) and \(336\) epochs at one minute, ten minutes and one hour over
+fourteen days. The day grid sets \(K = 3\), \(T_1 = 8{,}640\) and branching
+\((12, 24)\) at a five-minute finest slot, giving \(8{,}640\), \(720\) and
+\(30\) epochs at five minutes, one hour and one day over thirty days. The
+second exists so that the study repeats when the coarsest scale is a calendar
+day, which changes the number of coarsest epochs available for estimation by
+an order of magnitude.
+
+Both grids fix the same generating conditions. The finest scale is constrained
+to binary event starts, \(X_t^{(1,\ell)} \in \{0,1\}\), which is a modeling
+choice about the labels rather than a requirement of the event-log reading. What
+makes a reconstructed trace an event log is that every episode carries a start
+and an end **at the resolution of the finest scale itself**, and nothing finer:
+if that scale is an hour, an episode runs from one hour to another and may begin
+and end in the same one. Two episodes of a label beginning in the same finest
+epoch are therefore admissible, since the log does not claim to order events
+inside an epoch, and no claim below the declared finest scale is supported by
+anything the generator produced. The
+coarsest log-mean is set from a target rate of \(0.15\) events per finest epoch
+conditional on the label not being structurally absent, since fixing the
+coarsest mean directly empties the finest scale once the counts have been
+spread over sixty slots. The lagged coefficients and the regime contrasts carry
+multipliers of \(10\) and \(3\) on their base draws, which is what places them
+in the regime \cref{sec:benchmark_identifiability} certifies. The searched lag
+bound is \((p_k) = (3,2,1)\) from finest to coarsest and the true in-degree
+bound is \((D_k^\star) = (0,2,1)\), so the true edges live at the ten-minute
+and the hourly scales and the finest scale is left empty. The latent states are
+placed by the same rule and land differently: the regime count is
+\((M_k) = (1,1,M)\) on the minute grid and \((1,M,M)\) on the day grid, since
+the screen of \cref{sec:benchmark_identifiability} admits a regime at the hour
+scale of the day grid and at no scale below the coarsest of the minute grid,
+while the factor dimension \(r_k\) is uniform across scales because the factor
+clears everywhere.
+
+The minute grid holds twenty scenarios. Family I contributes four, from
+\(L \in \{5,10\}\) crossed with low and high zero inflation. Family II
+contributes eight, from \(L\) crossed with \(M \in \{2,4\}\) at the coarsest
+scale and one regime below it, and the two zero inflation levels. Family III contributes eight, from
+\(L\) crossed with \(r_k \in \{1,2\}\) and the two levels. The day grid adds
+two at medium zero inflation, one from family II with two regimes at the hour
+and day scales and one from family III with \(r_k = 1\), for twenty-two
+scenarios in total, each generated
+at three independent replicates.
+
+Family IV sits outside this grid and carries its own. Degradation under
+misspecification is a paired comparison against an otherwise identical
+well-specified scenario, so the misspecification type has to be the swept axis
+rather than one setting among twenty-two. That grid holds twelve
+configurations, from the three misspecification settings crossed with
+\(L \in \{5,10\}\) and \(M \in \{2,4\}\) at the coarsest scale and medium zero
+inflation, on the minute clock and with the same lag bound, in-degree bound,
+regime placement, rate, edge-strength and regime-strength calibration as above,
+again at three replicates.
+
+One asymmetry in the search space is deliberate. The in-degree bound the
+learner searches under is \(D_k = \max(D_k^\star, 1)\) rather than
+\(D_k^\star\) itself, so the finest scale, which carries no true edge, is
+searched with a budget of one parent per label instead of zero. A budget of
+zero would make that scale trivially correct for every method and would destroy
+the precision test it exists to carry.
+
+Each replicate is split chronologically at coarsest-scale boundaries into
+training, validation and test partitions holding \(70\%\), \(15\%\) and
+\(15\%\) of the coarsest epochs. Splitting on coarsest-scale boundaries is what
+keeps the reconciliation identity
+\(\sum_{t \in \child_k(c)} X_t^{(k,\ell)} = X_c^{(k+1,\ell)}\) true inside each
+partition; a split at an arbitrary finest-scale index would cut a block in half
+and break it. The split is chronological rather than random because the model
+is sequential and the question is generalization forward in time. Every method
+receives the same training partition, the same initialization and the same
+search space, namely the scenario's own \((p_k, D_k)\), since a search space
+narrower than the generating one caps recall before a single score is computed.
+
+\subsection{The identifiability screen}
+\label{sec:benchmark_identifiability}
+
+A recovery metric carries information only when the generated data contain what
+is being recovered. A scenario in which a true edge leaves less evidence than
+the best non-edge produces a low \(F_1\) for every consistent estimator, and
+reporting that number as a property of an estimator is a category error. The
+screen described here is applied to every scenario before it enters a study,
+and it decided the shape of the grid in \cref{sec:benchmark_grid}.
+
+The screen fits nothing. It generates one replicate, runs latent-state
+inference at the true parameters \(\Theta^\star\) and the true graph
+\(\gG^\star\), and asks what a perfect estimator would see. Write \(q\) for the
+posterior that inference returns under \(\Theta^\star\) and \(\gG^\star\), and
+define the unpenalized gain of a single candidate lagged parent
+\(e = (\ell', d)\) for label \(\ell\) at scale \(k\) as
+\begin{align}
+\Delta_{k,\ell}(e)
+&=
+\max_{\beta,\alpha}\;
+\E_q\!\left[
+\log p\bigl(X^{(k,\ell)}_{1:T_k}, Y^{(k,\ell)}_{1:T_k}
+\bigm| S^{(k)}, H^{(k)}, \gK^{(k)}, X^{(k+1,\ell)}, Y^{(k+1,\ell)},
+\{e\}, \beta, \alpha, \Theta_k^\star\bigr)
+\right]
+\nonumber \\
+&\qquad -
+\E_q\!\left[
+\log p\bigl(X^{(k,\ell)}_{1:T_k}, Y^{(k,\ell)}_{1:T_k}
+\bigm| S^{(k)}, H^{(k)}, \gK^{(k)}, X^{(k+1,\ell)}, Y^{(k+1,\ell)},
+\emptyset, \Theta_k^\star\bigr)
+\right],
+\label{eq:probe_gain}
+\end{align}
+with the coefficients of the candidate profiled out, exactly as the structure
+step scores it. The parent totals \(X^{(k+1,\ell)}\) and \(Y^{(k+1,\ell)}\) are
+in the conditioning set at a finer scale, where the likelihood is the
+Dirichlet-multinomial allocation of those totals over \(\child_k(c)\), and are
+absent at \(k = K\), where it is the zero-inflated negative binomial count and
+negative binomial duration pair. The expectation is likewise exact at \(k = K\)
+and approximate below it, since a finer-scale allocation score is evaluated at
+its regime average \(\bar{\eta}_t^{(k,\ell)}\) before the likelihood is formed,
+which is the substitution the structure step itself makes.
+
+Three quantities are then read off per scale, the median of
+\(\Delta_{k,\ell}\) over the true edges, the \(95\)th percentile of
+\(\Delta_{k,\ell}\) over the candidates that are not true edges, and the price
+\(\log T_k\) that a plain Bayesian information criterion attaches to one added
+parent. That price is a full log-epoch rather than half of one because a
+parent adds two coefficients, one on the count channel and one on the duration
+channel, at \(\tfrac{1}{2}\log T_k\) each. The screen also reports the number
+of epochs of that scale in the training split, the fraction of label-epoch
+cells there carrying at least one event, and the best-permutation regime
+accuracy that the true parameters themselves attain.
+
+The scenario is worth running a structure study on only when the three gains
+order correctly,
+\begin{align}
+\operatorname{med}_e \Delta_{k,\ell}(e)
+\;\gg\;
+Q_{0.95}\bigl(\Delta_{k,\ell} \mid e \notin \gP_{k,\ell}^\star\bigr)
+\;>\;
+\log T_k ,
+\label{eq:probe_ordering}
+\end{align}
+and the latent metrics are interpretable only relative to the oracle regime
+accuracy. \Cref{tab:probe} gives the reading for the benchmark scenario, a
+family II configuration on the minute grid with five labels, two regimes and
+low zero inflation.
+
+\begin{table}[t]
+\centering
+\caption{Identifiability screen on the benchmark scenario, one replicate,
+latent-state inference at the true parameters and the true graph. The minute
+scale carries no true edge, so its true-edge gain is undefined and the entry is
+left blank. Gains are in nats.}
+\label{tab:probe}
+\begin{tabular}{llrrrrrr}
+\toprule
+\(k\) & epoch & \(T_k\) (train) & density & true edges & true gain & non-edge \(Q_{0.95}\) & \(\log T_k\) \\
+\midrule
+1 & one minute  & 14{,}100 & 0.255 & 0 &        &  32.82 & 9.55 \\
+2 & ten minutes &  1{,}410 & 0.530 & 5 &  31.50 &  11.32 & 7.25 \\
+3 & one hour    &      235 & 0.856 & 4 & 182.26 & 141.91 & 5.46 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The reading of \cref{tab:probe} is the design of the grid. At the ten-minute
+scale a true edge is worth \(31.50\) nats against a non-edge level of \(11.32\)
+and a penalty of \(7.25\), and at the hourly scale it is worth \(182.26\)
+against \(141.91\) and \(5.46\), so \eqref{eq:probe_ordering} holds at both and
+the edges there are recoverable in principle. The whole gain scale at the hour
+sits higher, non-edges included, because an edge there is scored against the
+count and duration likelihood itself rather than against an allocation of a
+parent total over children. At the minute scale the ordering fails before any
+estimator is involved, since a non-edge already reaches \(32.82\) nats against a
+penalty of \(9.55\), so a criterion charging the plain price would accept
+non-edges on evidence alone. Placing true edges there would produce recovery
+numbers that measure the scenario rather than the method.
+
+That reading is one scenario, and the placement of the edges follows from the
+same screen applied to all twenty-two. Each was generated once more at a nonzero
+in-degree on every scale, and the quantity recorded was the median true-edge
+gain less the floor it has to clear, \(\max(Q_{0.95}, \log T_k)\). The
+ten-minute scale returns \(-4.42\), \(+7.68\) and \(+15.92\) nats for families I,
+II and III with \(17\) of \(22\) scenarios clearing, and the hourly scale
+\(-9.89\), \(+6.29\) and \(+11.15\) with \(14\) of \(22\). The finest scale fails
+in every family, at \(-6.88\), \(-16.50\) and \(-8.64\), with only \(2\) of
+\(22\) clearing. Family I clears at neither of the two coarser scales on this
+draw, and its four scenarios split by zero inflation rather than by anything the
+screen controls: at the hourly scale the two low-inflation scenarios return
+\(-37.09\) and \(-79.24\) while the two high-inflation ones return \(+17.31\) and
+\(+22.21\). A denser count series gives a non-edge more to exploit there, and the signal is
+not what separates those scenarios: their realized effect sizes are $0.3244$ and
+$0.3407$, so the failing arm is if anything marginally the stronger one. The
+coarsest coefficients are pinned to one value, $0.3$, by the bound that keeps the
+count autoregression stable, and that makes the edge-strength multiplier inert
+at that scale; what
+it does not make constant is the difficulty, since the evidence an edge leaves is
+that coefficient times the spread of the column it multiplies, which runs
+$0.2655$ to $0.7907$ across the grid. The grid therefore carries true edges at the
+ten-minute and the hourly scales and leaves the finest one empty.
+
+That failure is a property of the generator rather than an accident of one draw.
+The finest scale is a binary event-start process, so a lagged edge there can
+only shift which slot of a block begins an episode, which is worth less than the
+price of the edge and is small relative to the freedom the allocation already
+has. Leaving the scale empty converts it from a failed recovery test into a
+working precision test. Any edge a method reports there is structure the data do
+not contain, which makes the count of such edges a direct, interpretable
+false-positive measurement with no threshold to choose. The converse has to be
+stated with it, so that silence there is not read as recovery. No measurement on
+this grid can credit a method for finding a finest-scale edge, because none can
+be placed there.
+
+An earlier version of this grid left the coarsest scale empty as well. The
+screen that justified it had been read on scenarios generated with no
+coarsest-scale edge at all, where every gain it could observe there was a
+non-edge gain and the whole scale of them sat below the price. Regenerating at a
+nonzero in-degree and rescreening reverses that reading, and the same screen is
+what keeps the finest scale out.
+
+The latent states need the same screen, and they need it stated with a floor
+rather than a ceiling alone. The ceiling is the best-permutation regime accuracy
+the true parameters themselves attain. An earlier version of this section
+reported that ceiling as \(0.652\) at the minute scale, \(0.661\) at ten minutes
+and \(1.000\) at the hour, and concluded that a fit near either of the first two
+was at the limit the data allow. That conclusion does not follow, because a
+ceiling bounds nothing on its own. The generated chain spent \(0.71\) of its
+epochs in one state at the minute scale, so naming that state scored \(0.71\)
+and the ceiling sat below the constant predictor. A fit at that ceiling was not
+a successful inference reported as a failure; it was no inference at all, and
+every parameter block driven by that path was scored against noise.
+
+The screen therefore reports both, and refuses a latent state whose ceiling does
+not clear its floor. A regime is scored against the share of its modal state,
+which is what a constant predictor reaches. A factor has no constant predictor,
+so it is scored against the correlation a circularly shifted copy of its own
+trajectory reaches, which is the null the edge confirmation already uses. Write
+\(\pi^\star_{\max}\) for the modal share of the generating path at scale \(k\)
+and \(a_k^\star\) for the accuracy attained under \(\Theta^\star\) and
+\(\gG^\star\); the state is admissible at that scale only when
+\begin{align}
+a_k^\star - \pi^\star_{\max} \;\ge\; \delta ,
+\label{eq:latent_ordering}
+\end{align}
+with \(\delta = 0.05\), so that a path beating the constant by a thousandth is
+not counted as recovered.
+
+Applied to the nine family II scenarios, \eqref{eq:latent_ordering} holds at the
+coarsest scale of both grids in \(9\) of \(9\), by \(+0.468\) to \(+0.600\). It
+fails at the minute scale in \(0\) of \(8\), with every margin inside \(0.021\)
+of the floor, and holds at the ten-minute scale in \(1\) of \(8\), which does not
+survive raising the regime contrast and is therefore a draw rather than a signal.
+The hour scale of the daily grid is the exception and keeps its regime, clearing
+four times out of four at \(+0.157\) and above; its blocks hold \(24\) children
+against the minute grid's \(6\), and that is the channel a regime has to act
+through once it no longer reaches the count emission. The contrast is not the
+lever, which had to be measured before the scale could be blamed: raising it
+from \(3\) to \(8\) to \(20\) moves the two finer scales from \(0\) and \(2\) of
+\(9\) clearing to \(1\) and \(2\) of \(9\), while the coarsest clears \(9\) of
+\(9\) throughout. The grid therefore carries \(M_k = [1, 1, M]\) on the minute
+hierarchy and \([1, M, M]\) on the daily one, decided exactly as the in-degree
+is.
+
+The generating chain is built so that this comparison is worth making. Its
+transition logits used to be drawn freely, so the stationary distribution was
+whatever the draw implied and the modal share at the coarsest scale was
+\(0.672\) at two regimes. Each row is now \(q e_m + (1 - q)\pi\), a self
+transition mixed with a draw from \(\pi\), which leaves \(\pi\) stationary
+exactly for any persistence \(q\), with \(\pi\) drawn within ten percent of an
+equal share. The modal share fell to \(0.511\). That rebalance changed no verdict
+in \eqref{eq:latent_ordering}, since the finer scales fail on the ceiling sitting
+at the floor rather than on the floor being high, but it is what makes a reported
+accuracy at the coarsest scale readable.
+
+The factor clears at every scale of every scenario, by \(+0.34\) to \(+0.78\) in
+correlation, including at the minute scale where no lagged edge can be placed and
+no regime can be recovered. Same-slice co-movement survives the event-start
+reading and persistent drift does not, which is why \(r_k\) is uniform across
+scales and \(M_k\) is not. The same argument applies to every parameter block
+whose identified form is coarser than its stored form.
+
+Stated generally, the screen turns a claim about an estimator into a claim
+about an estimator on a scenario that has been certified to contain the signal.
+It costs one replicate and one pass of latent-state inference per scenario,
+which is negligible against the cost of the studies it protects, and it is the
+step that makes a low recovery number attributable.
+
+\subsection{Methods under comparison}
+\label{sec:benchmark_methods}
+
+Seven entries share one interface, so that the protocol fits them on identical
+data and the difference between two rows is the single design decision that
+separates them.
+
+The \emph{full model} runs all three learning steps at every scale. The
+\emph{single-scale variant} switches off the cross-scale coupling, so no
+parent-scale posterior reaches latent-state inference or parameter learning and
+the regime chain at each scale sees only its own data and context. The
+allocation still ties a finer scale to its parent totals, since that is what
+makes the counts reconcile, so this entry isolates the value of passing the
+parent posterior downward rather than the value of the hierarchy itself. The
+\emph{no-factor} ablation forces \(r_k = 0\) at every scale, which sends all
+same-slice co-movement into the regimes, the lagged edges or the noise. The
+\emph{no-regime} ablation collapses the chain to \(M_k = 1\), which removes
+non-stationarity while leaving the hierarchy and the graph intact. The
+\emph{empty graph} fixes \(\gP_{k,\ell} = \emptyset\) at every scale with the
+structure step switched off, leaving top-down transfer and the latent model as
+the only mechanisms; it is the reference against which a structural Hamming
+distance becomes meaningful, because a method whose distance exceeds it is
+worse than reporting nothing. The \emph{oracle graph} installs
+\(\gG^\star\) and switches the structure step off, which separates parameter
+and latent-state recovery from search error.
+
+The seventh entry, \emph{oracle parameters}, fits nothing at all. It runs
+latent-state inference at \(\Theta^\star\) and \(\gG^\star\) and reports the
+resulting metrics. It is a ceiling and not a competitor, and comparing a fitted
+model against it answers a question no other row can, which is whether a
+disappointing latent metric reflects a learner that failed or a scenario that
+does not identify the quantity. The screen of
+\cref{sec:benchmark_identifiability} already fixes that ceiling numerically for
+the regime path, and the oracle row extends it to every metric the protocol
+computes.
+
+When a published structure learner supplies the graph, it enters through the
+same interface, with the learned edges replacing \(\gG\) and nothing else
+changed. One implementation detail decides whether that comparison is valid at
+all. The parameter step updates the coefficient of a lagged parent only where a
+coefficient for that parent already exists, so a graph installed from outside
+the structure step has no effect on any likelihood until a zero coefficient is
+created for each of its parents. Without that step every externally supplied
+graph is scored exactly as if it had reported the empty graph, and a table of
+apparently distinct methods measures nothing.
+
+\subsection{Metrics}
+\label{sec:benchmark_metrics}
+
+\paragraph{Structure recovery, per scale.}
+Write
+\(E_k = \{(\ell', d, \ell) : \ell \in \gL,\; (\ell', d) \in \gP_{k,\ell}\}\)
+for the lagged edge set that a collection of parent sets at scale \(k\)
+defines, and
+\(\hat{E}_k\) and \(E_k^\star\) for its learned and true values. The two are
+compared as sets of triples, giving true positives, false positives and false
+negatives and hence
+\begin{align}
+\mathrm{Prec}_k = \frac{|\hat{E}_k \cap E_k^\star|}{|\hat{E}_k|},
+\qquad
+\mathrm{Rec}_k = \frac{|\hat{E}_k \cap E_k^\star|}{|E_k^\star|},
+\qquad
+\mathrm{SHD}_k = \bigl|\hat{E}_k \,\triangle\, E_k^\star\bigr| ,
+\label{eq:bench_structure}
+\end{align}
+with \(F_{1,k}\) the harmonic mean of the first two. Reporting per scale rather
+than pooled is forced by the design, since one of the three scales carries no
+true edges and pooling would let recall at another scale hide false positives
+there. The empty-versus-empty case is scored by convention rather than by
+formula. When \(\hat{E}_k\) and \(E_k^\star\) are both empty the scale is
+perfectly recovered, so precision, recall and \(F_1\) are all set to \(1\);
+treating them as \(0/0\) and recording zero drags the macro average down by a
+whole scale in every scenario, since the finest scale is empty in all of them.
+The convention has to be declared wherever the macro average over scales is
+quoted, because it hands a free \(1\) at the finest scale to any method that
+proposes nothing there, and a method that proposes nothing anywhere collects
+that term as well.
+
+\paragraph{Latent-state recovery.}
+The regime label is identifiable only up to permutation, so the estimate
+\(\hat{S}_t^{(k)} = \argmax_m \gamma_t(m)\) is scored under the relabeling that
+suits it best,
+\begin{align}
+\mathrm{Acc}_S^{(k)}
+=
+\max_{\sigma \in \mathfrak{S}_{M_k}}
+\frac{1}{T_k}\sum_{t=1}^{T_k}
+\mathbb{I}\bigl\{\sigma(\hat{S}_t^{(k)}) = S_t^{(k)\star}\bigr\},
+\label{eq:bench_accs}
+\end{align}
+enumerated exactly for \(M_k \le 8\) and matched greedily on the contingency
+table above that. Accuracy alone rewards a degenerate estimate on an unbalanced
+regime path, so the adjusted Rand index and the normalized mutual information
+are reported alongside it; both are invariant to relabeling by construction and
+the adjusted Rand index is corrected for chance agreement.
+
+Two readings of \eqref{eq:bench_accs} that a table would otherwise get wrong. A
+scale whose true path never switches has no regime to recover, and
+\eqref{eq:bench_accs} returns exactly \(1\) there for any estimate whatsoever, so
+all three figures are reported as not applicable rather than as a perfect score.
+Since the grid places a regime only where the screen of
+\cref{sec:benchmark_identifiability} admits one, that is the usual case at the
+two finer scales of the minute hierarchy. A scale whose true path switches while
+the fitted model emits a constant is scored, and the score is worth reading: the
+only available relabeling maps that constant onto one true regime, so
+\eqref{eq:bench_accs} returns that regime's frequency, which is what a constant
+predictor earns and is a floor rather than a recovery. Regime accuracy from a
+model with \(M_k = 1\) is therefore not comparable with regime accuracy from one
+with \(M_k > 1\). The factor is
+identified only up to a rotation, so pointwise recovery of \(H_t^{(k)}\) is not
+the quantity of interest. The metric averages, over the inferred components at
+a scale, the largest absolute correlation that component attains against any
+true component, which is invariant to the sign and to the ordering of the
+components but not to a general rotation of them.
+
+\paragraph{Aggregation consistency.}
+The model claims exact reconciliation, so the claim is measured rather than
+assumed,
+\begin{align}
+\mathrm{RecErr}_X
+=
+\sum_{k=1}^{K-1}\sum_{\ell \in \gL}\sum_{c \in \gT^{(k+1)}}
+\Bigl| X_c^{(k+1,\ell)} - \sum_{t \in \child_k(c)} X_t^{(k,\ell)} \Bigr|,
+\label{eq:bench_recx}
+\end{align}
+and identically for \(\mathrm{RecErr}_Y\) with \(Y\) in place of \(X\). The
+quantity is a property of whatever multiscale array it is handed. In the
+protocol that array is the held-out partition of the generated data, which
+satisfies the identity by construction because the finer scales were produced
+by allocating the parent total, so every entry scores exactly zero and the
+column certifies the generator and the split rather than separating methods.
+It becomes a comparison only when it is applied to an array a method
+reconstructed itself, where a scale predicted without reference to its parent
+leaves a residual whose magnitude is hierarchical inconsistency in the units of
+the data.
+
+\paragraph{Held-out log evidence, and how it must be read.}
+The predictive quantity is the negative log evidence on the validation
+partition, \(-\sum_k \log Z_k\), where \(\log Z_k\) is what latent-state
+inference returns at scale \(k\); the recovery metrics are computed on the test
+partition instead. It sums a zero-inflated negative binomial count likelihood
+and a negative binomial duration likelihood at the coarsest scale with a
+Dirichlet-multinomial allocation likelihood at each finer scale, the allocation
+terms up to an additive constant that depends only on the data, since the
+block-level normalizer and the multinomial coefficient shift every candidate by
+the same amount and are dropped. That constant is the reason the quantity
+compares methods on one dataset and does not compare datasets. Its
+magnitude also grows with \(T_k\) and with the count level, so an average of
+raw values across scenarios is dominated by whichever scenario happens to be
+largest. The defensible summary is the paired per-fit difference between two
+methods on the same replicate, reported as the fraction of fits in which one
+beats the other together with the mean difference.
+
+\paragraph{Parameter recovery.}
+Structure recovery reports which edges returned and is silent on whether the
+conditional distributions attached to them are right. The parameter metric
+scores the learned blocks directly against the generating ones, and it scores
+only the identified form of each block. Two alignments are needed. The regime
+permutation is resolved once per scale by matching identified emission levels,
+and every regime-indexed block is then compared under that one relabeling. The
+factor loading is identified only up to a rotation, since rotating the factors
+rotates the loadings back, so the loadings are compared through their row
+space, by one minus the mean best absolute cosine between the normalized true
+and learned loading vectors.
+
+Which form is identified differs by scale, and comparing raw arrays instead
+charges for directions the data cannot see. At the coarsest scale the count
+mean is
+\(\exp\bigl(\beta_{0,\ell}^{(K)} + \beta_{S,\ell}^{(K)}[m] + \cdots\bigr)\), so
+only the sum \(\beta_{0,\ell}^{(K)} + \vbeta_{S,\ell}^{(K)}\) is pinned down and
+a constant may move between the two freely. At a finer scale the allocation is
+a softmax over the children of one block, so every term constant inside that
+block cancels exactly and only the contrast of the regime effect across regimes
+survives,
+\begin{align}
+\text{identified level of label } \ell \text{ at scale } k < K
+\;=\;
+\vbeta_{S,\ell}^{(k)}
+- \frac{1}{M_k}\sum_{m=1}^{M_k} \beta_{S,\ell}^{(k)}[m].
+\label{eq:bench_identified}
+\end{align}
+The reported blocks are then the total variation distance between transition
+tables, the mean absolute lag coefficient error on the true support, the
+absolute learned lag mass placed off that support, the emission level error
+divided by the spread of the true block, the loading subspace error and the
+mean absolute difference of the child shares a regime implies for the
+allocation. The scale-free entries are averaged into a single figure, and the
+headline is the sample-size ladder rather than any single value, since
+parameter recovery is a consistency claim and an error that does not fall with
+\(T_1\) is a bias rather than an estimate.
+
+\paragraph{Edge AUPRC.}
+The candidate edge sets here are sparse, so the negative class dominates and a
+single thresholded \(F_1\) confounds the quality of a ranking with the choice
+of operating point. Where a method returns scored candidates rather than a
+hard set, the candidates are ranked by score descending and the precision at
+each recall gain is summed and divided by the number of true edges. Equally
+scored candidates form one indistinguishable block and are all credited the
+precision at the end of that block, so the value does not depend on the order
+in which the scores happen to be enumerated, and a true edge that was never
+scored contributes nothing while still counting in the denominator. The
+quantity is undefined when a scale has no true edges, which is the honest
+outcome rather than a value of zero.
+
+\subsection{Protocol items that decide whether the evaluation survives review}
+\label{sec:benchmark_review}
+
+Four reporting decisions separate a structure-learning evaluation that can be
+compared against published work from one that cannot. They are listed here
+because each has a documented failure mode and because each is cheap to satisfy
+in advance and impossible to repair afterwards.
+
+\paragraph{Standardize, then report both sortability statistics.}
+A synthetic generator that draws coefficients on a fixed positive range induces
+a marginal variance ordering that agrees with the causal order, and a
+continuous-optimization learner then scores well by sorting on variance rather
+than by discovering anything \citep{reisach2021varsortability}. The design here
+standardizes the response and the lagged design matrix before the
+continuous-optimization entry is solved, which removes the raw-scale advantage.
+Standardizing is necessary and not sufficient, since an \(R^2\)-based
+sortability survives it \citep{reisach2023r2sortability}, so both varsortability
+and \(R^2\)-sortability belong in the reported description of any generated
+grid. Both are computed here. Over the $44$ scale fits of the grid that carry
+true edges, two per scenario, varsortability is $0.563 \pm 0.233$ and
+\(R^2\)-sortability is $0.452 \pm 0.221$, both near the chance level of $0.5$.
+The generator does not induce a variance ordering that agrees with the causal
+order, so no entry in the comparison tables can be scoring for that reason.
+
+The tiled bnlearn networks used as external ground truth are the more sortable
+of the two constructions. Their varsortability runs from $0.462$ on sachs to
+$0.773$ on child, and their \(R^2\)-sortability from $0.621$ on child to
+$1.000$ on earthquake, so a learner has ordering information there that the
+generated grid does not supply. That is a property of the tiling rather than of
+any method scored against it, and it is stated because the construction is
+widely used and, as far as we are aware, this statistic has not been reported
+for it.
+
+\paragraph{State which structural Hamming distance is meant.}
+The original definition is over partially directed acyclic graphs
+\citep{tsamardinos2006mmhc}, where a reversed edge and an unoriented edge are
+distinct kinds of error. Most released code computes the distance on the
+directed adjacency instead, and some implementations additionally offer a
+switch for whether a reversed edge costs one or two. The two definitions are
+different quantities and a distance reported without saying which is not
+commensurable across papers. This work computes the distance on the directed
+adjacency of the lagged edge set, as in \eqref{eq:bench_structure}, counting
+each missing and each spurious edge once. Within the hypothesis class searched
+here every candidate edge points forward in time and its reversal is not
+admissible, so the orientation ambiguity that separates the two definitions in
+the static case does not arise inside the search space.
+
+\paragraph{Report AUPRC, not AUROC alone.}
+Under the class imbalance of sparse edge scoring a large number of false
+positives moves the area under the receiver operating characteristic very
+little while moving precision a great deal, so the two curves rank methods
+differently and only the precision-recall view reflects the imbalance
+\citep{davis2006prroc}. The area under the precision-recall curve is therefore
+the ranking metric reported wherever a method exposes scored candidates, and
+the thresholded triple of \eqref{eq:bench_structure} is reported alongside it
+rather than in place of it.
+
+\paragraph{Report regime recovery separately from edge recovery.}
+A persistent latent state raises the level of every label it drives for as long
+as it lasts, so each label is autocorrelated even with an empty parent set, and
+a criterion that conditions on nothing attributes that autocorrelation to the
+only mechanism in its hypothesis space, a lagged self edge. This is the
+published mechanism by which autocorrelation inflates false positives in
+time-series structure learning \citep{runge2018pitfalls}, and it is exactly the
+confound the empty finest scale of \cref{sec:benchmark_grid} is built to expose.
+Because a method can track the regime path well and still over-select edges, or
+the reverse, the regime metrics of \eqref{eq:bench_accs} are reported per scale
+and are never folded into the structural columns. Pooling the two into a single
+score would hide precisely the trade-off the benchmark exists to measure.

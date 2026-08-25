@@ -1,0 +1,39 @@
+# CPU image: the full test suite, every experiment, and the manuscript build.
+FROM python:3.12-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=0 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/workspace
+
+# One BLAS thread per process by default.  A pool of N workers each starting
+# one thread per core oversubscribes the machine by a factor of N, which is
+# slower than one thread each; `--jobs 1` runs override this at the command line.
+ENV OMP_NUM_THREADS=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    NUMEXPR_NUM_THREADS=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        graphviz \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+COPY requirements.txt requirements-dev.txt ./
+# The cpu wheel of torch first, so the `torch` line of requirements-dev.txt is
+# already satisfied and the multi-gigabyte CUDA build is never pulled here.
+RUN python -m pip install --upgrade pip \
+    && python -m pip install --index-url https://download.pytorch.org/whl/cpu torch \
+    && python -m pip install -r requirements.txt -r requirements-dev.txt
+
+COPY . .
+
+# Stamp the image with a digest of the source it was built from, so a run can
+# say whether it executed this code or something mounted over it.
+ARG GIT_REV=unknown
+RUN python -m src.utils.provenance --write --git-rev "$GIT_REV"
+
+CMD ["python", "-m", "pytest", "tests/", "-q"]

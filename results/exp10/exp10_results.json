@@ -1,0 +1,166 @@
+{
+  "csv": "data/events.csv",
+  "slot_minutes": 1,
+  "branching": [
+    10,
+    6
+  ],
+  "starved_minutes": 360,
+  "train_frac": 0.7,
+  "observed": {
+    "name": "data/events.csv",
+    "n_events": 1601,
+    "labels": [
+      "L0",
+      "L1",
+      "L2"
+    ],
+    "K": 3,
+    "max_lag": [
+      2,
+      2,
+      2
+    ],
+    "whole_series": [
+      {
+        "k": 1,
+        "n_epochs": 1440,
+        "n_candidates": 6,
+        "epochs_per_candidate": 240.0,
+        "expected_recall": 0.75,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 2,
+        "n_epochs": 144,
+        "n_candidates": 6,
+        "epochs_per_candidate": 24.0,
+        "expected_recall": 0.6271,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 3,
+        "n_epochs": 24,
+        "n_candidates": 6,
+        "epochs_per_candidate": 4.0,
+        "expected_recall": 0.1471,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      }
+    ],
+    "training_split": [
+      {
+        "k": 1,
+        "n_epochs": 1020,
+        "n_candidates": 6,
+        "epochs_per_candidate": 170.0,
+        "expected_recall": 0.75,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 2,
+        "n_epochs": 102,
+        "n_candidates": 6,
+        "epochs_per_candidate": 17.0,
+        "expected_recall": 0.4632,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 3,
+        "n_epochs": 17,
+        "n_candidates": 6,
+        "epochs_per_candidate": 2.8333,
+        "expected_recall": 0.0856,
+        "supported": false,
+        "reason": "under the count at which the sweep recovered anything, and it returned edges there anyway"
+      }
+    ],
+    "refused_whole_series": [],
+    "refused_training_split": [
+      3
+    ]
+  },
+  "starved": {
+    "name": "data/events.csv clipped to 360 minutes",
+    "n_events": 424,
+    "labels": [
+      "L0",
+      "L1",
+      "L2"
+    ],
+    "K": 3,
+    "max_lag": [
+      2,
+      2,
+      2
+    ],
+    "whole_series": [
+      {
+        "k": 1,
+        "n_epochs": 360,
+        "n_candidates": 6,
+        "epochs_per_candidate": 60.0,
+        "expected_recall": 0.75,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 2,
+        "n_epochs": 36,
+        "n_candidates": 6,
+        "epochs_per_candidate": 6.0,
+        "expected_recall": 0.2206,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 3,
+        "n_epochs": 6,
+        "n_candidates": 6,
+        "epochs_per_candidate": 1.0,
+        "expected_recall": 0.0,
+        "supported": false,
+        "reason": "fewer than 12 epochs"
+      }
+    ],
+    "training_split": [
+      {
+        "k": 1,
+        "n_epochs": 240,
+        "n_candidates": 6,
+        "epochs_per_candidate": 40.0,
+        "expected_recall": 0.7126,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 2,
+        "n_epochs": 24,
+        "n_candidates": 6,
+        "epochs_per_candidate": 4.0,
+        "expected_recall": 0.1471,
+        "supported": true,
+        "reason": "above the count at which recovery begins"
+      },
+      {
+        "k": 3,
+        "n_epochs": 4,
+        "n_candidates": 6,
+        "epochs_per_candidate": 0.6667,
+        "expected_recall": 0.0,
+        "supported": false,
+        "reason": "fewer than 12 epochs"
+      }
+    ],
+    "refused_whole_series": [
+      3
+    ],
+    "refused_training_split": [
+      3
+    ]
+  }
+}

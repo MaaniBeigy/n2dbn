@@ -1,0 +1,140 @@
+% ============================================================================
+% n2dbn.tex
+%
+% Nested non-stationary dynamic Bayesian networks: the model, the learning
+% procedure, the benchmark and the results, in one document.
+%
+% Build:
+%   docker compose run --rm paper
+% or, from paper/:
+%   latexmk -pdf n2dbn.tex
+%
+% Sections live in sec_*.tex and are input below in reading order.
+% ============================================================================
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[submission]{probml}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\ShortHeadings{Nested Non-Stationary Dynamic Bayesian Networks}
+
+\input{math_commands.tex}
+
+% Operators the model notation needs beyond math_commands.tex.
+\newcommand{\child}{\operatorname{ch}}
+\newcommand{\parmap}{\pi}
+\newcommand{\Dir}{\mathrm{Dir}}
+\newcommand{\Mult}{\mathrm{Mult}}
+\newcommand{\Top}{\mathrm{Top}}
+\newcommand{\logit}{\mathrm{logit}}
+\newcommand{\old}{\mathrm{old}}
+\newcommand{\new}{\mathrm{new}}
+\newcommand{\NB}{\mathrm{NB}}
+\newcommand{\ZINB}{\mathrm{ZINB}}
+\newcommand{\SHD}{\mathrm{SHD}}
+\newcommand{\Prec}{\mathrm{Prec}}
+\newcommand{\Rec}{\mathrm{Rec}}
+
+\newtheorem{assumption}{Assumption}
+\crefname{assumption}{assumption}{assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefrangelabelformat{assumption}{#3#1#4 to #5#2#6}
+\let\origtheassumption\theassumption
+
+\begin{document}
+
+\title{
+    Modeling Behavior Evolution Across Timescales:\\
+    Nested Non-Stationary Dynamic Bayesian Networks
+}
+
+\author[1,$*$,$\dagger$]{First Author}
+\author[1,2,$*$]{Second Author}
+\author[2]{Third Author}
+
+\affil[1]{Affiliation 1}
+\affil[2]{Affiliation 2}
+\affil[$*$]{Equal contribution}
+\affil[$\dagger$]{Correspondence to \url{email@example.com}}
+
+\maketitle
+
+\begin{abstract}
+One stream of behavior appears at several temporal resolutions at once, as a
+sparse sequence of event starts at a fine resolution and as counts per hour or
+per day above it, and the dependencies that govern it drift over time. A
+dynamic Bayesian network is defined at one chosen resolution and does not force
+a fine-scale prediction to aggregate to the coarse summary of the same
+quantity; non-stationary variants keep the single resolution; temporal
+abstraction supplies no probabilistic account of how a coarse count divides
+into finer ones. We present nested non-stationary dynamic Bayesian networks,
+which generate each finer scale by dividing its parent, so that counts and
+durations reconcile exactly by construction rather than by a later correction,
+and which carry two latent states per scale, a discrete regime for persistent
+drift and a continuous factor for co-movement inside one epoch, so that
+co-movement is not reported as a directed dependence. Structure and parameters
+are estimated by a bidirectional variational structural expectation maximization
+procedure whose two passes carry the two components of a scale-\(k\) predictor,
+the block-constant one that only a coarser scale identifies and the within-block
+one that only scale \(k\) does, and whose local score is conditioned on the
+latent posterior. We give the
+model, the estimator, the identifiability invariances that any evaluation of it
+must respect, and a benchmark screened for identifiability before any metric is
+read. In that benchmark the coarsest and the middle scale carry true lagged
+edges and the finest carries none, so the finest scale scores a method for
+staying silent. Against eight published structure learners the
+latent-conditional score reaches an $F_1$ of $0.892$ at the coarsest scale,
+where those learners reach $0.021$ to $0.346$, and of $0.690$ at the middle
+scale, where they reach $0.109$ to $0.251$, and it is the only method whose
+total structural distance improves on reporting nothing at all. Its recall of
+true cross-label edges at the middle scale is $0.523$ against at most $0.245$
+for any of the eight, which separates a dependence between two labels from the
+autocorrelation of one. We also evaluate
+against released Bayesian networks with exact conditional probability tables,
+tiled into two-slice temporal networks, and we report a methodological finding
+that governs how such a comparison must be run. A latent-variable model carries
+free quantities that a latent-free learner does not, namely the number of
+regimes, the factor dimension and the edge penalty, and declaring them rather
+than estimating them makes the comparison a comparison of declarations. Choosing
+all three on held-out log evidence, by the same rule and from the training data
+alone, raises $F_1$ on five tiled networks from $0.532$ to $0.806$. Most of the
+gap to hill climbing that the declared setting appeared to show was therefore a
+property of the protocol. What remains is a recall deficit of about eight true
+edges spread over three of the five networks, which we report as unexplained
+rather than attribute to the model's block structure, an explanation we test
+and rule out. On an observed wearable and self-report log with no ground truth,
+$51$ participants over eight complete calendar weeks each, a model fitted to
+the panel draws synthetic logs holding four of six behavior labels within $6$
+percent of their real episode volume at exactly zero reconciliation error,
+four times closer than an intercept and a participant level draws them, and an
+enumerated grid of twenty-one non-stationarity forms accepts four of the six
+rows that carry evidence net of a positive control. That grid does not separate
+the fitted graph from the empty one on any row that carries evidence, which we
+report as a bound on what fifty-one participants over eight weeks can resolve.
+Agreement between changepoints found independently in the two logs is monotone
+in the calendar scale for every label, which places the departure at the
+within-day shape. On the same log, offering calendar nodes at the scale the
+model says they are identified at is worth $2295.64$ nats over withholding them
+and $33.90$ nats over offering them at every scale.
+\end{abstract}
+
+\input{sec_synopsis}
+\input{sec_intro}
+\input{sec_related}
+\clearpage
+\input{sec_model}
+\input{sec_learning}
+\input{sec_identifiability}
+\input{sec_benchmark}
+\input{sec_results}
+\input{sec_limitations}
+
+\bibliography{n2dbn_refs}
+
+\end{document}

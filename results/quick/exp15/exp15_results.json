@@ -1,0 +1,403 @@
+{
+  "provenance": {
+    "csv": "data/observed_lifesnaps_event_log.csv",
+    "csv_sha256": "fe8a2b019cec94b78968a40f55245eb8f5a6e4b5919eb6e94155eaafce10fb06",
+    "window_weeks": 8,
+    "window_days": 56,
+    "n_subjects": 10,
+    "dropped": [],
+    "coverage_mean": 0.9964285714285716,
+    "axis_digest": "cfe31d87424173f5",
+    "targets": [
+      "gym",
+      "mindfulness",
+      "nap",
+      "sleep",
+      "survey_response",
+      "walk"
+    ],
+    "exogenous": [
+      "hour_index",
+      "weekday_index",
+      "day_index",
+      "week_index",
+      "notification_received"
+    ],
+    "n_epochs": [
+      80640,
+      1344,
+      56,
+      8
+    ]
+  },
+  "collapse_agreement": 0.9712895377128954,
+  "participants_kept": 51,
+  "search": {
+    "scales": [
+      2,
+      3,
+      4
+    ],
+    "max_lag": 1,
+    "price": 2.5402254134490496,
+    "null_median": 0.05302851346100973,
+    "null_max": 201.3389913308905,
+    "n_candidates": 46,
+    "by_stratum": {
+      "cross": 10,
+      "self": 12
+    },
+    "accepted": [
+      "gym -> gym (k=2, duration, lag=1)",
+      "gym -> gym (k=3, duration, lag=1)",
+      "hour_index -> gym (k=2, level, lag=0)",
+      "day_index -> gym (k=3, level, lag=0)",
+      "sleep -> gym (k=4, count, lag=1)",
+      "sleep -> gym (k=2, count, lag=1)",
+      "mindfulness -> mindfulness (k=2, duration, lag=1)",
+      "mindfulness -> mindfulness (k=4, duration, lag=1)",
+      "nap -> nap (k=2, count, lag=1)",
+      "nap -> nap (k=2, duration, lag=1)",
+      "sleep -> sleep (k=3, duration, lag=1)",
+      "sleep -> sleep (k=3, count, lag=1)",
+      "notification_received -> survey_response (k=2, level, lag=0)",
+      "notification_received -> survey_response (k=2, level, lag=1)",
+      "hour_index -> survey_response (k=2, level, lag=0)",
+      "survey_response -> survey_response (k=2, count, lag=1)",
+      "survey_response -> survey_response (k=3, count, lag=1)",
+      "weekday_index -> survey_response (k=3, level, lag=0)",
+      "walk -> walk (k=2, count, lag=1)",
+      "hour_index -> walk (k=2, level, lag=0)",
+      "walk -> walk (k=2, duration, lag=1)",
+      "weekday_index -> walk (k=3, level, lag=0)"
+    ],
+    "guard_rejected": {}
+  },
+  "anchors": {
+    "digest": "b55cbb587182610252920c278d18e30a2cbea27ac0177bf5e59d058f80193697",
+    "n_anchors": 84
+  },
+  "rungs": {
+    "R1": {
+      "hits": 0,
+      "denominator": 6,
+      "passed": true
+    },
+    "R2": {
+      "hits": 1,
+      "denominator": 88,
+      "passed": false
+    },
+    "R3": {
+      "hits": 1,
+      "denominator": 6,
+      "reachable": 3,
+      "reachable_hits": 1
+    },
+    "R7": {
+      "target": "gym",
+      "columns": [
+        "gym -> gym (k=2, duration, lag=1)",
+        "hour_index -> gym (k=2, level, lag=0)",
+        "sleep -> gym (k=2, count, lag=1)"
+      ],
+      "model_rejected": true,
+      "n_invariant_sets": 0,
+      "intersection": []
+    },
+    "R9": {
+      "n_pairs": 2,
+      "threshold": 0.75,
+      "frequency": {
+        "gym -> gym (k=2, count, lag=1)": 0.5,
+        "hour_index -> gym (k=2, level, lag=0)": 0.5,
+        "gym -> gym (k=3, duration, lag=1)": 0.75,
+        "walk -> gym (k=3, duration, lag=1)": 0.25,
+        "walk -> gym (k=2, count, lag=1)": 0.25,
+        "walk -> gym (k=4, count, lag=1)": 0.25,
+        "nap -> nap (k=3, duration, lag=1)": 0.5,
+        "sleep -> sleep (k=2, duration, lag=1)": 0.25,
+        "notification_received -> survey_response (k=2, level, lag=0)": 1.0,
+        "notification_received -> survey_response (k=2, level, lag=1)": 1.0,
+        "survey_response -> survey_response (k=3, count, lag=1)": 1.0,
+        "hour_index -> survey_response (k=2, level, lag=0)": 1.0,
+        "survey_response -> survey_response (k=2, duration, lag=1)": 0.5,
+        "weekday_index -> survey_response (k=3, level, lag=0)": 0.5,
+        "walk -> walk (k=2, count, lag=1)": 0.75,
+        "survey_response -> walk (k=3, count, lag=1)": 0.25,
+        "gym -> gym (k=2, duration, lag=1)": 0.5,
+        "nap -> nap (k=3, count, lag=1)": 0.5,
+        "nap -> nap (k=2, count, lag=1)": 0.5,
+        "sleep -> sleep (k=4, count, lag=1)": 0.25,
+        "sleep -> sleep (k=3, duration, lag=1)": 0.5,
+        "survey_response -> survey_response (k=2, count, lag=1)": 0.5,
+        "notification_received -> survey_response (k=3, level, lag=0)": 0.5,
+        "walk -> walk (k=4, duration, lag=1)": 0.5,
+        "hour_index -> walk (k=2, level, lag=0)": 0.5,
+        "walk -> walk (k=2, duration, lag=1)": 0.5,
+        "sleep -> sleep (k=2, count, lag=1)": 0.25
+      },
+      "selected": [
+        "gym -> gym (k=3, duration, lag=1)",
+        "hour_index -> survey_response (k=2, level, lag=0)",
+        "notification_received -> survey_response (k=2, level, lag=0)",
+        "notification_received -> survey_response (k=2, level, lag=1)",
+        "survey_response -> survey_response (k=3, count, lag=1)",
+        "walk -> walk (k=2, count, lag=1)"
+      ],
+      "expected_false": 1.471467391304348
+    }
+  },
+  "edges": [
+    {
+      "edge": "gym -> gym (k=2, duration, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -18.180942702835875,
+      "standardized": -2.1016334654581024,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.99999999231349,
+      "e_value": 13.019833549198868
+    },
+    {
+      "edge": "gym -> gym (k=3, duration, lag=1)",
+      "scale": 3,
+      "lag": 1,
+      "coefficient": 0.020483160417476668,
+      "standardized": 0.011529380934820182,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.995841245953085,
+      "e_value": 1.1137855577858542
+    },
+    {
+      "edge": "hour_index -> gym (k=2, level, lag=0)",
+      "scale": 2,
+      "lag": 0,
+      "coefficient": 0.05111018118864702,
+      "standardized": 0.3537942089164015,
+      "future_lag_p": 0.0024221058523751014,
+      "future_lag_coefficient": 0.0006714074080347446,
+      "e_value": 2.1037549353588227
+    },
+    {
+      "edge": "day_index -> gym (k=3, level, lag=0)",
+      "scale": 3,
+      "lag": 0,
+      "coefficient": -0.0356475924316935,
+      "standardized": -0.5761802309724922,
+      "future_lag_p": 0.966748910773544,
+      "future_lag_coefficient": 0.00013709004551125425,
+      "e_value": 2.768424346452743
+    },
+    {
+      "edge": "sleep -> gym (k=4, count, lag=1)",
+      "scale": 4,
+      "lag": 1,
+      "coefficient": 0.5646384461310388,
+      "standardized": 1.6109521778355465,
+      "future_lag_p": 0.04220373239101122,
+      "future_lag_coefficient": 0.18089874791614163,
+      "e_value": 8.130693084324033
+    },
+    {
+      "edge": "sleep -> gym (k=2, count, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -4.811927752181205,
+      "standardized": -0.832401288321201,
+      "future_lag_p": 0.04235220073089408,
+      "future_lag_coefficient": -0.011706142527374497,
+      "e_value": 3.6873767554469454
+    },
+    {
+      "edge": "mindfulness -> mindfulness (k=2, duration, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -155.30028235273653,
+      "standardized": -4.441707425199617,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999998775510716,
+      "e_value": 113.37273750635924
+    },
+    {
+      "edge": "mindfulness -> mindfulness (k=4, duration, lag=1)",
+      "scale": 4,
+      "lag": 1,
+      "coefficient": 0.21067350435609808,
+      "standardized": 0.08809169686749237,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999999989520689,
+      "e_value": 1.3841806194893995
+    },
+    {
+      "edge": "nap -> nap (k=2, count, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -2875.363506033761,
+      "standardized": -156.63033706484103,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999999660988036,
+      "e_value": 1.5943691550646967e+62
+    },
+    {
+      "edge": "nap -> nap (k=2, duration, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": 192.81517856672826,
+      "standardized": 10.503265533818581,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999999660988036,
+      "e_value": 28313.702589336044
+    },
+    {
+      "edge": "sleep -> sleep (k=3, duration, lag=1)",
+      "scale": 3,
+      "lag": 1,
+      "coefficient": -2.138786544258973,
+      "standardized": -1.4512189303802856,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9768944481851746,
+      "e_value": 6.952661626170739
+    },
+    {
+      "edge": "sleep -> sleep (k=3, count, lag=1)",
+      "scale": 3,
+      "lag": 1,
+      "coefficient": 20.248139461374226,
+      "standardized": 13.738857376955876,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9768944481851746,
+      "e_value": 537942.2353392524
+    },
+    {
+      "edge": "notification_received -> survey_response (k=2, level, lag=0)",
+      "scale": 2,
+      "lag": 0,
+      "coefficient": 1.9351074172809823,
+      "standardized": 0.701936232965673,
+      "future_lag_p": 0.49408784390186544,
+      "future_lag_coefficient": -0.00950687337297155,
+      "e_value": 3.1955224733563847
+    },
+    {
+      "edge": "notification_received -> survey_response (k=2, level, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": 1.240087171568402,
+      "standardized": 0.44982625253065583,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.6249987681510878,
+      "e_value": 2.3785731956742806
+    },
+    {
+      "edge": "hour_index -> survey_response (k=2, level, lag=0)",
+      "scale": 2,
+      "lag": 0,
+      "coefficient": 0.07939215282816946,
+      "standardized": 0.5495672926757592,
+      "future_lag_p": 6.152179065912181e-18,
+      "future_lag_coefficient": 0.010281385292770442,
+      "e_value": 2.68328660049226
+    },
+    {
+      "edge": "survey_response -> survey_response (k=2, count, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -1.4153875084968974,
+      "standardized": -0.8880757842283759,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999344626156653,
+      "e_value": 3.9142798692165837
+    },
+    {
+      "edge": "survey_response -> survey_response (k=3, count, lag=1)",
+      "scale": 3,
+      "lag": 1,
+      "coefficient": 0.45549858086942546,
+      "standardized": 1.5403164621566516,
+      "future_lag_p": 7.646650396320542e-279,
+      "future_lag_coefficient": 0.9334349768179803,
+      "e_value": 7.588834966087066
+    },
+    {
+      "edge": "weekday_index -> survey_response (k=3, level, lag=0)",
+      "scale": 3,
+      "lag": 0,
+      "coefficient": -0.09714519072428743,
+      "standardized": -0.19429038144857486,
+      "future_lag_p": 0.8678639101547604,
+      "future_lag_coefficient": -0.012261897693454142,
+      "e_value": 1.6738139832566334
+    },
+    {
+      "edge": "walk -> walk (k=2, count, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": -296.0640438608194,
+      "standardized": -57.439439868122655,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999999971349073,
+      "e_value": 1.0035867386962442e+23
+    },
+    {
+      "edge": "hour_index -> walk (k=2, level, lag=0)",
+      "scale": 2,
+      "lag": 0,
+      "coefficient": 0.07516318073621837,
+      "standardized": 0.5202935589302464,
+      "future_lag_p": 9.148246475422303e-12,
+      "future_lag_coefficient": 0.0025291737708900836,
+      "e_value": 2.591575312922483
+    },
+    {
+      "edge": "walk -> walk (k=2, duration, lag=1)",
+      "scale": 2,
+      "lag": 1,
+      "coefficient": 22.78763279673805,
+      "standardized": 4.421032850515332,
+      "future_lag_p": 0.0,
+      "future_lag_coefficient": 0.9999999971349073,
+      "e_value": 111.25029518451004
+    },
+    {
+      "edge": "weekday_index -> walk (k=3, level, lag=0)",
+      "scale": 3,
+      "lag": 0,
+      "coefficient": -0.15655691249825243,
+      "standardized": -0.31311382499650486,
+      "future_lag_p": 0.051116514140577406,
+      "future_lag_coefficient": 0.046428572891071586,
+      "e_value": 1.9917601566507708
+    }
+  ],
+  "calendar_ablation": {
+    "absent": {
+      "n_candidates": 42,
+      "n_accepted": 15,
+      "by_stratum": {
+        "cross": 3,
+        "self": 12
+      },
+      "objective": -10545.810451841031
+    },
+    "home": {
+      "n_candidates": 46,
+      "n_accepted": 22,
+      "by_stratum": {
+        "cross": 10,
+        "self": 12
+      },
+      "objective": -10418.753671346301
+    },
+    "every": {
+      "n_candidates": 58,
+      "n_accepted": 22,
+      "by_stratum": {
+        "cross": 10,
+        "self": 12
+      },
+      "objective": -10418.727476520586
+    }
+  },
+  "negative_anchors": 6
+}

@@ -1,0 +1,907 @@
+\section{Results}
+\label{sec:results}
+
+Every number below comes from a stored run under \texttt{results/} and was read
+back from the file named beside it. The synthetic grid holds $22$ scenarios
+drawn from the three generating families, each fitted on three replicates, with
+the replicate seed fixed by the scenario so that the same scenario and
+replicate index reproduce the same dataset. Across the five grid experiments
+this is $1176$ scored fits; the parameter ladder adds $81$ and the external
+benchmark adds $120$.
+
+One property of the generator governs how the structural tables read. Over the
+$66$ (scenario, replicate) pairs of the full grid the generator places $731$
+lagged edges, $482$ of them at scale $k=2$ and $249$ at scale $k=3$, so the
+mean number of true edges per fit is $11.076$ and two of the three scales carry
+a recovery test. Scale $1$ carries no edge in any replicate, so $\gP_{1,\ell}$
+is empty for every label $\ell$. That emptiness is a measured property of the
+generator rather than a convenience. The finest scale is a binary event-start
+process, so a lagged edge there can only shift which minute of a block begins
+an episode, which is worth less than the price of the edge, and the screen of
+\cref{sec:benchmark_identifiability} rejects it in every family. A scale with
+no true edge and no proposed edge is scored as perfectly recovered, with
+precision, recall and $F_1$ all equal to $1$; a scale with no true edge and at
+least one proposed edge scores $0$ on all three. Reported precision at scale
+$1$ is therefore the fraction of fits that proposed nothing there, not a ratio
+of counts, and any mean of $F_1$ across the three scales still carries that
+free term. One of the $66$ pairs happens to carry no true edge at scale $3$
+either, which is why the empty-graph row scores $0.015$ there rather than
+exactly $0$.
+
+\subsection{Structure recovery on the synthetic grid}
+\label{sec:results:structure}
+
+Table~\ref{tab:results:exp1} reports the ideal-recovery experiment
+(\texttt{results/exp1/exp1\_results.csv}, $198$ fits), where the generator, the
+number of regimes and the number of factors are all given to the learner and
+only $\gP_{k,\ell}$ has to be found. Every fit on the grid
+starts at the generating parameters, and the structure search starts at the
+generating parent sets, so the structure reported for the full model is where
+the penalized score moves from the truth rather than where a cold search
+arrives; the empty-graph row clears those parent sets and runs no search.
+
+\begin{table}[t]
+\centering
+\caption{Structure recovery on the synthetic grid, means over $22$ scenarios
+and three replicates. Scale $1$ carries no true edge, so its precision, recall
+and $F_1$ record the fraction of fits that proposed nothing there. In the
+across-scales row the $F_1$ column is the mean over the three scales and the
+SHD column is their sum. Source
+\texttt{results/exp1/exp1\_results.csv}.}
+\label{tab:results:exp1}
+\begin{tabular}{llrrrr}
+\toprule
+Method & Scale & Precision & Recall & $F_1$ & SHD \\
+\midrule
+n$^2$DBN      & $k=1$ & 0.273 & 0.273 & 0.273 & 2.318 \\
+              & $k=2$ & \textbf{0.864} & \textbf{0.598} & \textbf{0.680} & \textbf{3.379} \\
+              & $k=3$ & \textbf{0.985} & \textbf{0.870} & \textbf{0.908} & \textbf{0.515} \\
+              & across &      &       & 0.620 & 6.212 \\
+\midrule
+Empty graph   & $k=1$ & 1.000 & 1.000 & 1.000 & 0.000 \\
+              & $k=2$ & 0.000 & 0.000 & 0.000 & 7.303 \\
+              & $k=3$ & 0.015 & 0.015 & 0.015 & 3.773 \\
+              & across &      &       & 0.338 & 11.076 \\
+\midrule
+Oracle parameters & all & 1.000 & 1.000 & 1.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The total structural Hamming distance favors the full model. It averages
+$6.212$ against $11.076$ for the empty graph, so proposing a structure saves
+$4.864$ edge errors per fit on average against proposing nothing. Paired within
+(scenario, replicate), the full model is better on $61$ pairs, tied on $5$ and
+worse on none of $66$.
+
+The decomposition locates the gain, and it falls on two scales rather than
+one. At scale $2$ the paired difference is $-3.924$ edge errors per fit, better
+on $58$ pairs, tied on $6$ and worse on $2$. At scale $3$ it is $-3.258$,
+better on $64$ pairs, tied on $2$ and worse on none. At scale $1$, where the
+truth is empty, the full model proposes on average $2.318$ edges that cannot be
+correct, losing every pair in which it proposes anything at all ($0$ wins, $18$
+ties, $48$ losses); it proposes nothing there on $18$ of the $66$ fits and
+$3.188$ edges on each of the rest. Summed, a gain of about seven edge errors
+across the two scales that carry the truth is offset by about two false
+positives at the scale that carries none, so the total keeps most of the gain,
+and reporting it alone would still hide all three effects.
+
+The silence at the finest scale is selective rather than a general reluctance
+to propose. The same fits propose at least one edge at scale $2$ on $63$ of
+$66$ and at scale $3$ on $65$ of $66$.
+
+Precision at scale $2$ runs $0.851$ on family I, $0.775$ on family II and
+$0.959$ on family III, against recall $0.655$, $0.502$ and $0.668$. At scale
+$3$ precision runs $0.917$, $1.000$ and $1.000$ against recall $0.833$, $0.836$
+and $0.921$. The selection is conservative in the same way in all three
+families, and the coarsest scale is the easier of the two scales that carry
+true edges, returning more of the truth at a higher precision than the middle
+scale in every family.
+
+\subsection{Prediction against the empty graph}
+\label{sec:results:prediction}
+
+Held-out fit is scored by the validation loss $-\sum_k \log Z_k$ evaluated on
+the validation split with the learned $\Theta$ and the learned graph, where
+$\log Z_k$ is the normalizer the scale-$k$ E-step returns, the forward-backward
+partition function of the regime chain evaluated with the factor posterior
+folded into the emission terms. Lower is better. Because the comparison is
+between two methods fitted on the same split, the paired difference is the
+quantity of interest and the level is not.
+
+Over the $66$ pairs of \texttt{results/exp1/exp1\_results.csv} the full model
+reaches a mean of $-36296.45$ against $-34951.83$ for the empty graph. The mean
+paired difference is $-1344.63$ nats and the median is $-632.20$; the full model
+is better on $64$ of $66$ pairs. Expressed relative to the
+empty-graph value of each pair, the mean reduction is $4.0$ percent. The
+selected edges therefore pay for themselves in held-out evidence on the same
+fits where they also reduce the total edge distance.
+
+The oracle-parameter row records a validation loss of $-3485.14$, far above
+both. That row installs the generating parameters and fits nothing, so it is
+the ceiling for structure and for latent state, not for prediction; a
+parameter set tuned on the training split will fit a held-out split of the same
+series better than the parameters that generated it.
+
+\subsection{Latent-state recovery against the oracle ceiling}
+\label{sec:results:latent}
+
+Table~\ref{tab:results:latent} scores the recovered regime path $S_t^{(k)}$
+against the generating path, with the oracle-parameter row as the ceiling.
+
+\begin{table}[t]
+\centering
+\caption{Latent regime recovery, means over the full grid. The oracle row
+installs the generating $\Theta$ and runs inference only, so it bounds what any
+estimator on this grid can reach. Source
+\texttt{results/exp1/exp1\_results.csv}.}
+\label{tab:results:latent}
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Adjusted Rand index} & \multicolumn{3}{c}{Best-permutation accuracy} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Method & $k=1$ & $k=2$ & $k=3$ & $k=1$ & $k=2$ & $k=3$ \\
+\midrule
+n$^2$DBN          & --- & 0.295 & 0.907 & --- & 0.767 & 0.961 \\
+Empty graph       & --- & 0.237 & 0.908 & --- & 0.736 & 0.967 \\
+Oracle parameters & --- & 0.219 & 0.967 & --- & 0.742 & 0.987 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Most of this table is empty on purpose, and that is the result rather than a
+gap in it. A scale whose generating path never switches has no regime to
+recover, and the screen of \cref{sec:benchmark_identifiability} places a regime
+only where its own oracle clears the constant predictor, so on the minute grid
+scales $1$ and $2$ carry one state and are reported as not applicable rather
+than as a perfect score. The scale-$2$ column holds the three day-grid fits,
+whose hour scale does carry a regime, and the scale-$3$ column holds $25$ of the
+$27$ family II fits, the two omissions being replicates whose coarsest test
+partition happened not to switch.
+
+Where a regime is placed, it is recovered. At the coarsest scale the full model
+reaches an adjusted Rand index of $0.907$ and an accuracy of $0.961$ against an
+oracle at $0.967$ and $0.987$, and it recovers the path exactly on $17$ of its
+$25$ scored fits, the same count as the oracle. The gap to the ceiling is
+$0.060$ of index and $0.026$ of accuracy. At the hour scale of the day grid the
+three rows are $0.295$, $0.237$ and $0.219$ of index, where the fitted model is
+ahead of the oracle on three fits, which is inside the noise of three fits and
+should not be read as beating a ceiling.
+
+An earlier version of this benchmark placed a regime at all three scales and
+reported near-identical rows for the full model, the empty graph and the oracle,
+with scale-$2$ accuracies of $0.529$, $0.521$ and $0.516$ against a floor of one
+half. That was not three methods tying; it was three methods scoring a quantity
+the data did not identify. The screen removed those scales from the grid, and
+what is left is the one comparison that carries information.
+
+The latent factor $H_t^{(k)}$ tells the same story with a smaller gap. On the
+family III scenarios the mean absolute correlation between the recovered and
+generating factor trajectories is $0.457$, $0.470$ and $0.694$ at the three
+scales for the full model, against $0.540$, $0.555$ and $0.786$ for the oracle.
+The estimator gives up between $0.083$ and $0.092$ of correlation at each
+scale, and the ceiling itself is well below one.
+
+\subsection{The contribution of the cross-scale coupling}
+\label{sec:results:coupling}
+
+The coupling experiment (\texttt{results/exp2/exp2\_results.csv}, $132$ fits)
+removes the downward pass, so that the regime chain of scale $k$ is driven only
+by that scale's own data and context $\gK_t^{(k)}$ and never by the posterior
+of its parent epoch $\parmap_k(t)$. Everything else, including the allocation
+that ties $X_t^{(k)}$ and $Y_t^{(k)}$ to their parent totals, is unchanged.
+
+On the minute grid the coupling now buys exactly nothing, and the reason is
+structural rather than empirical. Its sixty fits return identical graphs and
+identical validation losses to the last recorded digit, on every column. With
+$M_k = [1,1,M]$ the parent posterior passed downward at scales $1$ and $2$ is a
+distribution over one state, which is the same object whether or not it is
+passed, so the coupled and uncoupled arms are the same computation. The
+experiment does not test the coupling there.
+
+The six day-grid fits are the ones that test it, since the hour scale of that
+hierarchy does carry a regime with a two-state parent above it. There the
+uncoupled arm is ahead on held-out evidence by a mean of $362.5$ nats, with the
+coupled model better on $2$ of the $6$ pairs; the structural columns are
+identical. Six fits with that spread support no claim in either direction, so
+the honest statement is that this benchmark no longer measures the contribution
+of the cross-scale coupling.
+
+This is a direct cost of the screen, and it is worth stating as one. An earlier
+version of this grid put a regime at all three scales and recorded the coupling
+as worth $61.89$ nats and $0.061$ edge errors, all of it on family II. What the
+coupling was passing downward there was a finer-scale regime whose own oracle
+could not beat a constant predictor, so that figure measured the benchmark
+rather than the mechanism. Removing the unrecoverable latent removed the
+measured benefit with it. Testing the coupling properly needs a hierarchy in
+which two adjacent scales both carry a latent the screen admits, which on the
+present grid is one hierarchy out of two and three scenarios out of twenty-two.
+
+\subsection{Component ablation}
+\label{sec:results:ablation}
+
+The ablation (\texttt{results/exp3/exp3\_results.csv}, $270$ fits over the $18$
+family II and family III scenarios) removes one component at a time. Dropping
+the factor sets $r_k = 0$; dropping the regime sets $M_k = 1$.
+
+\begin{table}[t]
+\centering
+\caption{Component ablation on the family II and family III scenarios, means
+over $18$ scenarios and three replicates. Source
+\texttt{results/exp3/exp3\_results.csv}.}
+\label{tab:results:ablation}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & $F_1$ $k{=}2$ & $F_1$ $k{=}3$ & SHD $k{=}1$ & SHD $k{=}3$ & SHD all & Acc.\ $k{=}3$ & Val.\ loss \\
+\midrule
+n$^2$DBN          & \textbf{0.677} & \textbf{0.918} & 2.362 & \textbf{0.500} & \textbf{6.259} & \textbf{0.961} & \textbf{-37814.78} \\
+No latent factor  & 0.677 & 0.918 & 2.352 & 0.537 & 6.259 & 0.961 & -37767.39 \\
+No regime chain   & 0.676 & 0.784 & 2.389 & 1.796 & 7.574 & 0.376 & -37692.81 \\
+Empty graph       & 0.000 & 0.000 & 0.000 & 3.815 & 11.130 & --- & -36454.00 \\
+Oracle parameters & 1.000 & 1.000 & 0.000 & 0.000 & 0.000 & 0.987 & -4033.88 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The two components contribute unequally, and one of them contributes nothing
+structural. Removing the factor leaves the total distance equal to three
+decimals, equal on $45$ of the $54$ pairs and better on $4$ against worse on
+$5$, and leaves scale-$2$ and scale-$3$ $F_1$ unchanged to three decimals. Its
+whole contribution is $47.39$ nats of held-out evidence, identical on $27$
+pairs, better on $24$ and worse on $3$. Removing the regime chain costs
+$121.97$ nats, better on all $27$ pairs that differ and worse on none, and it
+also costs structure at the coarsest scale. The scale-$3$ distance rises from
+$0.500$ to $1.796$, scale-$3$ $F_1$ falls from $0.918$ to $0.784$, the total
+distance rises from $6.259$ to $7.574$ and the mean $F_1$ across scales falls
+from $0.606$ to $0.561$.
+
+Scale-$2$ $F_1$ alone does not show this. It is $0.676$ without the regime
+chain against $0.677$ with it, so the regime pays for itself at the coarsest
+scale and not at the middle one. That is where persistent drift was always
+claimed to live, and it is now the only scale at which the screen of
+\cref{sec:benchmark_identifiability} admits a regime on this grid, which is why
+the regime's held-out contribution is $122$ nats here where an earlier version
+of this benchmark recorded $1250$. That earlier figure credited the model for
+tracking a finer-scale regime whose own oracle could not beat a constant, so it
+measured the benchmark rather than the method. The regime accuracy column makes
+the same point from the other side: with the chain removed the fitted path is
+constant, and the $0.376$ it scores is the frequency of the modal true regime,
+which is the floor rather than a recovery. The regime chain is what makes the
+coarsest scale recoverable, and the factor is a small likelihood term that the
+structure search does not see. That is an honest negative for the factor as a
+structural device.
+
+\subsection{Behavior under misspecification}
+\label{sec:results:misspec}
+
+The misspecification experiment
+(\texttt{results/exp4/exp4\_results.csv}, $36$ fits) generates from a family
+that violates a modeling assumption and fits the same model. The
+\emph{heavier tail} arm draws counts from a distribution with a heavier tail
+than the fitted emission; the \emph{omitted context} arm generates with a
+context that is then withheld from $\gK_t^{(k)}$ at fit time. No fit failed and
+no run raised an error.
+
+\begin{table}[t]
+\centering
+\caption{Behavior under misspecification, means over four scenario shapes and
+three replicates per arm. Structure metrics only, since the three arms generate
+from different data and their held-out losses are not on a common scale. Source
+\texttt{results/exp4/exp4\_results.csv}.}
+\label{tab:results:misspec}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Arm & Prec.\ $k{=}2$ & Rec.\ $k{=}2$ & $F_1$ $k{=}2$ & $F_1$ $k{=}3$ & SHD $k{=}1$ & SHD $k{=}2$ & Sweeps \\
+\midrule
+Well specified   & 0.965 & 0.578 & 0.707 & 1.000 & 3.000 & 3.333 & 6.33 \\
+Heavier tail     & 0.875 & 0.611 & 0.710 & 0.976 & 3.583 & 3.917 & 6.75 \\
+Omitted context  & 0.846 & 0.536 & 0.650 & 0.889 & 3.667 & 4.500 & 6.17 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The two arms fail in different directions, and they reach different scales. A
+heavier tail than the emission assumes trades precision for recall at the middle
+scale, precision falling from $0.965$ to $0.875$ while recall rises from $0.578$
+to $0.611$, so its $F_1$ there is level at $0.710$ against $0.707$; what it costs
+is the coarsest scale, whose $F_1$ falls from an exact $1.000$ to $0.976$, and
+the empty finest scale, where false positives rise from $3.000$ to $3.583$.
+Withholding the context costs both halves of the middle scale, precision
+$0.846$ and recall $0.536$, and it is the arm that reaches the coarsest scale
+hardest, where precision falls to $0.917$ and recall to $0.875$. Neither arm
+breaks the model. Both keep the aggregation exact, at a reconciliation error of
+exactly $0$ for counts and durations on all $36$ fits, and neither takes
+materially longer to converge than the well-specified arm, at $6.75$ and $6.17$
+outer sweeps against $6.33$.
+
+The mean of $F_1$ across scales is the wrong summary for this table and is left
+out of it. That mean is $0.590$ under the heavier tail against $0.569$ under the
+well-specified arm, reversing the ordering of the coarsest scale, and the
+reversal comes from the empty finest scale, where the heavier-tail arm proposes
+nothing on one of its twelve fits and the other two arms on none of theirs. The
+heavier tail is not the easier setting.
+
+\subsection{Against eight published structure learners}
+\label{sec:results:comparison}
+
+The comparison experiment (\texttt{results/exp5/exp5\_results.csv}, $540$ fits)
+runs eight published structure learners on the same counts $X_t^{(k)}$ that
+the local score sees, then fits this model's parameters on whatever graph each
+returns, so that every row is scored by the same metric code on the same data.
+
+\begin{table}[t]
+\centering
+\caption{Eight published structure learners against the latent-conditional
+local score and against reporting nothing, means over $18$ scenarios and three
+replicates. Sorted by total structural Hamming distance. Source
+\texttt{results/exp5/exp5\_results.csv}.}
+\label{tab:results:comparison}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & Prec.\ $k{=}2$ & Rec.\ $k{=}2$ & $F_1$ $k{=}2$ & $F_1$ $k{=}3$ & SHD all & $\times$ empty & Val.\ loss \\
+\midrule
+n$^2$DBN local score & \textbf{0.867} & \textbf{0.585} & \textbf{0.677} & \textbf{0.918} & \textbf{6.259} & \textbf{0.56} & \textbf{-37814.78} \\
+Empty graph          & 0.000 & 0.000 & 0.000 & 0.000 & 11.130 & 1.00 & -36454.00 \\
+Chow-Liu tree        & 0.210 & 0.196 & 0.195 & 0.082 & 23.296 & 2.09 & -36933.15 \\
+PC                   & 0.073 & 0.129 & 0.088 & 0.031 & 26.815 & 2.41 & -36784.06 \\
+GES                  & 0.146 & 0.220 & 0.169 & 0.043 & 27.685 & 2.49 & -36960.92 \\
+Granger, BIC         & 0.164 & 0.351 & 0.217 & 0.341 & 29.389 & 2.64 & -37517.01 \\
+Hill climbing, BIC   & 0.139 & 0.288 & 0.183 & 0.043 & 30.574 & 2.75 & -37452.14 \\
+Exhaustive, BIC      & 0.139 & 0.288 & 0.183 & 0.043 & 30.574 & 2.75 & -37452.19 \\
+DYNOTEARS            & 0.155 & 0.327 & 0.203 & 0.363 & 30.759 & 2.76 & -37556.48 \\
+Hill climbing, BDeu  & 0.136 & 0.288 & 0.181 & 0.096 & 33.241 & 2.99 & -37454.06 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All eight land between $2.1$ and $3.0$ times worse than reporting nothing.
+Their $F_1$ at the middle scale runs from $0.088$ to $0.217$ against $0.677$
+for the local score, and no fit of any of the eight beats the empty graph on
+total distance in any of the $54$ pairs. The local score is the only entry
+below the empty graph, by a mean of $4.870$ edge errors with $50$ wins, $4$ ties
+and no losses.
+
+The coarsest scale is where the separation is widest, and it is a column this
+comparison could not carry until the grid placed a true edge there. Six of the
+eight score below $0.100$ at scale $3$, and the two that do not, DYNOTEARS at
+$0.363$ and the Granger test at $0.341$, still reach less than four tenths of
+the local score's $0.918$. Those two are the only entries with an explicitly
+temporal search. The other six run from $0.031$ to $0.096$ at that scale, near
+enough to the empty graph's $0.000$ that what they mostly contribute at the
+hourly scale is false positives.
+
+\paragraph{The mechanism is a lagged self edge.}
+The generator drives every label of a scenario from a shared regime $S_t^{(k)}$
+that persists across epochs, so every label it drives is autocorrelated whether
+or not any lagged edge points into it. A selection criterion that conditions on
+nothing sees that autocorrelation and has one place to put it, namely an edge
+from the label to itself at lag one. Splitting recall at scale $2$ by whether
+the true edge points from a label to itself or from one label to another states
+this directly rather than by inference. The Granger test recovers $1.000$ of
+the true self edges and $0.210$ of the true cross edges; DYNOTEARS recovers
+$0.986$ against $0.190$, and both hill climbing variants and exhaustive search
+$0.957$ against $0.167$; PC recovers $0.729$ against $0.002$ and GES $0.543$
+against $0.165$. The Chow-Liu tree is the one exception and is weak on both,
+$0.429$ and $0.167$. The local score recovers $0.929$ of the self edges and
+$0.524$ of the cross edges, and is the only entry of the nine above a quarter on
+the cross edges. At the coarsest scale it is $0.944$ and $0.850$, so once the
+regime is conditioned on the two kinds of edge are recovered at nearly the same
+rate.
+
+The proposed edge sets say the same thing from the other side. Across the $54$
+(scenario, replicate) pairs of this experiment the generator places $391$ true
+edges at scale $2$, of which $61$ point from a label to itself, a true
+self-edge share of $0.156$. The proposed share is $0.985$ for PC, $0.886$ for
+DYNOTEARS, $0.883$ for hill climbing with BIC and for exhaustive search,
+$0.879$ for hill climbing with BDeu, $0.838$ for the Granger test, $0.743$ for
+GES and $0.634$ for the Chow-Liu tree, against $0.280$ for the local score. Six
+of the eight place more than four fifths of their scale-$2$ budget on a
+construct that is about a sixth of the truth. Conditioning the score
+on $q(\gS,\gH)$ removes that autocorrelation before an edge is priced, which is
+what the precision column of Table~\ref{tab:results:comparison} records.
+
+\paragraph{Held-out likelihood does not order the structures.}
+Every one of the nine non-empty rows of
+Table~\ref{tab:results:comparison} improves on the empty graph in validation
+loss, by between $330.1$ and $1360.8$ nats, and the ordering it induces is close
+to unrelated to the structural one. Spearman rank correlation between
+mean total distance and mean validation loss across the ten rows is $-0.333$.
+The empty graph has the worst validation loss of the ten and
+the second-best distance; DYNOTEARS has the second-best validation loss and the
+ninth-best distance. The local score leads both columns here, which is a
+property of that row rather than of the criterion, since the other nine rows
+are ordered almost independently by the two. Held-out likelihood is a real
+quantity and it is not a proxy for structure recovery on this grid, so a paper
+that reports only one of the two can support a conclusion the other refutes.
+
+\subsection{Parameter recovery on a sample-size ladder}
+\label{sec:results:params}
+
+Structure recovery says which edges came back and nothing about the conditional
+distributions attached to them. The parameter experiment
+(\texttt{results/exp7/exp7\_results.csv}, $81$ rows) scores the learned
+$\Theta$ against the generating $\Theta$ directly, in identified form, so that
+two parameter sets inducing the same distribution score zero. It holds the
+hierarchy shape fixed and varies only $T_1$, the number of finest-scale epochs,
+over $10{,}080$, $20{,}160$ and $40{,}320$, chosen so that the coarsest scale
+receives $168$, $336$ and $672$ epochs and the structural benchmark's own
+horizon sits in the middle. Two starting points are separated. The
+\emph{oracle start} begins the estimator at the generating parameters and
+measures the estimator alone; the \emph{data start} builds its initial
+parameters from moments of the data and measures the estimator together with
+its initializer, which is the only setting that transfers to a log with no
+ground truth.
+
+The criterion was set before the study ran. Parameter recovery is a consistency
+claim, so the error has to fall as $T_1$ grows; an error that does not fall
+with sample size is a bias rather than an estimate.
+
+\begin{table}[t]
+\centering
+\caption{Mean identified parameter error against $T_1$, over three generating
+families and three replicates. The ladder is set from the coarsest scale rather
+than the finest, so these three rungs give it $168$, $336$ and $672$ epochs;
+the middle rung is the horizon the structural benchmark itself runs at. The third stored method installs the generating
+parameters and fits nothing, so its error is zero at every rung and it is not
+shown. The error averages whichever scale-free blocks a family identifies,
+which is $5$ for family I, $6$ for family II and $8$ for family III, so a level
+is comparable along a row and not down the family rows; only the per-family rows
+carry a criterion. Source \texttt{results/exp7/exp7\_results.csv}.}
+\label{tab:results:ladder}
+\begin{tabular}{lrrr}
+\toprule
+Start & $T_1 = 10080$ & $T_1 = 20160$ & $T_1 = 40320$ \\
+\midrule
+Oracle start (estimator alone) & 0.0725 & 0.0695 & \textbf{0.0514} \\
+Data start (estimator and initializer) & 0.2822 & 0.2595 & \textbf{0.2504} \\
+\midrule
+Family I, data start   & 0.3366 & 0.2735 & 0.3001 \\
+Family II, data start  & 0.2145 & 0.2119 & \textbf{0.1924} \\
+Family III, data start & 0.2956 & 0.2932 & \textbf{0.2588} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Both starts meet the criterion, and the reading of this table changed when the
+benchmark did. From the oracle start the mean identified parameter error goes
+$0.0725$, $0.0695$ and $0.0514$, falling at every rung. From the data start it
+goes $0.2822$, $0.2595$ and $0.2504$, also falling at every rung. Per family the
+data start falls at every rung for family II, $0.2145$, $0.2119$ and $0.1924$,
+and for family III, $0.2956$, $0.2932$ and $0.2588$. Family I is the one that
+does not, $0.3366$, $0.2735$ and $0.3001$, and it carries neither a regime nor a
+factor, so its reported error is the coarsest-scale emission block alone.
+
+An earlier version of this grid placed a regime at all three scales and reported
+a data start rising at every rung, $0.4261$, $0.4533$ and $0.4678$, with family
+II alone at $0.6461$, $0.7933$ and $0.8445$. That rise is what the screen of
+\cref{sec:benchmark_identifiability} removed. Three of family II's scored blocks
+were the finest-scale transition table and the two allocation shares, all driven
+by a regime whose own oracle could not beat a constant predictor, so the quantity
+that grew with the sample size was the noise in an unidentified block rather than
+a fit converging elsewhere. With the regime placed only where it is recoverable,
+family II falls to about a quarter of its former level and becomes the best of
+the three families rather than twice the worst. Families I and III are unchanged
+to the digit, because a scenario carrying one regime at every scale is untouched
+by where a regime is placed, which is the control this comparison has that a
+rerun on a freshly randomized grid would not.
+
+What remains is the gap between the two starts rather than a failure of either.
+At the longest rung the data start sits at $0.2504$ against $0.0514$ from the
+oracle start, so the initializer, not the estimator, is what the remaining error
+measures. The coarsest transition table is recovered closely from either start,
+at $0.0242$, $0.0417$ and $0.0167$ in total variation from the data start, and
+the coarsest lagged support is recovered at $4.00$, $4.22$ and $5.11$ selected
+keys against a true $4.00$, so the over-selection that remains is at the longest
+rung and is small.
+
+\paragraph{The objective and the parameter error no longer disagree.}
+Comparing the two starts on their final objective rather than on their parameter
+error separates a fit that found a worse optimum from one that found an equally
+good optimum at different parameters, and the two have different remedies. Over
+the $27$ paired fits the data start reaches a strictly worse objective in $3$ of
+the $9$ family I fits, $2$ of $9$ for family II and none for family III, and in
+every one of those it is worse on the parameter error as well. There is no fit
+in which a worse objective comes with better parameters, where an earlier version
+of this grid had $4$ of $27$. That pathology was the sign that the error was
+being scored partly on quantities the likelihood does not see, and it is gone
+with them. Two conditions attach: equality is equality at a relative tolerance,
+not proven equality, and the objective compared is the monitored one, which
+Section~\ref{sec:lim_meanfield} records as contained rather than exact.
+
+\paragraph{The coarsest scale is recoverable from a data start, and only with
+the level correction.}
+Counting the lagged coefficient keys each fit ends with separates a coefficient
+that is wrong from one that was never estimated. Against a true $4.00$ keys per
+fit at the coarsest scale, a data start recovers $4.00$, $4.22$ and $5.11$
+across the three rungs, so the support is recovered and the over-selection that
+remains is at the longest rung. Removing two things restores the earlier behavior
+exactly: initializing the coarsest level from the observed mean, which already
+contains the contribution of the lagged parents, and letting the parameter step
+refit that level against the empty graph before the structure search runs. With
+both removed the same fits recover $0.00$, $0.00$ and $0.67$. The level is
+therefore not a nuisance parameter here. Fitted before the search and against a
+graph with no edges in it, it absorbs exactly what a true lagged edge would
+explain, and the search then meets a model that already accounts for the data.
+
+\paragraph{The short coarse series was the likeliest explanation, and it is
+ruled out.}
+The ladder holds the hierarchy shape fixed and varies $T_1$ alone, so the
+coarsest scale receives $168$, $336$ and $672$ epochs across the three rungs, of
+which a fit sees $117$, $235$ and $470$ after the training split, while the
+finest receives $10{,}080$, $20{,}160$ and $40{,}320$. That scale now carries lagged
+coefficients of its own, which made it the natural suspect. Reading the error
+per scale and per parameter block removes it from suspicion on three counts.
+The lagged coefficients of any scale are excluded from the reported error by
+construction, since it averages the scale-free blocks alone, and perturbing the
+coarsest lagged coefficients of a set of true parameters leaves it unchanged to
+machine precision. Every coarsest-scale block falls at every rung from the
+oracle start, the relative emission error $0.603$, $0.562$, $0.350$ and the
+transition distance $0.224$, $0.074$, $0.068$. And recomputing the reported
+error over subsets of the scales separates the readings directly: the coarsest
+scale alone falls, $0.490$, $0.448$, $0.271$, while dropping it leaves the
+ladder broken, $0.416$, $0.529$, $0.248$. A ladder that grew every scale at the
+same rate would therefore not repair this one.
+
+What the breakdown puts in its place is narrower and less comfortable. From the
+oracle start the non-monotonicity is confined to family II, whose level is set
+by the relative emission error at the \emph{finest} scale, reaching $7.9$ and
+$9.5$ on its worst fits against $0.2$ at the coarsest, while families I and III
+fall at every rung. That is the binary event-start scale on which the leak of
+\cref{sec:lim_leak} sits and which the screen of
+\cref{sec:benchmark_identifiability} places below its identifiability floor. The
+residual therefore concentrates where this benchmark cannot separate a fitting
+failure from a scale it was never able to identify, so the criterion stands as
+failed and the cause is attributed no further than that.
+
+\paragraph{The leak also shows up in the coefficients.}
+The same rows record the absolute learned lag-coefficient mass placed on lagged
+keys outside the true support, which is the parameter-space counterpart of a
+false-positive edge. That mass is largest at the longest rung from either start
+instead of shrinking. From the oracle start it grows at every step, from
+$0.281$ at $T_1 = 1440$ to $1.194$ at $T_1 = 2880$ and $1.585$ at
+$T_1 = 5760$; from the data start it runs $0.278$, $0.860$ and $1.376$ over the
+same three rungs. The share of fits carrying any off-support mass runs $0.111$,
+$0.444$, $0.556$ from the oracle start and $0.111$, $0.333$, $0.444$ from the
+data start. It is not confined to one family. At the longest rung from the
+oracle start the mass per fit is $2.384$ on family I, $1.458$ on family II and
+$0.913$ on family III. It is confined to one scale. Of the $1.585$ overall at
+that rung, $1.358$ sits at scale $1$, which is the scale the generator leaves
+empty. The co-movement a persistent regime induces between
+labels is being absorbed into
+lagged coefficients, and a longer series makes that absorption more confident,
+not less. The structural score suppresses it as an edge; the parameter step
+still pays for it as a coefficient.
+
+\subsection{External ground truth}
+\label{sec:results:external}
+
+Every number to this point is scored against data this benchmark generated,
+which is the weakest evidence base for a claim about a learner. The external
+experiment (\texttt{results/exp8/exp8\_structure.csv} and
+\texttt{results/exp8/exp8\_cpt.csv}) repeats the structure comparison against
+released networks. The bnlearn repository \citep{scutari2010bnlearn}
+distributes fully parameterized networks with an exact directed graph and exact
+conditional probability tables, and pgmpy \citep{ankan2024pgmpy} vendors them
+inside its wheel, so the experiment runs with no network access. A static
+network becomes a two-slice temporal network by mapping each edge onto a lag-1
+edge, the standard construction with published precedent
+\citep{trabelsi2013benchmarking, ouyang2023divideconquer}. Five networks (asia,
+cancer, child, earthquake and sachs, from $5$ to $20$ nodes and $4$ to $25$
+edges), three replicates and $4000$ epochs give $120$ structure fits including
+the empty-graph reference, with no errors. The largest network of the earlier
+version of this experiment, insurance at $27$ nodes, is not included, because
+selecting the free quantities per dataset multiplies the number of fits by
+eleven and that run did not complete. The omission is of size rather than of an
+inconvenient result.
+
+A tiled network is flat, so a two-scale hierarchy is imposed by summing blocks
+of consecutive epochs and only the finest scale is scored, where the candidate
+set is exactly the tiled ground truth. The block length is declared as the
+square root of the series length, for the reason given in
+\cref{sec:results:selection}, and the regime count, the factor dimension and
+the edge penalty are selected per dataset on held-out log evidence.
+
+Structure and parameters are scored on the same graph. A learned parent set
+that differs from the true one produces a table of a different shape, so tables
+cannot be compared entry by entry across methods. Both the learned model and
+the released network do answer one common question, namely the distribution of
+a node at epoch $t$ given the whole previous epoch, so that conditional is what
+is scored: the table is estimated from the sampled data on the learned parents
+alone, the released tables are read at the true parent configuration, and the
+two are compared in total variation, averaged over epochs. An empty parent set
+is a valid answer under this score and is charged the distance from the
+marginal to the truth.
+
+\begin{table}[t]
+\centering
+\caption{Structure and conditional probability recovery against released
+bnlearn networks tiled into two-slice temporal networks, means over five
+networks and three replicates. Same structural metric code as
+Table~\ref{tab:results:comparison}, external ground truth. The last column is
+the mean total variation distance of the conditional each method's own learned
+parent set implies, so structure and parameters are scored on one graph.
+Source \texttt{results/exp8/exp8\_structure.csv}.}
+\label{tab:results:external}
+\begin{tabular}{lrrrrr}
+\toprule
+Method & SHD & Precision & Recall & $F_1$ & CPT TV \\
+\midrule
+Hill climbing, BIC     & \textbf{1.13} & 0.987 & 0.920 & \textbf{0.950} & 0.0110 \\
+Exhaustive, BIC        & \textbf{1.13} & 0.987 & 0.920 & \textbf{0.950} & 0.0110 \\
+Granger, BIC           & 2.40 & 0.942 & 0.895 & 0.913 & 0.0172 \\
+DYNOTEARS              & 2.80 & \textbf{1.000} & 0.778 & 0.866 & 0.0284 \\
+n$^2$DBN, selected     & 3.27 & 0.869 & 0.762 & 0.806 & 0.0239 \\
+Hill climbing, BDeu    & 4.60 & 0.682 & \textbf{0.967} & 0.778 & 0.0112 \\
+Chow-Liu tree          & 7.20 & 0.776 & 0.519 & 0.610 & 0.0582 \\
+Empty graph            & 11.60 & 0.000 & 0.000 & 0.000 & 0.1054 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ordering is not the same as on the synthetic grid, and the reason is a
+property of the two benchmarks rather than a contradiction. A tiled static
+network has no persistent latent state, so the confound that
+\cref{sec:results:comparison} isolates is absent and the classical criteria
+have nothing to be confounded by. Hill climbing under BIC leads at $F_1 =
+0.950$. The local score, with its free quantities selected rather than
+declared, reaches $0.806$, up from $0.532$ under the declared setting of the
+first version of this experiment.
+
+The per-network breakdown locates what is left. On asia the local score matches
+hill climbing exactly, $F_1 = 0.933$ for both, and on earthquake both recover
+the network exactly, $F_1 = 1.000$ at zero structural distance. On child, the
+largest network here at $20$ nodes, it reaches $0.870$ against $0.933$ at a
+higher precision, $0.958$ against $0.933$. On sachs it reaches $0.812$ against
+$0.980$. The one clear loss is cancer, $0.413$ against $0.905$, a five-node
+network with four edges, where the finest-scale allocation has very little to
+condition on. Only three true edges separate the two learners across both
+networks; \cref{sec:lim_recall} names them and reports what is known about why,
+having tested and withdrawn the block-structure explanation we first proposed.
+
+Conditional probability recovery follows structure recovery and separates the
+methods less. The local score reaches a mean total variation distance of
+$0.0239$ per conditioning row against $0.0110$ for hill climbing and $0.1054$
+for the empty graph, so the tables it implies are far closer to the released
+ones than reporting no dependence, at about twice the distance of the best
+structural entry. Table~\ref{tab:results:cpt} reports the floor the sample
+size allows, estimating each table on the true graph.
+
+\begin{table}[t]
+\centering
+\caption{Conditional probability table recovery against the released tables
+given the true structure, which is the floor the sample size allows rather than
+a method score. Mean total variation distance per conditioning row. A node fit
+is one node on one replicate. Source \texttt{results/exp8/exp8\_cpt.csv}.}
+\label{tab:results:cpt}
+\begin{tabular}{lrrrr}
+\toprule
+Network & Node fits & Mean & Median & Max \\
+\midrule
+asia       & 24 & 0.0198 & 0.0078 & 0.1317 \\
+cancer     & 15 & 0.0122 & 0.0057 & 0.0671 \\
+child      & 60 & 0.0194 & 0.0176 & 0.0457 \\
+earthquake & 15 & 0.0315 & 0.0278 & 0.1160 \\
+sachs      & 33 & 0.0240 & 0.0245 & 0.0465 \\
+\midrule
+All        & 147 & 0.0210 & 0.0171 & 0.1317 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Given the true structure, $94.6$ percent of the $147$ node fits fall below a
+total variation distance of $0.05$ and $98.6$ percent below $0.10$, so the
+sampled data at this length identifies the released tables well and the
+differences in the last column of Table~\ref{tab:results:external} are
+attributable to structure rather than to estimation noise.
+
+\subsection{Selecting the free quantities of the model}
+\label{sec:results:selection}
+
+A latent-variable model carries free quantities that a latent-free learner does
+not. The classical learners in Table~\ref{tab:results:external} each choose
+their own penalty through their own score, while the number of regimes $M_k$,
+the factor dimension $r_k$ and the edge penalty $\lambda_k$ were held at
+declared values. A table produced that way compares declarations, not criteria.
+All three are therefore selected on held-out log evidence, computed on the
+final quarter of the training series and never on the evaluation data, with the
+graph budget and the block lengths of the hierarchy left as declarations
+because no held-out score supplies a question about which lags and which
+timescales are of interest.
+
+Table~\ref{tab:results:frontier} sweeps $\lambda_k$ on both benchmarks and
+reports $F_1$ beside the held-out negative log evidence.
+
+\begin{table}[t]
+\centering
+\caption{Edge-penalty frontier on both benchmarks, with the held-out negative
+log evidence of the same fit. External columns are four tiled networks (asia,
+cancer, earthquake, sachs) at $T = 4000$ and block length $63$; synthetic
+columns are all $22$ scenarios of the grid at the true hierarchy. Every cell
+is read back from \texttt{results/exp9/exp9\_measurements.csv}. The minimum of
+the evidence column and the maximum of every $F_1$ column fall on the same row
+on the external networks and on different rows on the grid. The grid carries
+true edges at the middle and the coarsest scale, so both are reported, together
+with the mean over all three scales.}
+\label{tab:results:frontier}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{2}{c}{External} & \multicolumn{4}{c}{Synthetic} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-7}
+$\lambda_k$ & $F_1$ & held-out NLL & $F_{1,k=2}$ & $F_{1,k=3}$ & $F_{1,\mathrm{mean}}$ & held-out NLL \\
+\midrule
+$2.0$  & 0.666 & $-68061.4$ & \textbf{0.685} & 0.833 & \textbf{0.597} & $-37890.7$ \\
+$1.0$  & 0.725 & $-68065.5$ & 0.669 & 0.940 & 0.582 & $-37923.6$ \\
+$0.5$  & 0.812 & $-68067.6$ & 0.602 & \textbf{0.955} & 0.519 & $\mathbf{-37958.6}$ \\
+$0.25$ & \textbf{0.869} & $\mathbf{-68070.9}$ & 0.549 & 0.857 & 0.468 & $-37923.8$ \\
+$0.1$  & 0.791 & $-68068.9$ & 0.589 & 0.731 & 0.440 & $-37898.8$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Held-out evidence selects the maximizing penalty on the external networks and
+does not on the grid. Externally it picks $\lambda_k = 0.25$, which is also
+where $F_1$ peaks, and the evidence turns back up on exactly the row where
+$F_1$ turns back down. On the grid it picks $0.5$ while $F_{1,k=2}$ peaks at
+$2.0$, and the miss is not a tie: $F_{1,k=2}$ is $0.602$ at the selected
+penalty against $0.685$ at the maximizing one. It is worse than that on the
+columns $F_{1,k=2}$ hides. The strictest setting, $\lambda_k = 2$, reaches a
+scale-$2$ precision of $0.864$ and a total structural distance of $6.77$ against
+$0.520$ and $12.82$ at the selected $0.5$. Held-out evidence therefore prefers a
+graph that is clearly worse at the middle scale.
+
+The frontier was previously scored at the middle scale alone, which raised the
+possibility that the disagreement was an artifact of reading a two-scale truth
+through a one-scale metric. Rescoring it across both truth-bearing scales
+removes that possibility rather than narrowing it to one scale. Held-out
+evidence picks $0.5$; $F_{1,k=3}$ peaks at $0.5$ as well, while $F_{1,k=2}$ and
+$F_{1,\mathrm{mean}}$ peak at $2.0$. So the selector agrees with the coarsest
+scale and disagrees with the middle one, which is a sharper statement than the
+blanket disagreement an earlier version of this grid produced and points at the
+same conclusion.
+
+That conclusion is the one the wider reading forces. The two truth-bearing
+scales do not agree with each other: the middle scale is best at the strictest
+penalty and the coarsest at an intermediate one, so no single $\lambda$
+maximizes both and a scalar penalty cannot be optimal at every scale on this
+grid, whatever selects it. And $F_{1,\mathrm{mean}}$ is not the neutral arbiter
+it looks like, since the finest scale is scored for silence and its contribution
+recovers as the penalty rises, so the mean rewards a strict penalty partly for
+suppressing false positives rather than for finding true edges. The external
+half of the table is unaffected throughout, since those networks are tiled flat
+and scored at one scale by construction.
+
+The reason is visible elsewhere in these results and is not special pleading.
+Held-out likelihood does not order the methods the way structural distance does
+on this grid, at a Spearman correlation of $-0.333$ between the two orderings.
+A spurious lagged self edge is a genuinely good predictor, because the
+autocorrelation it absorbs is real, so a criterion that rewards prediction
+prefers denser graphs than the truth wherever a persistent latent state drives
+the observations. The tiled networks have no such state, which is why the same
+rule works there. The honest statement is therefore conditional: selecting the
+penalty on held-out evidence is a principled rule that uses no ground truth,
+and it recovers the maximizing setting when prediction and structure agree,
+which is the case without a latent confound and not with one. That is a
+limitation of held-out evidence as a selector rather than of the score being
+selected, and it means an analyst who wants precision on data with a latent
+regime should declare a strict penalty and disclose it rather than select one.
+
+\paragraph{The imposed block length is not incidental.}
+A tiled network is flat, so the second scale is the analyst's construction. The
+finest-scale term of the score is a within-block allocation, so the evidence it
+carries about a lagged effect grows with the block length while the number of
+blocks falls. Measured at $\lambda_k = 0.5$ on the four networks, $F_1$ rises
+from $0.511$ at block length $2$ through $0.601$ and $0.763$ at lengths $5$ and
+$10$ to $0.812$ at length $20$, and is unchanged at $40$ and $80$. The block length is declared as the square root of the series length,
+which lands inside that plateau and is fixed before any graph is scored.
+
+\paragraph{Subsample stability is measured and not adopted.}
+Selection over five contiguous subsamples in the sense of
+\citet{meinshausen2010stability} raises external precision to $1.000$ at every
+threshold tried, $0.6$, $0.8$ and $1.0$, but costs recall, giving $F_1$ of
+$0.831$, $0.812$ and $0.802$ against $0.869$ for the single fit. Held-out
+evidence agrees with $F_1$ here too, preferring the single fit at $-68070.7$
+against $-68066.7$ for every threshold, so the extra layer is reported and left
+out.
+
+\subsection{The search is not what limits recovery}
+\label{sec:results:search}
+
+Greedy forward-backward accepts one edge at a time, so a pair of edges that
+pays only jointly is unreachable from the incumbent set. Because the score
+decomposes per target and every candidate is lagged
+(Proposition~\ref{prop:learn_decomposition}), the per-target optimum can be certified
+by enumeration whenever the in-degree bound keeps the subset count small, which
+it does on both benchmarks: $232$ parent sets for an eleven-node network at
+in-degree three, $2626$ for the grid. An exhaustive search and a genetic search
+over parent sets were both implemented and run in place of the greedy one.
+
+All three return the same parent sets on every cell of both benchmarks, so
+every structural column agrees exactly: $F_1$ of $0.725$ and $0.812$ externally
+at $\lambda_k$ of $1.0$ and $0.5$, and $F_{1,k=2}$ of $0.647$ and $0.546$ on
+the grid at $2.0$ and $1.0$. The grid figures here run over the four-scenario
+subset this comparison uses, which is why they sit below the corresponding rows
+of \cref{tab:results:frontier}, an average over every scenario. The held-out losses differ in the fourth
+significant figure, since the evolutionary search draws its own randomness and
+the fitted coefficients are not bit-identical, but the graphs are. The greedy answer is therefore already
+the certified per-target optimum on these data, and no search can improve it.
+What limits recovery is the score and the protocol around it, not the
+optimizer, which is why the preceding subsection is where the gain is.
+
+\subsection{Aggregation consistency and the recorded objective}
+\label{sec:results:invariants}
+
+Two properties are checked on every fit rather than sampled. The first is that
+the learned model reconciles across scales, so that for every coarse epoch $c$
+at scale $k+1$ and every label $\ell$,
+\begin{equation}
+X_c^{(k+1,\ell)} \;=\; \sum_{t \in \child_k(c)} X_t^{(k,\ell)},
+\qquad
+Y_c^{(k+1,\ell)} \;=\; \sum_{t \in \child_k(c)} Y_t^{(k,\ell)} .
+\label{eq:results:reconcile}
+\end{equation}
+The reported reconciliation error is the absolute violation of
+Equation~\ref{eq:results:reconcile} summed over coarse epochs, labels and
+adjacent scale pairs, so any discrepancy anywhere makes it positive. Across all
+$1176$ scored fits of the five grid experiments, and separately on the observed
+log below, it is exactly $0$ for both counts and durations, on every row, for
+every method including the ablations and the eight external learners. The
+equality holds by construction of the allocation and is verified rather than
+assumed.
+
+The second is that the recorded objective never decreases. Over the same five
+experiments, $1056$ fits recorded a history of at least two outer sweeps,
+totaling $4534$ successive steps. Not one of them is a decrease, and the
+largest recorded step-to-step change in the wrong direction is exactly $0$. The
+rejected-sweep counter, which records a proposal the objective refused, averages
+between $0.94$ and $1.72$ per fit across the five experiments and is positive on
+$826$ of the $1176$ fits, so the guard is active rather than vacuous.
+
+\paragraph{An observed log.}
+The model was also fitted once to an observed event log with no ground truth
+(\texttt{results/exp6/exp6\_results.json}), $1601$ events over three labels, one
+minute per finest slot, branching $10$ then $6$, so $T_1 = 1440$, $T_2 = 144$
+and $T_3 = 24$. Both reconciliation errors are exactly $0$, the recorded
+objective rises over all five sweeps, from $7002.16$ to $25044.83$, and one
+sweep was rejected. The structure search selected no edge at any scale. The
+subsample stability check, which refits on four resamples and records how often
+each edge is reselected, returns one candidate at scale $3$, the lag-one edge
+from the second label to the third, selected on all four resamples but not on
+the full fit. That disagreement between the full fit and the resamples is
+reported as it stands; on a log of this length it is a signal to collect more
+data, not an edge.
+
+\input{sec_arm1}
+
+\subsection{Cost}
+\label{sec:results:cost}
+
+Wall-clock cost is reported for the fits as run, one process per fit, with
+thread-level parallelism pinned to one so that the numbers are comparable
+across methods.
+
+On the synthetic grid a full fit averages $72.1$ seconds with a median of
+$60.8$ and a maximum of $203.0$, over a mean of $5.4$ outer sweeps. The empty
+graph, which runs the same inference on a fixed graph, averages $14.3$ seconds,
+and the oracle-parameter row, which runs inference once and fits nothing,
+averages $1.6$. The five grid experiments together account for $96\,886$
+seconds of fitting, of which the ten-method comparison of
+Section~\ref{sec:results:comparison} is $68\,361$.
+
+The cost is dominated by the structure search rather than by inference; on the
+grid the empty-graph row runs the same inference on a fixed graph for $14.3$
+seconds against $72.1$ for the full fit. On the external benchmark the local
+score costs $174.7$ seconds per fit on average and $461.7$ at most, against
+$6.6$ for exhaustive search, $0.3$ for either hill climbing variant, $0.02$
+for Granger and $0.003$ for DYNOTEARS. Most of that difference is the selection of
+\cref{sec:results:selection}, which fits ten candidate configurations before
+the one it keeps, so a single fit at a declared setting costs about a tenth of
+the reported figure. Even so the local score is between twenty six times and
+five orders of magnitude more expensive than the classical entries, exhaustive
+search being the nearest of them and DYNOTEARS the furthest, and its position
+in Table~\ref{tab:results:external} does not depend on that. Cost is not the
+reason to prefer any row in these tables, and it is reported so that the
+comparison is not read as free.

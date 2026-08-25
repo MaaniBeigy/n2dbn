@@ -1,0 +1,241 @@
+\section{Related work and the benchmark landscape}
+\label{sec:related}
+
+\subsection{Dynamic Bayesian networks and structure learning}
+\label{sec:related_dbn}
+
+Dynamic Bayesian networks generalize hidden Markov models and linear state-space
+models by writing a temporal process as a factored graphical model over a
+repeated time slice \citep{dean1989model, murphy2002dbn}. The representation is
+attractive precisely when the temporal dependence has to remain readable, since
+each edge names a variable, a lag and a target. Structure learning for the
+dynamic case inherits the machinery of the static case. Score-based search
+maximizes a decomposable criterion, most often the Bayesian information criterion
+or a Bayesian Dirichlet score \citep{heckerman1995learning}; constraint-based
+search recovers a skeleton from conditional independence tests
+\citep{spirtes2000causation}; greedy equivalence search operates on equivalence
+classes \citep{chickering2002optimal}; and hybrid methods combine a local
+neighborhood step with a scored search \citep{tsamardinos2006max}. The tree
+special case has an exact maximizer \citep{chow1968approximating}, the
+time-series literature contributes lag selection read as model selection
+\citep{granger1969investigating}, and continuous-optimization formulations
+replace the combinatorial search with a smooth acyclicity penalty and an
+autoregressive design \citep{pamfil2020dynotears}. Open implementations of most
+of these are available in a single library \citep{ankan2015pgmpy, ankan2024pgmpy}.
+
+Two features of that literature matter here. Every one of these criteria is
+computed from the observed variables alone, so none of them conditions on a
+latent state while scoring a candidate parent. And the flagship survey of
+Bayesian network structure learning covers 74 algorithms and states explicitly
+that structure learning from time-series data is outside its scope, deferring to
+a separate review \citep{kitson2023bnsurvey, nogueira2022cdtools}. The dynamic
+case is a distinct literature with distinct tooling, and the present work sits
+inside it.
+
+\subsection{Non-stationary and time-varying variants}
+\label{sec:related_nonstationary}
+
+Classical dynamic Bayesian network learning assumes a stationary generating
+process, which long behavioral horizons violate. The response splits into two
+premises. In the first, the graph itself changes, and learning means recovering a
+sequence of structures together with the times at which they change
+\citep{robinson2010learning, lebre2010artiva}. In the second, the graph is shared
+and only the parameters change across segments, which is the premise of the
+allocation and coupling models of Grzegorczyk and Husmeier and of their
+successors \citep{grzegorczyk2011nhdbncontinuous, dondelinger2013edison}. A
+parallel line treats the parameters as varying smoothly rather than in segments,
+estimating a time-varying network by kernel-weighted or penalized regression
+\citep{song2009tvdbn, kolar2010estimating}. More recent work makes the regime an
+explicit latent variable to be inferred jointly with per-regime structure
+\citep{saggioro2020rpcmci, rahmani2025castor}.
+
+The n\(^2\)DBN belongs to the second premise. The lagged graph at a scale is
+shared across the horizon and the regime \(S_t^{(k)}\) modulates the emission and
+allocation parameters, with the regime chain at a finer scale conditioned on its
+parent-scale regime so that drift is coherent across resolutions. What separates
+this model from the cited work is that the regime is one of two latent
+mechanisms rather than the only one, and that the scales are coupled by an exact
+aggregation identity rather than by a shared prior.
+
+There is a specific hazard in this setting that the non-stationary literature has
+already named. A persistent latent state raises the level of every variable it
+drives for as long as it lasts, so each variable becomes positively
+autocorrelated even with an empty parent set, and a criterion that conditions on
+nothing attributes that autocorrelation to a lagged self edge
+\citep{runge2018pitfalls}. This is not a defect of any particular algorithm. It
+is a property of the hypothesis class those algorithms search, and it is the
+mechanism the comparison in this paper measures.
+
+\subsection{Temporal abstraction and hierarchical time series}
+\label{sec:related_abstraction}
+
+Reasoning at several temporal granularities rather than only over instantaneous
+slices is an old concern in the Bayesian network literature, where temporal
+abstraction supplies the vocabulary of intervals and episodes that a slice-based
+model lacks \citep{burns2003temporal}. The forecasting literature supplies the
+other half of the picture. A hierarchical time series carries an exact and known
+summing map from the bottom level to the aggregates, and independent forecasts of
+the levels are almost never coherent with it, so a reconciliation step projects
+them back onto the space that satisfies the summing constraints
+\citep{athanasopoulos2009tourism, wickramasuriya2019mint}. The summing map of
+that literature is the direct analogue of \cref{eq:intro_reconciliation}.
+
+The n\(^2\)DBN takes the constraint from the second literature and the episode
+semantics from the first, and differs from both in where the constraint is
+imposed. Reconciliation in hierarchical forecasting is a projection applied after
+independent models have been fitted, and it is optimal under an assumption about
+the base forecast errors. Here the constraint is a property of the generative
+model, since a finer scale exists only as an allocation of its parent total, so
+there is no incoherent intermediate object to project and no reconciliation
+estimator to specify. The cost of that choice is that the fine scale is not free.
+It competes for a fixed total, which turns out to have consequences the
+limitations record.
+
+\subsection{The benchmark landscape}
+\label{sec:related_benchmarks}
+
+A model whose central property is exact cross-scale aggregation invites an
+obvious question. Why not score it on a public benchmark rather than on a
+generator written for the purpose? We surveyed the datasets available for scoring
+a dynamic Bayesian network learner and found a specific and citable gap.
+
+Restricting attention to resources that carry both a released ground-truth graph
+and a genuine time series, which is the set on which a structure learner can be
+scored at all, leaves twelve. They are the DREAM4 and DREAM3 in-silico network
+challenges \citep{marbach2010revealing, prill2010dream3} and the GeneNetWeaver
+simulator behind them \citep{schaffter2011gnw}; the TimeGraph synthetic suite
+\citep{ferdous2025timegraph}; CausalDynamics \citep{herdeanu2025causaldynamics};
+CausalTime \citep{cheng2024causaltime}; the Causal Chambers
+\citep{gamella2025causalchambers}; CausalRivers \citep{stein2025causalrivers};
+the IRMA yeast circuit \citep{cantone2009irma}; the NetSim simulated fMRI
+networks \citep{smith2011netsim}; FinanceCPT \citep{nauta2019tcdf}; and
+CIPCaD-Bench \citep{menegozzo2022cipcad}. Two kinds of resource frequently
+listed alongside them do not belong, since SynTReN generates steady-state data
+rather than a time series, and the pseudotime benchmarks order cells along a
+differentiation trajectory over a network that does not change, so what varies
+across their samples is not time.
+
+Not one of the twelve combines the three properties this model is about, namely
+event counts, exact cross-scale aggregation and a latent regime. The gap is not
+that any one of the three is unattainable. A regime change with something to
+score against is present in five of the twelve, and count series that aggregate
+exactly over a known hierarchy are routine in forecasting repositories. What no
+resource does is release a ground-truth graph alongside all three at once.
+
+DREAM4 is the most used quantitative benchmark in the field, with five networks
+of ten genes and five of a hundred, replicated time series of twenty-one points
+each, and a released directed gold standard; DREAM3 is the same construction at
+ten, fifty and a hundred genes. The observations are continuous expression levels
+rather than counts, the design is single resolution, and the perturbation applied
+and then removed is a stimulus rather than a structural change, so the process is
+stationary. GeneNetWeaver is the simulator that produced them and generates the
+same kind of data at chosen sizes, with the same three absences.
+
+TimeGraph is the closest synthetic match on the non-stationarity axis, since
+non-stationarity is an explicit generator axis alongside trends, seasonality,
+irregular sampling and missingness, and it ships the structural equations rather
+than only the graph. Its series are four to eight continuous variables over 500
+to 3000 steps at a single resolution, so it has a changing generator but no
+counts and no aggregation.
+
+The Causal Chambers are the strongest real-data item, and the only one giving a
+real physical system, a known graph, known intervention targets and marked
+changepoints at once. The regime-jump datasets run 320{,}000 observations in
+thirty-two regimes of ten thousand, with an intervention drawn from an
+eleven-variable pool at seventy percent of the regime boundaries. The observed
+quantities are sensor readings rather than event counts, the regime is an applied
+intervention rather than a latent state to be inferred, and there is no nesting,
+so any hierarchy would be imposed by the analyst rather than intrinsic.
+
+CausalRivers is the largest real-world time-series causal benchmark, with
+hundreds of stations at fifteen-minute resolution over several years and a
+released station graph, and its flood product contains a genuine distributional
+shift. The shift is real, it is not labeled as a regime path, the measurements
+are water levels rather than counts, and nothing aggregates exactly.
+
+IRMA is the only classical real dataset with both a known network and an
+experimentally imposed regime switch, since the growth medium is changed inside
+the series. It is five genes, eight links and series of sixteen or twenty points,
+which supports a demonstration and not a power analysis, and its readings are
+again continuous and single-scale.
+
+CausalDynamics is the largest synthetic resource, with more than fourteen
+thousand graphs and more than fifty million samples drawn from coupled
+differential equations and two idealized climate models, and its adjacency is
+derived analytically from the governing equations. The trajectories are chaotic
+or stochastic rather than regime-switching by design, and they are continuous and
+single-scale.
+
+The remaining four complete the picture without changing it. NetSim and
+FinanceCPT are stationary simulations on fixed graphs, the second usefully
+labeling its ground truth with the lag. CausalTime fits a deep model to real data
+and emits synthetic series that keep real dynamics and carry a graph by
+construction, which is the right instrument against the charge that fixed
+synthetic benchmarks are too easy, but the graph is generated rather than
+externally validated and none of the three properties is present. CIPCaD-Bench
+supplies an industrial process with faults injected mid-run and a graph derived
+from a plant flowsheet, which is the closest thing to a regime among the
+industrial data, again without counts or nesting.
+
+The tempting alternative is a static repository. The bnlearn Bayesian Network
+Repository distributes fully parameterized networks with an exact directed graph
+and exact conditional probability tables \citep{scutari2010bnlearn}, and a
+package vendors them so that an experiment runs without network access
+\citep{ankan2024pgmpy}. It has no temporal section of any kind. Turning one of
+its networks into a two-slice temporal network means mapping each edge onto a
+lag-1 edge and sampling, which is what the field already does when it needs a
+dynamic benchmark, with published methodology and published precedent
+\citep{trabelsi2013benchmarking, ouyang2023divideconquer}. The construction is
+sound and this work uses it, but it manufactures the time series it needs. The
+tiled network has no nesting, no counts that aggregate and no latent regime, so
+three of the four requirements of \cref{sec:intro_requirements} are absent by
+construction. There is also no dynamic counterpart to the repository itself. The
+2025 expansion of the static collection adds a further large set of networks
+drawn from the literature and no dynamic ones \citep{leonelli2025bnrep}, and the
+reference reproducible
+workflow for benchmarking structure learning has no temporal graph generator, no
+time-series data module and no dynamic algorithm entries
+\citep{rios2025benchpress}.
+
+The conclusion is narrow and it is the justification for this work shipping its
+own benchmark. Multiscale reconciliation cannot be scored on any released
+benchmark, because no released benchmark contains it. What can be scored
+externally is the structure learner, the local score and the table estimator on
+flat discrete data, which is what the tiled networks are used for here, and the
+resulting comparison is reported alongside the generated one rather than in place
+of it.
+
+\subsection{Released parameters, not only released graphs}
+\label{sec:related_parameters}
+
+A recovery claim about parameters needs more than a released graph, since the
+generating conditional distributions have to be known exactly for the comparison
+to mean anything. Most of the twelve release a graph and nothing else. Four
+resources release true parameters. GeneNetWeaver attaches kinetic models of
+transcription and translation to the subnetworks it extracts, so a generated
+network carries its own parameters by construction. TimeGraph releases the
+structural equations and the full generating metadata alongside each graph.
+CausalDynamics derives its adjacency from governing equations that are themselves
+released. And the tiled bnlearn networks carry exact conditional probability
+tables, which is why the external check in this paper can score an estimated
+table against a published one rather than only counting edges. The real systems
+in the list, namely the Causal Chambers, CausalRivers and IRMA, have no true
+parameters to release, and the DREAM challenges release edge lists rather than
+the kinetics of the specific challenge networks.
+
+Two further hazards of benchmark design deserve mention, since both would be
+raised against any evaluation of this kind. A synthetic generator for a two-slice
+network can induce an ordering of the variables by marginal variance that
+continuous-optimization learners exploit for the wrong reason, so standardization
+and a report of the residual sortability are both needed
+\citep{reisach2021varsortability}. And structural Hamming distance is defined
+over partially directed graphs in its original form \citep{tsamardinos2006max}
+while several widely used libraries compute it on the directed adjacency, so a
+paper has to state which convention it used before its distances can be compared
+with anyone else's.
+
+Finally, a falsification test that requires no ground truth exists and transfers
+to real logs. The self-compatibility check compares graphs learned from different
+variable subsets and asks whether they agree where they overlap
+\citep{faller2024selfcompatibility}. It is necessary rather than sufficient, and
+it is the only structural check available where the true graph is unknown.

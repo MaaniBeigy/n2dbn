@@ -1,0 +1,143 @@
+\section{Synopsis}
+\label{sec:synopsis}
+
+A nested non-stationary dynamic Bayesian network is built from a ladder of
+temporal resolutions, two maps between adjacent rungs, one latent state and one
+lagged graph per rung. The densities, the estimator and the proofs follow in
+\cref{sec:model,sec:learning,sec:identifiability}.
+
+\paragraph{The ladder.}
+An event log is \(\mathcal D=\{(\ell_i,s_i,d_i)\}\): a label, a start, a
+duration. Fix nested partitions of the study horizon indexed by
+\(k=1,\dots,K\), finest to coarsest, and read off each epoch the number of
+episodes that start in it and the duration they carry,
+\begin{align}
+ Z^{(k)}=\bigl(X^{(k)},Y^{(k)}\bigr),
+ \qquad
+ X_t^{(k,\ell)}=\#\{i:\ell_i=\ell,\ s_i\in I_t^{(k)}\},
+ \qquad
+ Y_t^{(k,\ell)}=\!\!\sum_{i:\,s_i\in I_t^{(k)}}\!\! d_i .
+ \label{eq:syn_project}
+\end{align}
+One log, \(K\) views of it. Write \(\child_k(c)\) for the children of a
+coarse epoch \(c\).
+
+\paragraph{Folding and unfolding.}
+Two maps move between adjacent views. The \emph{fold} is deterministic and
+known; the \emph{unfold} is the model,
+\begin{align}
+ \underbrace{\bigl(\mathcal A_kz\bigr)_c=\!\!\sum_{t\in\child_k(c)}\!\! z_t}_{\text{fold, fine}\to\text{coarse}},
+ \qquad
+ \underbrace{Z^{(k)}\sim W_k\bigl(\cdot\mid Z^{(k+1)},U^{(k)},C^{(k)}\bigr)}_{\text{unfold, coarse}\to\text{fine}},
+ \qquad
+ \operatorname{supp}W_k=\mathcal A_k^{-1}\bigl(Z^{(k+1)}\bigr).
+ \label{eq:syn_foldunfold}
+\end{align}
+The unfold is a distribution over the \emph{fiber}: over all the ways a coarse
+total can be dealt out among its children. Generation starts at the top and
+walks down,
+\begin{align}
+ Z^{(K)}\sim E_K\bigl(\cdot\mid U^{(K)},C^{(K)}\bigr),
+ \qquad
+ Z^{(K-1)}\sim W_{K-1},\ \dots,\ Z^{(1)}\sim W_1 ,
+ \label{eq:syn_generate}
+\end{align}
+where \(U^{(k)}=(S^{(k)},H^{(k)})\) is a per-scale latent state, a discrete
+regimen for persistent drift and a continuous factor for same-epoch
+co-movement, and \(C^{(k)}\) holds calendar quantities as exogenous nodes.
+Because every unfold lands inside the fiber it came from,
+\begin{align}
+ \mathcal A_k\circ W_k=\mathrm{id}
+ \qquad\text{almost surely, hence}\qquad
+ \mathcal A_{j-1}\cdots\mathcal A_kZ^{(k)}=Z^{(j)}\ \ \text{for all }k<j .
+ \label{eq:syn_coherence}
+\end{align}
+Every draw, every forecast and every simulation reconciles exactly at every
+resolution. Nothing is projected afterwards.
+
+\paragraph{Shadow and detail.}
+Each scale carries a lagged graph \(\mathcal G^{(k)}\) and a predictor
+\(\eta^{(k)}\) built from lagged parents, latents and calendar. Split that
+predictor along the blocks, with \(\Pi_k\) the block average,
+\begin{align}
+ \eta^{(k)}
+ =\underbrace{\Pi_k\eta^{(k)}}_{\text{shadow}}
+ \;\oplus\;
+ \underbrace{(I-\Pi_k)\eta^{(k)}}_{\text{detail}} .
+ \label{eq:syn_split}
+\end{align}
+The unfold is blind to its own shadow: adding a constant to every child of one
+block leaves \(W_k\) unchanged, because the split it induces is unchanged.
+Therefore
+\begin{center}
+\emph{the detail at scale \(k\) is identified at scale \(k\); the shadow at
+scale \(k\) is identified only above it.}
+\end{center}
+This single sentence organizes the rest, and it has a spectral reading: folding
+is a low-pass filter, so the resolutions partition frequency and each one owns
+its own band. Periodic structure is then carried by a few Fourier harmonics,
+each landing in the band that contains its frequency, and localized structure by
+Haar coefficients on the block tree, where a level shift is simply a large one.
+A changepoint therefore has a home scale exactly as a calendar quantity does.
+Every parameter has a resolution that can see it. A latent regimen that does not switch inside a block is pure shadow
+there, so below the coarsest scale a regimen must act on a feature that varies
+within the block. A calendar quantity is pure shadow above the scale at which
+its period fits, which is what gives each one a home: hour of day at the hour,
+weekday at the day, a study trend at the week. And two adjacent scales share
+exactly their shadow, which is the only thing a cross-resolution prior may tie.
+
+\paragraph{The nested walk.}
+Learning is one walk up the ladder and one walk down, repeated. The ascent
+carries evidence, the descent carries context,
+\begin{align}
+ \text{ascent }(1\!\to\!K):\ \text{fold the details into sufficient statistics};
+ \qquad
+ \text{descent }(K\!\to\!1):\ \text{pass shadows down as priors} .
+ \label{eq:syn_walk}
+\end{align}
+Both directions are necessary, and \cref{eq:syn_split} says why: neither scale
+can identify what the other owns. One sweep updates the latent posterior
+\(q(U)\), then the parameters, then proposes graph moves, each step
+non-decreasing on one penalized bound
+\begin{align}
+ \mathcal J
+ =\mathbb E_q\bigl[\log p(Z,U,\mathcal G,\Theta\mid C)\bigr]
+ +\mathbb H[q]
+ -\sum_k\Bigl[\lambda_k^{\mathrm{rel}}\!\!\sum_{r}z_{r,k}
+ +\lambda_k^{\mathrm{rep}}\!\!\sum_{r}z_{r,k}\bigl(|\mathcal R_k(r)|-1\bigr)\Bigr] .
+ \label{eq:syn_objective}
+\end{align}
+A scientific relation \(r\) is bought once at price
+\(\lambda_k^{\mathrm{rel}}\); its representations, the choice of lag, quantity
+and basis, are cheap refinements inside it. Pricing each representation
+separately is what makes a simple relation lose to its own alternatives.
+
+\paragraph{The cascade.}
+The descent carries one more thing, and it is what makes the search
+affordable. A relation whose lag is shorter than a coarse epoch cannot appear
+there as a lag; it appears as same-epoch co-movement. Coarse co-movement is
+therefore the shadow of a fine lagged edge, and it orders where to look,
+\begin{align}
+ \rho_{a\to b}^{(k)}
+ =\max_{j>k}\ \bigl|\operatorname{cor}\bigl(Z^{(j,a)},Z^{(j,b)}\bigr)\bigr|
+ \quad\longrightarrow\quad
+ \text{visit candidates at scale }k\text{ in decreasing }\rho .
+ \label{eq:syn_cascade}
+\end{align}
+This is an ordering and never a filter. Nothing is removed, so at full depth
+the accepted set is exactly the unscreened one and the traversal depth is a
+speed control with no effect on what is reachable. Coarse regimens order the
+search the same way, by naming the epochs in which a relation is worth
+examining at all.
+
+\paragraph{What comes back.}
+A fit returns, at every resolution, a graph, its conditional distributions, and
+the latent regimen and factor paths. Running \cref{eq:syn_generate} forward
+from a filtered state produces a forecast; running it without conditioning
+produces a synthetic event log. Both are coherent by \cref{eq:syn_coherence},
+so a claim made at one resolution is automatically a claim at all of them, and
+a synthetic log can be re-projected through \cref{eq:syn_project} and compared
+with the real one scale by scale. \Cref{sec:results:arm1} runs that comparison
+on an observed log, and the pattern it finds is the one this synopsis predicts:
+what a fit reproduces is coarse-scale drift, and where the two logs separate is
+inside the day.
