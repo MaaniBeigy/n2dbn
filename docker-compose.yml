@@ -65,6 +65,117 @@ x-gpu: &gpu
             capabilities: [gpu]
 
 services:
+  # Revised manuscript: common normalized nested law, separate output root.
+  # exp* services below retain the historical implementations and results.
+  revision-tests:
+    <<: *common
+    volumes:
+      - .:/workspace
+    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_frozen_allocation_path.py -q
+
+  revision-smoke:
+    <<: *common
+    command: >-
+      python -m experiments.revision smoke
+      --outer 1 --inner 1 --profile 2 --shifts 0
+      --output results/${REV_ROOT:-revision}/smoke
+
+  revision-synthetic:
+    <<: *common
+    command: >-
+      python -m experiments.revision synthetic --tune
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
+      --output results/${REV_ROOT:-revision}/synthetic
+
+  revision-lifesnaps-audit:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision lifesnaps --audit-only
+      --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
+      --participants 51 --weeks 8
+      --output results/${REV_ROOT:-revision}/lifesnaps-audit
+
+  revision-benchmark:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision benchmark --tune
+      --csv data/dynamic_patterns/event_log.tsv
+      --manifest data/dynamic_patterns/manifest_declared.json --participants 30
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
+      --output results/${REV_ROOT:-revision}/benchmark
+
+  revision-lifesnaps:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision lifesnaps --tune
+      --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
+      --participants 51 --weeks 8 --pairs ${REV_PAIRS:-25}
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
+      --output results/${REV_ROOT:-revision}/lifesnaps
+
+  revision-forecast:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision forecast --tune
+      --data data/quito --panels min --series 40 --windows 1
+      --split cutoff --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --seconds ${REV_SECONDS:-0}
+      --output results/${REV_ROOT:-revision}/forecast
+
+  revision-forecast-extended:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision forecast --tune
+      --data data/quito --panels min --series 40 --windows 1
+      --split extended --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --seconds ${REV_SECONDS:-0}
+      --output results/${REV_ROOT:-revision}/forecast-extended
+
+  revision-scalability:
+    <<: *common
+    command: >-
+      python -m experiments.revision scalability
+      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
+      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
+      --replicates ${REV_SCALE_REPLICATES:-3} --seconds ${REV_SCALE_SECONDS:-3600}
+      --output results/${REV_ROOT:-revision}/scalability
+
+  revision-report:
+    <<: *common
+    command: >-
+      python -m experiments.revision report
+      --output results/${REV_ROOT:-revision}
+
   # ---------------------------------------------------------------- CPU ----
   # The three development services mount the working tree over the copy baked
   # into the image, so an edit takes effect without a rebuild.  The experiment
