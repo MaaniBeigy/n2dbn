@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from . import FORMULATION
+from .data import LIFESNAPS_OBSERVATION
 from .evaluate import summarize_forecasts, write_json
 
 
@@ -195,6 +196,9 @@ def report(root):
                 }
             )
         elif name == "lifesnaps":
+            sections[name]["observation_definition"] = settings.get(
+                "observation_definition"
+            )
             full = next((r for r in rows if r["key"] == "full"), {})
             fidelity = full.get("fidelity", {})
             volumes = fidelity.get("volumes", {})
@@ -224,6 +228,14 @@ def report(root):
                 enough &= (
                     sections[name]["audit"].get("valid", False)
                     and sections[name]["audit"].get("participants", 0) >= 51
+                    and sections[name]["audit"].get("observation_definition")
+                    == settings.get("observation_definition")
+                    == LIFESNAPS_OBSERVATION
+                    and all(
+                        row.get("observation_definition") == LIFESNAPS_OBSERVATION
+                        for row in rows
+                    )
+                    and fidelity.get("observation_definition") == LIFESNAPS_OBSERVATION
                 )
             else:
                 enough = False
@@ -253,7 +265,7 @@ def report(root):
             ]
             claims.append(
                 {
-                    "claim": "LifeSnaps count and duration volume errors are at least four times smaller than the intercept baseline",
+                    "claim": "LifeSnaps grouped-count and summed-mark volume errors are at least four times smaller than the intercept baseline",
                     "status": (
                         (
                             "supported"
@@ -282,7 +294,7 @@ def report(root):
             )
             claims.append(
                 {
-                    "claim": "LifeSnaps reproduces whole-label count volumes",
+                    "claim": "LifeSnaps reproduces per-label occupied-start-minute counts",
                     "status": (
                         ("supported" if good else "not_supported")
                         if enough
@@ -491,12 +503,51 @@ def report(root):
             ],
         )
     life = sections["lifesnaps"]
+    if life.get("observation_definition") == LIFESNAPS_OBSERVATION:
+        lines += [
+            "",
+            "## LifeSnaps observation definition",
+            "",
+            "One modeled start is one occupied participant-label-minute. "
+            "Its duration mark is the sum of all constituent annotation marks. "
+            "Counts and mark distributions describe these groups; raw episode "
+            "multiplicities and individual episode lengths are not modeled. "
+            "Summed marks are booked duration, not a union of occupied time intervals. "
+            "The original annotations and their group memberships are retained in "
+            "`lifesnaps/annotations.csv`.",
+        ]
+    grouping = life.get("audit", {}).get("grouping", {}).get("by_label", {})
+    result_table(
+        root,
+        lines,
+        "lifesnaps-grouping",
+        "LifeSnaps observed annotations and modeled groups",
+        ["Label", "Annotations", "Groups", "Count reduction", "Summed marks"],
+        [
+            [label]
+            + [
+                values.get(key)
+                for key in (
+                    "annotations_before",
+                    "groups_after",
+                    "count_reduction",
+                    "duration_after",
+                )
+            ]
+            for label, values in grouping.items()
+        ],
+    )
     for channel, values in life.get("volumes", {}).items():
         result_table(
             root,
             lines,
             "lifesnaps-" + channel,
-            "LifeSnaps " + channel,
+            "LifeSnaps "
+            + (
+                "occupied-start-minute counts"
+                if channel == "counts"
+                else "summed annotation-duration marks"
+            ),
             ["Label", "Observed", "Simulated mean", "Ratio", "Absolute log ratio"],
             [
                 [label]

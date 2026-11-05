@@ -24,6 +24,7 @@ import numpy as np
 
 from src.nested import FORMULATION
 from src.nested.data import (
+    LIFESNAPS_OBSERVATION,
     audit,
     check_round_trip,
     evaluation_view,
@@ -102,6 +103,8 @@ class Run:
         config = dict(vars(args))
         config["source_digest"] = source_digest()
         config["model_formulation"] = FORMULATION
+        if args.experiment == "lifesnaps":
+            config["observation_definition"] = LIFESNAPS_OBSERVATION
         config["packages"] = {}
         for package in (
             "numpy",
@@ -502,7 +505,16 @@ def synthetic(args):
                 run.cell(key, execute, method=method, scenario=scenario, replicate=rep)
 
 
-def simulations(path, records, model, replicates, seed, schedule=None, forms=True):
+def simulations(
+    path,
+    records,
+    model,
+    replicates,
+    seed,
+    schedule=None,
+    forms=True,
+    observation_definition=None,
+):
     simulations = []
     observed_totals, simulated_totals = volume_totals(records), []
     for rep in range(replicates):
@@ -525,6 +537,8 @@ def simulations(path, records, model, replicates, seed, schedule=None, forms=Tru
             records, observed_totals=observed_totals, simulated_totals=simulated_totals
         ),
     }
+    if observation_definition is not None:
+        result["observation_definition"] = observation_definition
     if forms:
         result["nonstationarity"] = nonstationarity(
             evaluation_view(records), simulations
@@ -568,18 +582,64 @@ def stability_summary(rows, full_graph, pairs):
 
 def lifesnaps_run(args):
     run = Run(args, [args.csv])
-    records, preparation, schedule = lifesnaps(args.csv, args.participants, args.weeks)
-    write_json(run.path / "audit.json", preparation)
-    if args.audit_only:
-        if not preparation["valid"]:
-            raise ValueError(
-                "LifeSnaps violates the declared support; see audit.json before fitting"
-            )
-        return
+    records, preparation, schedule = lifesnaps(
+        args.csv,
+        args.participants,
+        args.weeks,
+        annotation_path=run.path / "annotations.csv",
+    )
+    audit_path = run.path / "audit.json"
+    write_json(audit_path, preparation)
     if not preparation["valid"]:
-        raise ValueError(
-            "LifeSnaps violates the declared support; see audit.json. No episodes were clipped or jittered."
+        collisions = {
+            label: cells
+            for label, cells in preparation["collision_cells"].items()
+            if cells
+        }
+        errors = preparation["support_errors"]
+        details = [
+            "LifeSnaps audit failed; fitting has not started.",
+            f"Full report: {audit_path}",
+            "The count-duration model requires at most one start per label per "
+            "minute, Y >= X, and Y = 0 when X = 0.",
+            f"Observed minute cells with multiple starts, by label: {collisions}",
+            f"First {min(5, len(errors))} of {len(errors)} validation errors:",
+            *errors[:5],
+        ]
+        examples = preparation.get("collision_examples", [])[:3]
+        if examples:
+            details.extend(
+                [
+                    "First collision examples (CSV line numbers refer to the input):",
+                    json.dumps(examples, indent=2),
+                ]
+            )
+        details.append(
+            "Grouping has not resolved this support error. Inspect the report "
+            "and annotations.csv before fitting."
         )
+        raise ValueError("\n".join(details))
+    print(
+        f"LifeSnaps audit passed: {preparation['participants']} participants. "
+        f"Report: {audit_path}",
+        flush=True,
+    )
+    print(
+        "Observation unit: one occupied participant-label-minute; duration is "
+        "the sum of its annotation marks. "
+        f"Original annotations: {run.path / 'annotations.csv'}",
+        flush=True,
+    )
+    for label, values in preparation["grouping"]["by_label"].items():
+        print(
+            f"  {label}: {values['annotations_before']} annotations -> "
+            f"{values['groups_after']} groups; "
+            f"{values['coincident_groups']} coincident groups; "
+            f"duration {values['duration_after']} (unchanged)",
+            flush=True,
+        )
+    if args.audit_only:
+        return
     from src.data.anchors import anchor_set
 
     anchor_set(schedule.axis).freeze(str(run.path / "anchors.json"))
@@ -615,7 +675,12 @@ def lifesnaps_run(args):
                 own, args, latent=arm not in ("intercept", "no-regimes"), config=config
             )
             summary = save_fit(run.path / arm, fit, own, preparation["context_names"])
-            result = dict(status=fit.status, fit=summary, validation=validation)
+            result = dict(
+                status=fit.status,
+                fit=summary,
+                validation=validation,
+                observation_definition=LIFESNAPS_OBSERVATION,
+            )
             from src.nested.diagnostics import anchors, edge_checks, sham_denominator
 
             if arm != "sham":
@@ -626,6 +691,7 @@ def lifesnaps_run(args):
                     args.replicates,
                     args.seed + 9000,
                     schedule,
+                    observation_definition=LIFESNAPS_OBSERVATION,
                 )
                 result["anchors"] = anchors(
                     own, fit.model, config, schedule, preparation["context_names"]
@@ -660,6 +726,7 @@ def lifesnaps_run(args):
                     status=fit.status,
                     subjects=[r.name for r in own],
                     validation=validation,
+                    observation_definition=LIFESNAPS_OBSERVATION,
                     fit=save_fit(
                         run.path / key, fit, own, preparation["context_names"]
                     ),

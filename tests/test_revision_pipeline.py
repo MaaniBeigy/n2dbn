@@ -14,7 +14,15 @@ from experiments.revision import (
     simulations,
     stability_summary,
 )
-from src.nested.data import audit, check_round_trip, from_finest, read_log, write_log
+from src.nested.data import (
+    LIFESNAPS_OBSERVATION,
+    audit,
+    check_round_trip,
+    from_finest,
+    group_coincident_annotations,
+    read_log,
+    write_log,
+)
 from src.nested.evaluate import (
     aggregate_forecast,
     forecast_metrics,
@@ -68,6 +76,52 @@ def test_audit_exposes_simultaneous_starts():
     assert not result["valid"]
     assert result["collision_cells"] == {"label0": 1}
     assert audit([rec], count_only=True)["valid"]
+
+
+@pytest.mark.parametrize("audit_only", [True, False])
+def test_lifesnaps_failure_shows_evidence_and_stops_before_fitting(
+    tmp_path, monkeypatch, audit_only
+):
+    from experiments import revision
+
+    x = np.zeros((24, 1), dtype=int)
+    x[2] = 2
+    rec = from_finest("a", x, x, [3, 2], labels=["survey_response"])
+    preparation = audit([rec])
+    preparation["collision_examples"] = [
+        dict(
+            participant="a",
+            raw_day_index=0,
+            start_min=2,
+            modeled_label="survey_response",
+            original_annotations=[
+                dict(csv_line=2, raw_label="notification_read", duration_min="0"),
+                dict(csv_line=3, raw_label="mood_survey", duration_min="0"),
+            ],
+        )
+    ]
+    monkeypatch.setattr(
+        revision, "lifesnaps", lambda *args, **kwargs: ([rec], preparation, None)
+    )
+
+    def unexpected_fit(*args, **kwargs):
+        pytest.fail("an invalid panel must stop before fitting")
+
+    monkeypatch.setattr(revision, "selected_fit", unexpected_fit)
+    options = args(tmp_path)
+    options.experiment = "lifesnaps"
+    options.audit_only = audit_only
+    with pytest.raises(ValueError) as failure:
+        revision.lifesnaps_run(options)
+    message = str(failure.value)
+    assert str(tmp_path / "audit.json") in message
+    assert "'survey_response': 1" in message
+    assert "X=2, Y=2" in message
+    assert "notification_read" in message
+    assert "mood_survey" in message
+    assert json.loads((tmp_path / "audit.json").read_text()) == preparation
+    assert not (tmp_path / "runs.json").exists()
+    assert rec.data.X[0][2, 0] == 2
 
 
 def test_indexed_history_equals_full_column():
@@ -209,8 +263,18 @@ def test_small_cohort_fit_and_simulation_interface(tmp_path):
         latent=False,
         config=FitConfig(outer=1, inner=1, profile=1, shifts=0, structure=False),
     )
-    result = simulations(tmp_path, records, fit.model, 2, 51, forms=False)
+    result = simulations(
+        tmp_path,
+        records,
+        fit.model,
+        2,
+        51,
+        forms=False,
+        observation_definition=LIFESNAPS_OBSERVATION,
+    )
     assert result["round_trip_exact"]
+    saved = json.loads((tmp_path / "fidelity.json").read_text())
+    assert saved["observation_definition"] == LIFESNAPS_OBSERVATION
     assert set(fit.model.offsets) == {"p0", "p1"}
     assert np.allclose(sum(fit.model.offsets.values()), 0)
 
@@ -319,12 +383,10 @@ def test_log_link_is_not_silently_clipped():
         exp_mean(1000.0)
 
 
-def test_lifesnaps_reader_audits_collapsed_annotation_collisions(tmp_path):
+@pytest.fixture
+def lifesnaps_csv(tmp_path):
     import csv
     from datetime import datetime, timedelta
-
-    from src.data.label_axis import COLLAPSED_LABEL
-    from src.nested.data import lifesnaps
 
     path = tmp_path / "input.csv"
     with path.open("w", newline="") as handle:
@@ -353,17 +415,220 @@ def test_lifesnaps_reader_audits_collapsed_annotation_collisions(tmp_path):
                         start_datetime=when.strftime("%m/%d/%Y %H:%M"),
                     )
                 )
+        # Rare collisions occur after the first twenty survey collisions.
+        # The diagnostic must retain evidence for every affected label.
+        for minute, event, duration in (
+            (61, "workout", 32),
+            (61, "weights", 32),
+            (62, "mindfulness", 2),
+            (62, "mindfulness", 2),
+            (63, "mindfulness", 2),
+            (63, "mindfulness", 2),
+            (64, "notification_received", 0),
+            (64, "notification_received", 0),
+            (65, "notification_read", 0),
+            (65, "mood_survey", 0),
+            (65, "notification_read", 0),
+            (65, "step_goal_survey", 0),
+            (65, "walk", 3000),
+            (66, "mood_survey", 0),
+        ):
+            when = datetime(2026, 2, 16) + timedelta(days=55, minutes=minute)
+            writer.writerow(
+                dict(
+                    person_id="a",
+                    event=event,
+                    day_index=55,
+                    start_min=minute,
+                    duration_min=duration,
+                    start_datetime=when.strftime("%m/%d/%Y %H:%M"),
+                )
+            )
+        # A retained participant's annotation outside the eight-week window.
+        when = datetime(2026, 2, 16) + timedelta(days=56, minutes=60)
+        writer.writerow(
+            dict(
+                person_id="a",
+                event="walk",
+                day_index=56,
+                start_min=60,
+                duration_min=1,
+                start_datetime=when.strftime("%m/%d/%Y %H:%M"),
+            )
+        )
+        # A short record excluded by the cohort filter.
+        writer.writerow(
+            dict(
+                person_id="b",
+                event="walk",
+                day_index=0,
+                start_min=60,
+                duration_min=1,
+                start_datetime="02/16/2026 01:00",
+            )
+        )
+        # A retained participant whose last panel week is incomplete.
+        for day in range(63):
+            if day == 55:
+                continue
+            when = datetime(2026, 2, 16) + timedelta(days=day, minutes=60)
+            writer.writerow(
+                dict(
+                    person_id="c",
+                    event="walk",
+                    day_index=day,
+                    start_min=60,
+                    duration_min=1,
+                    start_datetime=when.strftime("%m/%d/%Y %H:%M"),
+                )
+            )
     # Use an actual member of the declared collapse, not an invented label.
     from src.data.label_axis import COLLAPSE_GROUP
 
     text = path.read_text().replace("ema_completed", COLLAPSE_GROUP[1])
     path.write_text(text)
-    records, preparation, schedule = lifesnaps(path, participants=1, weeks=8)
+    return path
+
+
+def test_lifesnaps_groups_preserve_annotations_marks_and_round_trip(
+    tmp_path, lifesnaps_csv
+):
+    import csv
+
+    from src.data.label_axis import COLLAPSED_LABEL
+    from src.nested.data import lifesnaps
+
+    source_bytes = lifesnaps_csv.read_bytes()
+    ledger_path = tmp_path / "annotations.csv"
+    records, preparation, schedule = lifesnaps(
+        lifesnaps_csv, participants=2, weeks=8, annotation_path=ledger_path
+    )
     assert schedule.weeks == 8
-    assert not preparation["valid"]
-    assert preparation["collision_cells"][COLLAPSED_LABEL] == 56
-    assert len(preparation["collision_examples"][0]["original_annotations"]) == 2
-    assert len(records) == 1
+    assert preparation["valid"]
+    assert not preparation["before_grouping"]["valid"]
+    before = preparation["before_grouping"]
+    assert before["collision_cells"][COLLAPSED_LABEL] == 57
+    assert before["max_starts_per_slot"][COLLAPSED_LABEL] == 4
+    assert all(n == 0 for n in preparation["collision_cells"].values())
+    examples = preparation["collision_examples"]
+    assert len(examples) == 23
+    assert {row["modeled_label"] for row in examples[:3]} == {
+        "gym",
+        "mindfulness",
+        COLLAPSED_LABEL,
+    }
+    assert all(len(row["original_annotations"]) == 2 for row in examples)
+    assert before["collision_cells"]["gym"] == 1
+    assert before["collision_cells"]["mindfulness"] == 2
+    assert preparation["collision_examples_complete_by_label"] == {
+        "gym": True,
+        "mindfulness": True,
+        COLLAPSED_LABEL: False,
+        "walk": True,
+    }
+    assert examples[0]["observed_count"] == 2
+    assert examples[0]["observed_duration"] == 64
+    assert examples[0]["original_annotations"][0]["raw_label"] == "workout"
+    assert [r.name for r in records] == ["a", "c"]
+    assert preparation["observation_definition"] == LIFESNAPS_OBSERVATION
+    volumes = preparation["grouping"]["by_label"][COLLAPSED_LABEL]
+    assert volumes == dict(
+        annotations_before=117,
+        groups_after=58,
+        count_reduction=59,
+        coincident_groups=57,
+        duration_before=117,
+        duration_after=117,
+    )
+    own = records[0].data
+    t = 55 * 1440
+    survey, walk = own.label_names.index(COLLAPSED_LABEL), own.label_names.index("walk")
+    assert (own.X[0][t + 65, survey], own.Y[0][t + 65, survey]) == (1, 4)
+    assert (own.X[0][t + 66, survey], own.Y[0][t + 66, survey]) == (1, 1)
+    assert (own.X[0][t + 65, walk], own.Y[0][t + 65, walk]) == (1, 3000)
+    assert own.C[0][t + 64, -1] == 2  # scheduled context remains a count
+    assert not records[1].data.get_observed(1)[49 * 1440 :].any()
+    with lifesnaps_csv.open() as handle:
+        source = list(csv.DictReader(handle))
+    with ledger_path.open() as handle:
+        ledger = list(csv.DictReader(handle))
+    assert len(ledger) == len(source) == preparation["annotation_audit"]["rows"]
+    assert {r["status"] for r in ledger} == {
+        "modeled",
+        "excluded_participant",
+        "outside_panel_window",
+        "context",
+        "unobserved_week",
+    }
+    for line, (raw, saved) in enumerate(zip(source, ledger), start=2):
+        assert saved["csv_line"] == str(line)
+        assert all(saved["raw_" + key] == value for key, value in raw.items())
+    four = [r for r in ledger if r.get("group_annotation_count") == "4"]
+    assert len(four) == 4
+    assert len({r["group_id"] for r in four}) == 1
+    assert {r["group_duration"] for r in four} == {"4"}
+    assert lifesnaps_csv.read_bytes() == source_bytes
+    exported = tmp_path / "grouped.csv"
+    write_log(exported, records, schedule)
+    assert check_round_trip(records, read_log(exported, records, schedule))
+
+
+def test_grouping_reaggregates_counts_and_does_not_hide_invalid_durations():
+    x = np.zeros((24, 2), dtype=int)
+    x[2] = [2, 1]
+    x[3] = [4, 0]
+    y = 3 * x
+    mask = np.ones(24, dtype=bool)
+    mask[-6:] = False
+    original = from_finest("a", x, y, [3, 2], observed=mask)
+    other = from_finest("b", x, y, [3, 2], observed=mask)
+    grouped = group_coincident_annotations([original, other])
+    assert [rec.name for rec in grouped] == ["a", "b"]
+    assert original.data.X[0][2, 0] == 2
+    assert grouped[0].data.X[0][:, 0].sum() == 2
+    assert grouped[0].data.X[-1][0, 0] == 2
+    for rec in grouped:
+        rec.validate()
+        np.testing.assert_array_equal(rec.data.observed, mask)
+        for k in range(rec.data.K):
+            np.testing.assert_array_equal(rec.data.Y[k], original.data.Y[k])
+            np.testing.assert_array_equal(rec.data.C[k], original.data.C[k])
+    invalid = from_finest("bad", x, (x > 0).astype(int), [3, 2])
+    with pytest.raises(ValueError, match="cannot repair invalid annotation durations"):
+        group_coincident_annotations([invalid])
+
+
+def test_lifesnaps_audit_cli_records_grouping_without_fitting(
+    tmp_path, lifesnaps_csv, monkeypatch, capsys
+):
+    from experiments import revision
+
+    options = parser().parse_args(
+        [
+            "lifesnaps",
+            "--audit-only",
+            "--participants",
+            "2",
+            "--csv",
+            str(lifesnaps_csv),
+            "--output",
+            str(tmp_path / "audit"),
+        ]
+    )
+    monkeypatch.setattr(
+        revision, "selected_fit", lambda *a, **kw: pytest.fail("audit must not fit")
+    )
+    revision.lifesnaps_run(options)
+    folder = tmp_path / "audit"
+    result = json.loads((folder / "audit.json").read_text())
+    assert result["valid"]
+    assert (folder / "annotations.csv").is_file()
+    assert not (folder / "runs.json").exists()
+    assert (
+        json.loads((folder / "config.json").read_text())["observation_definition"]
+        == LIFESNAPS_OBSERVATION
+    )
+    assert "117 annotations -> 58 groups" in capsys.readouterr().out
 
 
 def test_lagged_context_can_vary_inside_a_raw_constant_block():
@@ -411,6 +676,87 @@ def test_report_tables_keep_completed_and_failed_denominators(tmp_path):
     assert result["experiments"]["forecast"]["methods"]["nested"]["failed_runs"] == 1
     assert (tmp_path / "tables" / "forecast.csv").exists()
     assert "Failed/missing" in (tmp_path / "REPORT.md").read_text()
+
+
+def test_lifesnaps_report_labels_groups_and_rejects_unknown_observation_units(tmp_path):
+    from src.nested import FORMULATION
+    from src.nested.evaluate import write_json
+
+    folder = tmp_path / "lifesnaps"
+    settings = dict(
+        model_formulation=FORMULATION,
+        source_digest="fixture",
+        observation_definition=LIFESNAPS_OBSERVATION,
+        participants=51,
+        weeks=8,
+        replicates=10,
+        pairs=25,
+    )
+    write_json(folder / "config.json", settings)
+    grouped = dict(
+        annotations_before=117,
+        groups_after=58,
+        count_reduction=59,
+        coincident_groups=57,
+        duration_before=117,
+        duration_after=117,
+    )
+    write_json(
+        folder / "audit.json",
+        dict(
+            valid=True,
+            participants=51,
+            observation_definition=LIFESNAPS_OBSERVATION,
+            grouping=dict(by_label={"survey_response": grouped}),
+        ),
+    )
+    rows = [
+        dict(key=key, status="complete", observation_definition=LIFESNAPS_OBSERVATION)
+        for key in (
+            ["full", "intercept", "calendar-all", "calendar-none", "no-regimes", "sham"]
+            + [f"half-{pair}-{side}" for pair in range(25) for side in (0, 1)]
+        )
+    ]
+    for row in rows[:2]:
+        row["fidelity"] = dict(
+            observation_definition=LIFESNAPS_OBSERVATION,
+            volumes={
+                channel: dict(
+                    all_label_mean_absolute_log_ratio=(
+                        0.1 if row["key"] == "full" else 0.8
+                    ),
+                    by_label={
+                        "survey_response": dict(
+                            observed=58,
+                            simulated_mean=58,
+                            ratio=1,
+                            absolute_log_ratio=0,
+                        )
+                    },
+                )
+                for channel in ("counts", "booked_duration")
+            },
+        )
+    write_json(folder / "runs.json", rows)
+    result = report(tmp_path)
+    count_claim = next(
+        c for c in result["claims"] if "occupied-start-minute" in c["claim"]
+    )
+    assert count_claim["status"] == "supported"
+    assert (tmp_path / "tables" / "lifesnaps-grouping.csv").exists()
+    markdown = (tmp_path / "REPORT.md").read_text()
+    assert "raw episode multiplicities" in markdown
+    assert "annotations.csv" in markdown
+    assert "| survey_response | 117 | 58 | 59 | 117 |" in markdown
+
+    settings["observation_definition"] = "unknown-legacy-observations"
+    write_json(folder / "config.json", settings)
+    changed = report(tmp_path)
+    assert all(
+        c["status"] == "inconclusive"
+        for c in changed["claims"]
+        if c["claim"].startswith("LifeSnaps")
+    )
 
 
 def test_intercept_baseline_does_not_fit_depletion_predictors():

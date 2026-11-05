@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import csv
+import json
+from collections import Counter
+from contextlib import ExitStack
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -11,6 +15,149 @@ import numpy as np
 from ..core.scales import ScaleHierarchy
 from ..core.variables import MultiScaleData
 from .model import Record
+
+LIFESNAPS_OBSERVATION = "coincident-annotation-groups-v1"
+
+
+def group_coincident_annotations(records):
+    """One start per participant/label/minute, with all duration marks summed.
+
+    This defines grouped observations; it does not identify duplicate episodes.
+    Duration arrays, contexts, calendars and masks retain their original values.
+    All coarser counts are rebuilt from the binary finest-scale group indicators.
+    """
+    out = []
+    for rec in records:
+        rec.validate(count_only=True)
+        d = rec.data
+        x, y = d.X[0], d.Y[0]
+        if np.any(y < x) or np.any((x == 0) & (y != 0)):
+            raise ValueError(
+                f"{rec.name}: grouping cannot repair invalid annotation durations"
+            )
+        counts = [(x > 0).astype(np.int64)]
+        for k, parent in enumerate(d.hierarchy.parent_maps[:-1]):
+            up = np.zeros_like(d.X[k + 1])
+            np.add.at(up, parent, counts[-1])
+            counts.append(up)
+        grouped = Record(rec.name, replace(d, X=counts))
+        grouped.validate()
+        out.append(grouped)
+    return out
+
+
+def _annotation_audit(path, records, axis, schedule, examples, destination):
+    """Preserve every source row and verify its membership against raw arrays."""
+    from ..data.lifesnaps import GYM_LABEL, GYM_MODALITIES
+
+    by_name = {rec.name: rec for rec in records}
+    columns = {label: i for i, label in enumerate(records[0].data.label_names)}
+    status_counts = Counter()
+    membership = {}
+    destination = Path(destination) if destination is not None else None
+    if destination is not None:
+        if destination.resolve() == Path(path).resolve():
+            raise ValueError("annotation audit must not overwrite the source CSV")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+    with ExitStack() as stack:
+        source = csv.DictReader(
+            stack.enter_context(open(path, newline="", encoding="utf-8"))
+        )
+        writer = None
+        if destination is not None:
+            temporary = destination.with_suffix(destination.suffix + ".tmp")
+            output = stack.enter_context(
+                temporary.open("w", newline="", encoding="utf-8")
+            )
+            writer = csv.DictWriter(
+                output,
+                fieldnames=[
+                    "csv_line",
+                    "status",
+                    "modeled_label",
+                    "panel_epoch",
+                    "group_id",
+                    "group_annotation_count",
+                    "group_count",
+                    "duration_mark",
+                    "group_duration",
+                ]
+                + ["raw_" + name for name in source.fieldnames],
+            )
+            writer.writeheader()
+        for line, row in enumerate(source, start=2):
+            label = GYM_LABEL if row["event"] in GYM_MODALITIES else row["event"]
+            label = axis.grouped.get(label, label)
+            key = (
+                row["person_id"],
+                int(row["day_index"]),
+                int(row["start_min"]),
+                label,
+            )
+            # The input CSV contains whole-minute durations. This is exactly
+            # the legacy seconds-to-minutes conversion, including its floor.
+            mark = max(1, int(row["duration_min"]))
+            entry = dict(csv_line=line, modeled_label=label)
+            rec = by_name.get(key[0])
+            if rec is None:
+                status = "excluded_participant"
+            else:
+                t = (key[1] - schedule.offsets[rec.name]) * 1440 + key[2]
+                entry["panel_epoch"] = t
+                if not 0 <= t < len(rec.data.X[0]):
+                    status = "outside_panel_window"
+                elif label not in columns:
+                    status = "context"
+                else:
+                    ell = columns[label]
+                    count = int(rec.data.X[0][t, ell])
+                    duration = int(rec.data.Y[0][t, ell])
+                    status = (
+                        "modeled" if rec.data.get_observed(1)[t] else "unobserved_week"
+                    )
+                    entry.update(
+                        group_id=json.dumps(key, separators=(",", ":")),
+                        group_annotation_count=count,
+                        group_count=1,
+                        duration_mark=mark,
+                        group_duration=duration,
+                    )
+                    own = membership.setdefault((rec.name, t, ell), [0, 0])
+                    own[0] += 1
+                    own[1] += mark
+            entry["status"] = status
+            status_counts[status] += 1
+            if key in examples:
+                examples[key].append(
+                    dict(
+                        csv_line=line,
+                        raw_label=row["event"],
+                        duration_min=row["duration_min"],
+                        duration_mark=mark,
+                        start_datetime=row.get("start_datetime"),
+                        end_datetime=row.get("end_datetime"),
+                    )
+                )
+            if writer is not None:
+                writer.writerow(entry | {"raw_" + k: v for k, v in row.items()})
+        expected = sum(np.count_nonzero(rec.data.X[0]) for rec in records)
+        if len(membership) != expected:
+            raise ValueError("annotation audit does not cover every panel group")
+        for (name, t, ell), (count, duration) in membership.items():
+            d = by_name[name].data
+            if count != d.X[0][t, ell] or duration != d.Y[0][t, ell]:
+                raise ValueError(
+                    f"annotation audit disagrees with panel at {name}, {t}, {ell}"
+                )
+    if destination is not None:
+        temporary.replace(destination)
+    return {
+        "file": destination.name if destination is not None else None,
+        "rows": sum(status_counts.values()),
+        "status_counts": dict(status_counts),
+        "group_membership_verified": True,
+        "original_columns": "all input columns preserved with raw_ prefix",
+    }
 
 
 def from_finest(
@@ -67,7 +214,12 @@ def audit(records, count_only=False):
     }
 
 
-def lifesnaps(path, participants=51, weeks=8):
+def lifesnaps(path, participants=51, weeks=8, *, annotation_path=None):
+    """Read LifeSnaps as binary groups of coincident mapped annotations.
+
+    The experiment supplies annotation_path to retain every source CSV row in
+    a separate audit trail. Neither the source CSV nor legacy readers is edited.
+    """
     from ..data.lifesnaps_panel import PANEL_EXOGENOUS, balanced_panel
 
     if not Path(path).is_file():
@@ -98,56 +250,93 @@ def lifesnaps(path, participants=51, weeks=8):
             },
         }
     )
-    # Show which original annotations collided after the declared label map.
-    # This makes a support failure reviewable without guessing that coincident
-    # annotations are duplicate episodes or deleting distinct events.
-    from ..data.lifesnaps import GYM_LABEL, GYM_MODALITIES
-
-    examples = {}
+    # Retain evidence about multiplicities before defining grouped starts.
+    limit = 20
+    by_label = {label: [] for label in records[0].data.label_names}
+    values = {}
     for rec in records:
-        for t, ell in np.argwhere(
-            (rec.data.X[0] > 1) & rec.data.get_observed(1)[:, None]
-        ):
-            if len(examples) >= 20:
-                break
-            day, minute = divmod(int(t), 1440)
-            key = (
-                rec.name,
-                report.schedule.offsets[rec.name] + day,
-                minute,
-                rec.data.label_names[ell],
-            )
-            examples[key] = []
-    if examples:
-        with open(path, newline="", encoding="utf-8") as handle:
-            for line, row in enumerate(csv.DictReader(handle), start=2):
-                label = GYM_LABEL if row["event"] in GYM_MODALITIES else row["event"]
-                label = axis.grouped.get(label, label)
+        for ell, label in enumerate(rec.data.label_names):
+            remaining = limit - len(by_label[label])
+            if remaining <= 0:
+                continue
+            times = np.flatnonzero(
+                (rec.data.X[0][:, ell] > 1) & rec.data.get_observed(1)
+            )[:remaining]
+            for t in times:
+                day, minute = divmod(int(t), 1440)
                 key = (
-                    row["person_id"],
-                    int(row["day_index"]),
-                    int(row["start_min"]),
+                    rec.name,
+                    report.schedule.offsets[rec.name] + day,
+                    minute,
                     label,
                 )
-                if key in examples:
-                    examples[key].append(
-                        {
-                            "csv_line": line,
-                            "raw_label": row["event"],
-                            "duration_min": row["duration_min"],
-                        }
-                    )
+                by_label[label].append(key)
+                values[key] = {
+                    "count": int(rec.data.X[0][t, ell]),
+                    "duration": int(rec.data.Y[0][t, ell]),
+                }
+    # Interleave labels so both the terminal preview and the saved report show
+    # rare collisions instead of letting survey annotations occupy every slot.
+    examples = {
+        keys[i]: [] for i in range(limit) for keys in by_label.values() if i < len(keys)
+    }
+    preparation["annotation_audit"] = _annotation_audit(
+        path, records, axis, report.schedule, examples, annotation_path
+    )
     preparation["collision_examples"] = [
         dict(
             participant=key[0],
             raw_day_index=key[1],
             start_min=key[2],
             modeled_label=key[3],
+            observed_count=values[key]["count"],
+            observed_duration=values[key]["duration"],
             original_annotations=value,
         )
         for key, value in examples.items()
     ]
-    return records, preparation, report.schedule
+    preparation["collision_examples_limit_per_label"] = limit
+    preparation["collision_examples_complete_by_label"] = {
+        label: len(keys) == preparation["collision_cells"][label]
+        for label, keys in by_label.items()
+    }
+    preparation["collision_examples_basis"] = "before grouping"
+    preparation["before_grouping"] = audit(records)
+    grouped = group_coincident_annotations(records)
+    by_label = {}
+    for ell, label in enumerate(records[0].data.label_names):
+        before = sum(
+            int(r.data.X[0][r.data.get_observed(1), ell].sum()) for r in records
+        )
+        after = sum(
+            int(r.data.X[0][r.data.get_observed(1), ell].sum()) for r in grouped
+        )
+        duration = sum(
+            int(r.data.Y[0][r.data.get_observed(1), ell].sum()) for r in records
+        )
+        by_label[label] = {
+            "annotations_before": before,
+            "groups_after": after,
+            "count_reduction": before - after,
+            "coincident_groups": preparation["collision_cells"][label],
+            "duration_before": duration,
+            "duration_after": duration,
+        }
+    preparation["observation_definition"] = LIFESNAPS_OBSERVATION
+    preparation["grouping"] = {
+        "policy": LIFESNAPS_OBSERVATION,
+        "unit": "one occupied participant-label-minute",
+        "duration": "sum of individual positive integer annotation marks",
+        "basis": "observed slots of the selected panel",
+        "duplicates_inferred": False,
+        "by_label": by_label,
+    }
+    preparation.update(audit(grouped))
+    preparation["duration_convention"] = (
+        "sum of individually recoded annotation marks; each mark rounds "
+        "seconds/60 to nearest even with minimum one minute"
+    )
+    return grouped, preparation, report.schedule
 
 
 def with_sham(records, seed=0):
@@ -168,7 +357,11 @@ def with_sham(records, seed=0):
 
 
 def write_log(path, records, schedule=None):
-    """Export starts with full duration marks, including end times past a block."""
+    """Export modeled starts and full marks, including marks past a block.
+
+    LifeSnaps rows describe annotation groups; they do not reconstruct the
+    original group's individual annotations or their multiplicities.
+    """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -199,7 +392,9 @@ def write_log(path, records, schedule=None):
                 (rec.data.X[0] > 0) & rec.data.get_observed(1)[:, None]
             ):
                 if rec.data.X[0][t, ell] != 1:
-                    raise ValueError("raw episode export requires binary finest starts")
+                    raise ValueError(
+                        "modeled-start export requires binary finest starts"
+                    )
                 day, minute = divmod(int(t), 1440)
                 when = day_zero + timedelta(days=offset + day, minutes=minute)
                 writer.writerow(
