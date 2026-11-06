@@ -174,6 +174,12 @@ def report(root):
                     },
                 }
         elif name == "benchmark":
+            sections[name]["observation_definition"] = settings.get(
+                "observation_definition"
+            )
+            observed_audit = path / "audit.json"
+            if observed_audit.exists():
+                sections[name]["audit"] = json.loads(observed_audit.read_text())
             sections[name]["methods"] = {
                 row.get("method", row["key"]): {
                     key: row.get(key)
@@ -191,7 +197,7 @@ def report(root):
                 {
                     "claim": "CalendarBench typed-rule recovery supports the manuscript claim",
                     "status": "inconclusive",
-                    "criterion": "inspect manifest reachability and channel coefficients; label-only correspondence cannot establish cross-quantity recovery",
+                    "criterion": "inspect manifest reachability, effects of grouping on count quantities, and channel coefficients; label-only correspondence cannot establish typed recovery",
                     "evidence": sections[name]["methods"],
                 }
             )
@@ -500,6 +506,43 @@ def report(root):
                 + [(v.get("mse") or {}).get(s) for s in ("mean", "median")]
                 + [(v.get("coherence") or {}).get("max")]
                 for method, v in methods.items()
+            ],
+        )
+    benchmark = sections["benchmark"]
+    benchmark_groups = (
+        benchmark.get("audit", {}).get("grouping", {}).get("by_label", {})
+    )
+    if benchmark_groups:
+        lines += [
+            "",
+            "## CalendarBench observation definition",
+            "",
+            "CalendarBench uses one start per occupied participant-label-minute "
+            "and the sum of its individual duration marks. Starts at different "
+            "minutes remain distinct even when durations overlap. "
+            "`benchmark/annotations.csv` retains the original TSV rows. "
+            "Fidelity measures these groups; raw manifest episode counts can "
+            "differ. Manifest rules involving changed count quantities are "
+            "flagged before interpreting label-level correspondence.",
+        ]
+        result_table(
+            root,
+            lines,
+            "benchmark-grouping",
+            "CalendarBench annotations and modeled groups",
+            ["Label", "Annotations", "Groups", "Count reduction", "Summed marks"],
+            [
+                [label]
+                + [
+                    values.get(key)
+                    for key in (
+                        "annotations_before",
+                        "groups_after",
+                        "count_reduction",
+                        "duration_after",
+                    )
+                ]
+                for label, values in benchmark_groups.items()
             ],
         )
     life = sections["lifesnaps"]

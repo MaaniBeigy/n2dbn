@@ -23,6 +23,7 @@ from pathlib import Path
 import numpy as np
 
 from src.nested import FORMULATION
+from src.nested.calendarbench import CALENDARBENCH_OBSERVATION, calendarbench
 from src.nested.data import (
     LIFESNAPS_OBSERVATION,
     audit,
@@ -105,6 +106,8 @@ class Run:
         config["model_formulation"] = FORMULATION
         if args.experiment == "lifesnaps":
             config["observation_definition"] = LIFESNAPS_OBSERVATION
+        elif args.experiment == "benchmark":
+            config["observation_definition"] = CALENDARBENCH_OBSERVATION
         config["packages"] = {}
         for package in (
             "numpy",
@@ -1006,46 +1009,53 @@ def benchmark(args):
     quantity predictors. Keep those in the reachability ledger; do not count a
     label-only match as recovery of an unsupported typed rule.
     """
-    from src.data.dynamic_patterns import (
-        VERBATIM,
-        build_population,
-        read_declared_manifest,
-        read_subject_event_log,
-    )
-    from src.data.lifesnaps_panel import PANEL_NODES, shared_calendar
+    from src.data.dynamic_patterns import read_declared_manifest
+    from src.data.lifesnaps_panel import PANEL_NODES
 
     run = Run(args, [args.csv, args.manifest])
-    subjects = read_subject_event_log(args.csv)
-    subjects = {key: subjects[key] for key in sorted(subjects)[: args.participants]}
-    labels = sorted({event.label for events in subjects.values() for event in events})
-    records = []
-    for name, data, _ in build_population(subjects, labels, policy=VERBATIM):
-        records.append(
-            Record(
-                name, dataclasses.replace(data, C=shared_calendar(data.hierarchy.H[-1]))
-            )
-        )
-    preparation = audit(records)
-    preparation["duration_convention"] = (
-        "ceil duration seconds / 60; minimum one minute, inherited from CalendarBench reader"
+    records, preparation = calendarbench(
+        args.csv, args.participants, annotation_path=run.path / "annotations.csv"
     )
-    preparation["missingness"] = "declared common study window, with padding excluded"
+    labels = records[0].data.label_names
     write_json(run.path / "audit.json", preparation)
     if not preparation["valid"]:
         raise ValueError(
-            "CalendarBench log violates binary-start support; inspect audit.json"
+            f"CalendarBench grouped input violates support; inspect {run.path / 'audit.json'}:\n"
+            + "\n".join(preparation["support_errors"][:5])
         )
+    grouped_totals = preparation["grouping"]["by_label"]
+    print(
+        f"CalendarBench audit passed: {len(records)} participants, {len(labels)} labels. "
+        f"Report: {run.path / 'audit.json'}",
+        flush=True,
+    )
+    print(
+        f"{sum(v['annotations_before'] for v in grouped_totals.values())} annotations -> "
+        f"{sum(v['groups_after'] for v in grouped_totals.values())} groups; "
+        "all duration marks preserved. "
+        f"Original annotations: {run.path / 'annotations.csv'}",
+        flush=True,
+    )
     declared = read_declared_manifest(args.manifest)
     ledger, reachable = [], set()
     for rule in declared.rules:
         source_quantity = "count" if rule.source_quantity == "count" else "duration"
         target_quantity = "count" if rule.target_quantity == "episodes" else "duration"
         on_axis = rule.source in labels and rule.target in labels
+        changed_counts = any(
+            quantity == "count"
+            and grouped_totals.get(label, {}).get("count_reduction", 0) > 0
+            for label, quantity in (
+                (rule.source, source_quantity),
+                (rule.target, target_quantity),
+            )
+        )
         expressible = (
             on_axis
             and source_quantity == target_quantity
             and rule.lag_days <= args.lag
             and rule.source_quantity != "max_duration"
+            and not changed_counts
         )
         ledger.append(
             dict(
@@ -1054,11 +1064,13 @@ def benchmark(args):
                 lag=rule.lag_days,
                 source_quantity=rule.source_quantity,
                 target_quantity=rule.target_quantity,
+                observation_definition=CALENDARBENCH_OBSERVATION,
+                count_quantity_changed_by_grouping=changed_counts,
                 expressible=expressible,
                 reason=(
                     "same-quantity log predictor in lag bound"
                     if expressible
-                    else "cross-quantity, maximum-duration functional, missing label, or lag outside search"
+                    else "grouped count changed, cross-quantity, maximum-duration functional, missing label, or lag outside search"
                 ),
             )
         )
@@ -1067,6 +1079,8 @@ def benchmark(args):
                 (2, labels.index(rule.target), labels.index(rule.source), rule.lag_days)
             )
     write_json(run.path / "manifest-reachability.json", ledger)
+    if args.audit_only:
+        return
     methods = ["nested+latent", "intercept"] + list(CLASSICAL)
     run.plan(methods)
     for method in methods:
@@ -1139,6 +1153,7 @@ def benchmark(args):
                 fit=summary,
                 validation=validation,
                 manifest=hits,
+                observation_definition=CALENDARBENCH_OBSERVATION,
                 stationary_target_edges=[
                     e
                     for e in summary["graph"]
@@ -1154,6 +1169,7 @@ def benchmark(args):
                     fit.model,
                     args.replicates,
                     args.seed + 5000,
+                    observation_definition=CALENDARBENCH_OBSERVATION,
                 )
             return result
 

@@ -71,7 +71,7 @@ services:
     <<: *common
     volumes:
       - .:/workspace
-    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_frozen_allocation_path.py -q
+    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_revision_calendarbench.py tests/test_frozen_allocation_path.py -q
 
   revision-smoke:
     <<: *common
@@ -100,6 +100,18 @@ services:
       --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
       --participants 51 --weeks 8
       --output results/${REV_ROOT:-revision}/lifesnaps-audit
+
+  revision-benchmark-audit:
+    <<: *common
+    volumes:
+      - ./results:/workspace/results
+      - ./paper:/workspace/paper
+      - ./data:/workspace/data:ro
+    command: >-
+      python -m experiments.revision benchmark --audit-only
+      --csv data/dynamic_patterns/event_log.tsv
+      --manifest data/dynamic_patterns/manifest_declared.json --participants 30
+      --output results/${REV_ROOT:-revision}/benchmark-audit
 
   revision-benchmark:
     <<: *common
