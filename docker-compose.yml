@@ -71,12 +71,13 @@ services:
     <<: *common
     volumes:
       - .:/workspace
-    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_revision_calendarbench.py tests/test_frozen_allocation_path.py -q
+    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_revision_calendarbench.py tests/test_revision_parallel.py tests/test_frozen_allocation_path.py -q
 
   revision-smoke:
     <<: *common
     command: >-
       python -m experiments.revision smoke
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --outer 1 --inner 1 --profile 2 --shifts 0
       --output results/${REV_ROOT:-revision}/smoke
 
@@ -84,6 +85,7 @@ services:
     <<: *common
     command: >-
       python -m experiments.revision synthetic --tune
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
       --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
       --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
@@ -121,6 +123,7 @@ services:
       - ./data:/workspace/data:ro
     command: >-
       python -m experiments.revision benchmark --tune
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --csv data/dynamic_patterns/event_log.tsv
       --manifest data/dynamic_patterns/manifest_declared.json --participants 30
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
@@ -136,6 +139,7 @@ services:
       - ./data:/workspace/data:ro
     command: >-
       python -m experiments.revision lifesnaps --tune
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
       --participants 51 --weeks 8 --pairs ${REV_PAIRS:-25}
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
@@ -151,6 +155,7 @@ services:
       - ./data:/workspace/data:ro
     command: >-
       python -m experiments.revision forecast --tune
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --data data/quito --panels min --series 40 --windows 1
       --split cutoff --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
@@ -166,6 +171,7 @@ services:
       - ./data:/workspace/data:ro
     command: >-
       python -m experiments.revision forecast --tune
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --data data/quito --panels min --series 40 --windows 1
       --split extended --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
@@ -177,6 +183,7 @@ services:
     <<: *common
     command: >-
       python -m experiments.revision scalability
+      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
       --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
       --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
       --replicates ${REV_SCALE_REPLICATES:-3} --seconds ${REV_SCALE_SECONDS:-3600}

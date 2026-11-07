@@ -87,6 +87,8 @@ def fit_summary(fit):
         "shared_graph_penalty": fit.model.penalty(),
         "inference_seconds": fit.inference_seconds,
         "search_seconds": fit.search_seconds,
+        "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+        "parallel_phases": fit.parallel_phases,
         "candidate_refits": fit.candidate_refits,
         "depletion_coefficients": [
             [target.depletion for target in level.targets] for level in fit.model.levels

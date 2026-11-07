@@ -201,6 +201,9 @@ def fit_config(args, **changes):
         search=args.search,
         seed=args.seed,
         context_mode="home",
+        jobs=args.jobs,
+        memory_gb=args.memory_gb,
+        verbose=True,
     )
     values.update(changes)
     return FitConfig(**values)
@@ -973,11 +976,13 @@ def scalability(args):
             "platform": platform.platform(),
             "processor": platform.processor(),
             "cpu_count": os.cpu_count(),
+            "requested_jobs": args.jobs,
+            "memory_budget_gb": args.memory_gb,
             "threads": {
                 k: os.environ.get(k)
                 for k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")
             },
-            "memory_measure": "process lifetime resident high-water mark, not per-cell allocation",
+            "memory_measure": "parent process lifetime resident high-water mark; excludes private worker allocations, not per-cell allocation",
         },
     )
     for axis, value in settings:
@@ -1222,6 +1227,18 @@ def parser():
         ],
     )
     p.add_argument("--output", default="results/revision")
+    p.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        help="nested fit worker processes; 0 chooses up to 6 automatically",
+    )
+    p.add_argument(
+        "--memory-gb",
+        type=float,
+        default=0,
+        help="total estimated fitting RAM budget in GiB; 0 uses available RAM",
+    )
     p.add_argument("--outer", type=int, default=5)
     p.add_argument("--inner", type=int, default=3)
     p.add_argument("--profile", type=int, default=25)
@@ -1286,6 +1303,9 @@ def main(argv=None):
         )
         < 1
         or args.pairs < 0
+        or args.jobs < 0
+        or not np.isfinite(args.memory_gb)
+        or args.memory_gb < 0
     ):
         raise ValueError(
             "iteration, replicate, lag and series counts must be positive; pairs nonnegative"

@@ -220,20 +220,37 @@ def blocks(record, model, k, ell):
     )
 
 
-def stage_scores(record, model, k, ell, batch, base, stage, channel, override=None):
+def stage_scores(
+    record,
+    model,
+    k,
+    ell,
+    batch,
+    base,
+    stage,
+    channel,
+    override=None,
+    *,
+    prefix=None,
+    features=None,
+):
     """Use only endogenous values strictly preceding the current epoch."""
     target = model.levels[k].targets[ell]
     idx = batch.indices
     out = base[:, :, channel].copy()
-    for parent, coef in target.parents.items():
-        values = feature(record, k, parent, channel, override, idx)
+    if features is None:
+        features = [
+            (p, feature(record, k, p, channel, override, idx)) for p in target.parents
+        ]
+    for parent, values in features:
         if parent.kind == "behavior":
             available = (idx - parent.lag >= 0) & (
                 idx - parent.lag < idx[:, stage, None]
             )
             values = np.where(available, values, 0.0)
-        out += coef[channel] * values
-    prefix = np.cumsum(batch.x, axis=1) - batch.x
+        out += target.parents[parent][channel] * values
+    if prefix is None:
+        prefix = np.cumsum(batch.x, axis=1) - batch.x
     if channel == 0:
         prefix = np.minimum(prefix, prefix[:, stage, None])
     out += target.depletion[channel] * np.log1p(prefix)
@@ -255,7 +272,14 @@ def allocation_logpmf(
     totals = record.data.X[k + 1][batch.parents, ell]
     durations = record.data.Y[k + 1][batch.parents, ell]
     result = np.zeros(B)
+    prefix = np.cumsum(batch.x, axis=1) - batch.x
     for channel in range(1 if model.count_only else 2):
+        # Observations and overrides are fixed during one likelihood call.
+        # Read each lag once, retaining the stage-specific causal censor below.
+        features = [
+            (p, feature(record, k, p, channel, override, batch.indices))
+            for p in model.levels[k].targets[ell].parents
+        ]
         values = batch.x if channel == 0 else batch.y - batch.x
         remaining = (totals if channel == 0 else durations - totals).copy()
         concentration = model.levels[k].concentration[channel]
@@ -264,7 +288,17 @@ def allocation_logpmf(
             if not valid.any():
                 continue
             logits = stage_scores(
-                record, model, k, ell, batch, base, i, channel, override
+                record,
+                model,
+                k,
+                ell,
+                batch,
+                base,
+                i,
+                channel,
+                override,
+                prefix=prefix,
+                features=features,
             )
             weights = np.exp(logits - logsumexp(logits, axis=1, keepdims=True))
             a = concentration * weights[:, i]
@@ -292,7 +326,7 @@ def allocation_logpmf(
     return result
 
 
-def target_score(record, model, k, ell, posterior, override=None):
+def target_score(record, model, k, ell, posterior, override=None, *, batch=None):
     q = posterior[k]
     if model.emission(k):
         ll = np.zeros(len(q.gamma))
@@ -304,7 +338,7 @@ def target_score(record, model, k, ell, posterior, override=None):
         return float(ll[record.rows(k, model.lag_bound[k])].sum())
     return float(
         allocation_logpmf(
-            record, model, k, ell, q.gamma, q.m_H, override=override
+            record, model, k, ell, q.gamma, q.m_H, override=override, batch=batch
         ).sum()
     )
 

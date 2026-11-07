@@ -10,9 +10,10 @@ from dataclasses import dataclass, field
 import numpy as np
 from scipy.optimize import minimize
 
-from .inference import infer, monitor, transition_inputs
-from .law import feature, target_score
+from .inference import infer, monitor, monitor_record, transition_inputs
+from .law import blocks, feature, target_score
 from .model import Parent
+from .parallel import GIB, ordered_map, worker_plan
 
 
 @dataclass
@@ -32,8 +33,13 @@ class FitConfig:
     structure: bool = True
     subject_offsets: bool = True
     depletion: bool = True
+    jobs: int = 1
+    memory_gb: float = 0
+    verbose: bool = False
 
     def __post_init__(self):
+        if self.jobs < 0 or not np.isfinite(self.memory_gb) or self.memory_gb < 0:
+            raise ValueError("jobs and memory_gb must be nonnegative")
         if (
             min(self.outer, self.inner, self.profile) < 1
             or self.indegree < 0
@@ -62,6 +68,7 @@ class FitResult:
     inference_seconds: float = 0.0
     search_seconds: float = 0.0
     candidate_refits: int = 0
+    parallel_phases: list[dict] = field(default_factory=list)
 
 
 class Fitter:
@@ -72,6 +79,8 @@ class Fitter:
         self.shift_checks = []
         self.candidate_refits = 0
         self._candidate_cache = {}
+        self._batches = {}
+        self.parallel_phases = []
 
     def budget(self):
         if (
@@ -91,6 +100,7 @@ class Fitter:
                 ell,
                 posterior[rec.name],
                 None if overrides is None else overrides.get(rec.name),
+                batch=self._batches.get((id(rec), k, ell)),
             )
             for rec in records
         )
@@ -496,20 +506,121 @@ class Fitter:
             axis=0,
         )
 
+    def phase_plan(self, records, tasks, phase):
+        # A target worker retains only one label's block arrays. This also
+        # leaves room for Python copy-on-write pages and optimizer temporaries.
+        private = max(GIB, 64 * sum(r.data.hierarchy.H[0] for r in records))
+        plan = worker_plan(self.config.jobs, self.config.memory_gb, tasks, private)
+        self.parallel_phases.append(dict(phase=phase, **plan))
+        if self.config.verbose:
+            print(
+                f"fit: {phase}; {plan['workers']} workers; elapsed {time.perf_counter() - self.started:.1f}s",
+                flush=True,
+            )
+        return plan
+
+    def infer_all(self, records, model, phase):
+        plan = self.phase_plan(records, len(records), phase)
+        if plan["workers"] == 1:
+            posterior = {
+                rec.name: infer(rec, model, self.config.inner) for rec in records
+            }
+            return posterior, monitor(records, model, posterior)
+
+        def work(i):
+            rec = records[i]
+            q = infer(rec, model, self.config.inner)
+            return rec.name, q, monitor_record(rec, model, q)
+
+        rows = ordered_map(work, range(len(records)), plan)
+        # Preserve participant summation order and pay the graph price once.
+        return {name: q for name, q, _ in rows}, sum(
+            row[2] for row in rows
+        ) - model.penalty()
+
+    def fit_targets(self, records, model, k, posterior, iteration):
+        if self.config.structure:
+            self.candidates(records, model, k)  # Shared immutable candidate list.
+        for rec in records:
+            rec.capacities(k)  # Warm read-only arrays before forking.
+        plan = self.phase_plan(
+            records, model.L, f"iteration {iteration}, scale {k + 1} targets"
+        )
+
+        def work(ell):
+            worker = Fitter(self.config)
+            worker.started = self.started
+            worker._candidate_cache = self._candidate_cache
+            # Validity depends on observed counts/masks and fixed lag bounds,
+            # never on a fitted coefficient or a shifted source feature.
+            if not model.emission(k):
+                worker._batches = {
+                    (id(rec), k, ell): blocks(rec, model, k, ell) for rec in records
+                }
+            worker.profile_target(
+                records,
+                model,
+                k,
+                ell,
+                posterior,
+                model.levels[k].targets[ell].parents,
+                base=True,
+            )
+            search_seconds = 0.0
+            if self.config.structure:
+                start = time.perf_counter()
+                worker.search_target(records, model, k, ell, posterior)
+                search_seconds = time.perf_counter() - start
+            return (
+                model.levels[k].targets[ell],
+                worker.evaluations,
+                worker.candidate_refits,
+                worker.shift_checks,
+                search_seconds,
+            )
+
+        rows = ordered_map(work, range(model.L), plan)
+        for ell, (target, evaluations, refits, checks, _) in enumerate(rows):
+            model.levels[k].targets[ell] = target
+            self.evaluations += evaluations
+            self.candidate_refits += refits
+            self.shift_checks.extend(checks)
+        return sum(row[-1] for row in rows)
+
+    def concentration_value(self, records, model, k, posterior, plan):
+        if plan["workers"] == 1:
+            return sum(
+                self.value(records, model, k, ell, posterior) for ell in range(model.L)
+            )
+
+        def work(ell):
+            self.budget()
+            return sum(
+                target_score(rec, model, k, ell, posterior[rec.name]) for rec in records
+            )
+
+        # The optimizer remains serial. Its pooled likelihood evaluations are
+        # independent by target at the proposed concentration. Every map forks
+        # after assigning that proposal, so no worker uses an older value.
+        values = ordered_map(work, range(model.L), plan)
+        self.evaluations += len(values)
+        return sum(values)
+
     def fit(self, records, model):
         self.started = time.perf_counter()
         self._candidate_cache = {}
         self.evaluations = 0
         self.shift_checks = []
         self.candidate_refits = 0
+        self._batches = {}
+        self.parallel_phases = []
         inference_start = time.perf_counter()
         model = model.clone()
         if not self.config.depletion:
             for level in model.levels:
                 for target in level.targets:
                     target.depletion[:] = 0
-        posterior = {rec.name: infer(rec, model, self.config.inner) for rec in records}
-        retained = monitor(records, model, posterior)
+        posterior, retained = self.infer_all(records, model, "initial inference")
         result = FitResult(
             model,
             posterior,
@@ -529,31 +640,24 @@ class Fitter:
                 for k in range(model.K - 1, -1, -1):
                     self.update_latents(records, proposal, k, posterior)
                     self.update_factors(records, proposal, k, posterior)
-                    for ell in range(model.L):
-                        self.profile_target(
-                            records,
-                            proposal,
-                            k,
-                            ell,
-                            posterior,
-                            proposal.levels[k].targets[ell].parents,
-                            base=True,
-                        )
-                        if self.config.structure:
-                            search_start = time.perf_counter()
-                            self.search_target(records, proposal, k, ell, posterior)
-                            result.search_seconds += time.perf_counter() - search_start
+                    result.search_seconds += self.fit_targets(
+                        records, proposal, k, posterior, iteration
+                    )
                     if not proposal.emission(k):
                         # Concentrations are shared across targets and refitted
                         # with all normalization terms retained.
                         level = proposal.levels[k]
                         old = np.log(level.concentration)
+                        plan = self.phase_plan(
+                            records,
+                            model.L,
+                            f"iteration {iteration}, scale {k + 1} concentration",
+                        )
 
                         def objective(v):
                             level.concentration = np.exp(v)
-                            return -sum(
-                                self.value(records, proposal, k, ell, posterior)
-                                for ell in range(model.L)
+                            return -self.concentration_value(
+                                records, proposal, k, posterior, plan
                             )
 
                         before = objective(old)
@@ -570,10 +674,9 @@ class Fitter:
                 self.update_offsets(records, proposal, posterior)
                 # No cached pre-M/S-step evidence is used here.
                 inference_start = time.perf_counter()
-                proposed_q = {
-                    rec.name: infer(rec, proposal, self.config.inner) for rec in records
-                }
-                value = monitor(records, proposal, proposed_q)
+                proposed_q, value = self.infer_all(
+                    records, proposal, f"iteration {iteration} inference"
+                )
                 result.inference_seconds += time.perf_counter() - inference_start
                 accepted = bool(np.isfinite(value) and value >= retained)
                 improvement = value - retained
@@ -599,4 +702,5 @@ class Fitter:
         )
         result.shift_checks = self.shift_checks
         result.candidate_refits = self.candidate_refits
+        result.parallel_phases = self.parallel_phases
         return result
