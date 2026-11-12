@@ -20,9 +20,28 @@ if [ -z "${FORCE:-}" ] && mongosh --quiet --host "$HOST" --eval \
     exit 0
 fi
 
+have() { command -v "$1" >/dev/null 2>&1; }
+
+# The mongo image ships no downloader, so install one on first use.
+if ! have curl && ! have wget && ! have python3 && ! have python; then
+    echo "[lifesnaps] installing curl and unzip into the mongo image"
+    apt-get update -qq
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq curl unzip >/dev/null
+fi
+
 if [ ! -f "$WORK/rais_anonymized.zip" ]; then
     echo "[lifesnaps] downloading the published archive"
-    curl -sSL -o "$WORK/rais_anonymized.zip" "$ZENODO_URL"
+    if have curl; then
+        curl -sSL -o "$WORK/rais_anonymized.zip" "$ZENODO_URL"
+    elif have wget; then
+        wget -q -O "$WORK/rais_anonymized.zip" "$ZENODO_URL"
+    elif have python3; then
+        python3 -c "import sys, urllib.request; urllib.request.urlretrieve(sys.argv[2], sys.argv[1])" \
+            "$WORK/rais_anonymized.zip" "$ZENODO_URL"
+    else
+        python -c "import sys, urllib.request; urllib.request.urlretrieve(sys.argv[2], sys.argv[1])" \
+            "$WORK/rais_anonymized.zip" "$ZENODO_URL"
+    fi
 fi
 
 echo "[lifesnaps] checking the archive against its published digest"
@@ -30,8 +49,15 @@ echo "$ARCHIVE_MD5  $WORK/rais_anonymized.zip" | md5sum -c -
 
 if [ ! -f "$WORK/mongo_rais_anonymized/sema.bson" ]; then
     echo "[lifesnaps] unpacking"
-    python3 -c "import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" \
-        "$WORK/rais_anonymized.zip" "$WORK"
+    if have unzip; then
+        unzip -q "$WORK/rais_anonymized.zip" -d "$WORK"
+    elif have python3; then
+        python3 -c "import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" \
+            "$WORK/rais_anonymized.zip" "$WORK"
+    else
+        python -c "import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" \
+            "$WORK/rais_anonymized.zip" "$WORK"
+    fi
 fi
 
 echo "[lifesnaps] restoring into $DB at $HOST"
