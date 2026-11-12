@@ -79,8 +79,12 @@ def bb_logpmf(x, n, a, b):
     )
 
 
-def split_logpmf(x, n, a, b, lower, upper):
-    """Normalized feasible beta-binomial mass, including deterministic cases."""
+def split_logpmf(x, n, a, b, lower, upper, const=None):
+    """Normalized feasible beta-binomial mass, including deterministic cases.
+
+    `const`, when given, must equal gammaln(n+1)-gammaln(x+1)-gammaln(n-x+1)
+    elementwise and is used instead of recomputing those data-only terms.
+    """
     x, n, a, b, lower, upper = np.broadcast_arrays(x, n, a, b, lower, upper)
     out = np.full(x.shape, -np.inf, dtype=float)
     feasible = (lower <= x) & (x <= upper) & (x == np.floor(x)) & (lower <= upper)
@@ -92,7 +96,10 @@ def split_logpmf(x, n, a, b, lower, upper):
         return out
     xx, nn, aa, bb = x[idx], n[idx], a[idx], b[idx]
     lo, hi = lower[idx], upper[idx]
-    ll = bb_logpmf(xx, nn, aa, bb)
+    if const is None:
+        ll = bb_logpmf(xx, nn, aa, bb)
+    else:
+        ll = const[idx] + betaln(xx + aa, nn - xx + bb) - betaln(aa, bb)
     truncated = (lo > 0) | (hi < nn)
     if truncated.any():
         width = int(np.max(hi[truncated] - lo[truncated])) + 1
@@ -259,36 +266,175 @@ def stage_scores(
     return out
 
 
-def allocation_logpmf(
-    record, model, k, ell, gamma, h, *, base=None, batch=None, override=None
-):
-    """Full normalized block masses, replaying observed prefixes."""
-    batch = blocks(record, model, k, ell) if batch is None else batch
+@dataclass
+class Prepared:
+    """Data-only allocation replay structures for one (record, scale, target).
+
+    Everything here depends only on the observed arrays, capacities and the
+    lag bound, never on fitted coefficients, the posterior or an override, so
+    it is cached on the record and reused by every likelihood evaluation.
+    """
+
+    record: object
+    k: int
+    ell: int
+    lag_bound: int
+    count_only: bool
+    batch: Blocks
+    prefix: np.ndarray
+    values: list
+    remaining: list
+    lower: list
+    upper: list
+    valid: list
+    rem_final: list
+    bb_const: list
+
+    def logpmf_from_weights(self, concentration, a_src, b_src, vectorized=False):
+        """Replay the observed allocation with precomputed softmax weights.
+
+        The sequential path reproduces the stage-by-stage replay operation for
+        operation. The vectorized path evaluates the same factors with one
+        broadcast call per channel and is used only where the weights are
+        frozen across many evaluations (the concentration refit).
+        """
+        B, m = self.batch.indices.shape
+        if not B:
+            return np.zeros(0)
+        result = np.zeros(B)
+        for channel in range(len(self.values)):
+            conc = concentration[channel]
+            if vectorized:
+                valid = self.valid[channel]
+                a = conc * a_src[channel]
+                b = conc * b_src[channel]
+                if np.any((a <= 0) & valid):
+                    raise FloatingPointError(
+                        "active allocation softmax weight underflowed"
+                    )
+                a = np.where(valid, a, 1.0)
+                b = np.where(valid, b, 1.0)
+                ll = split_logpmf(
+                    self.values[channel],
+                    self.remaining[channel],
+                    a,
+                    b,
+                    self.lower[channel],
+                    self.upper[channel],
+                    const=self.bb_const[channel],
+                )
+                result += np.where(valid, ll, 0.0).sum(axis=0)
+                result = np.where(self.rem_final[channel] == 0, result, -np.inf)
+                continue
+            for i in range(m):
+                valid = self.valid[channel][i]
+                if not valid.any():
+                    continue
+                a = conc * a_src[channel][i]
+                b = conc * b_src[channel][i]
+                if np.any(a[valid] <= 0):
+                    raise FloatingPointError(
+                        "active allocation softmax weight underflowed"
+                    )
+                ll = split_logpmf(
+                    self.values[channel][i][valid],
+                    self.remaining[channel][i][valid],
+                    a[valid],
+                    b[valid],
+                    self.lower[channel][i][valid],
+                    self.upper[channel][i][valid],
+                )
+                result[valid] += ll
+            result = np.where(self.rem_final[channel] == 0, result, -np.inf)
+        return result
+
+
+def prepare(record, model, k, ell, batch=None):
+    """Return the cached replay structures, rebuilding only when inputs change."""
+    key = (k, ell)
+    cached = record._prepared.get(key) if record._cache_prepared else None
+    if (
+        cached is not None
+        and cached.lag_bound == model.lag_bound[k]
+        and cached.count_only == model.count_only
+        and (batch is None or cached.batch is batch)
+    ):
+        return cached
+    if batch is None:
+        batch = blocks(record, model, k, ell)
     B, m = batch.indices.shape
-    if not B:
-        return np.zeros(0)
-    if base is None:
-        base = scores(record, model, k, ell, gamma, h)[batch.indices]
+    channels = 1 if model.count_only else 2
+    prefix = np.cumsum(batch.x, axis=1) - batch.x
     totals = record.data.X[k + 1][batch.parents, ell]
     durations = record.data.Y[k + 1][batch.parents, ell]
-    result = np.zeros(B)
-    prefix = np.cumsum(batch.x, axis=1) - batch.x
-    for channel in range(1 if model.count_only else 2):
-        # Observations and overrides are fixed during one likelihood call.
-        # Read each lag once, retaining the stage-specific causal censor below.
-        features = [
-            (p, feature(record, k, p, channel, override, batch.indices))
-            for p in model.levels[k].targets[ell].parents
-        ]
-        values = batch.x if channel == 0 else batch.y - batch.x
-        remaining = (totals if channel == 0 else durations - totals).copy()
-        concentration = model.levels[k].concentration[channel]
+    values, remaining, lower, upper, valid, rem_final = [], [], [], [], [], []
+    for channel in range(channels):
+        v = batch.x if channel == 0 else batch.y - batch.x
+        active = np.ones((B, m), dtype=bool) if channel == 0 else batch.x > 0
+        tot = totals if channel == 0 else durations - totals
+        rem = np.empty((m, B), dtype=np.int64)
+        r = tot.copy()
         for i in range(m):
-            valid = np.ones(B, dtype=bool) if channel == 0 else batch.x[:, i] > 0
-            if not valid.any():
-                continue
+            rem[i] = r
+            r = r - np.where(active[:, i], v[:, i], 0)
+        values.append(v.T.copy())
+        valid.append(active.T.copy())
+        remaining.append(rem)
+        rem_final.append(r)
+        if channel == 0 and not model.count_only:
+            suffix = np.cumsum(batch.capacity[:, ::-1], axis=1)[:, ::-1]
+            cap_after = (suffix - batch.capacity).T
+            lo = np.maximum(0, rem - cap_after)
+            hi = np.minimum(batch.capacity.T, rem)
+        else:
+            lo = np.zeros((m, B), dtype=np.int64)
+            hi = rem.copy()
+        lower.append(lo)
+        upper.append(hi)
+    bb_const = [
+        gammaln(remaining[c] + 1.0)
+        - gammaln(values[c] + 1.0)
+        - gammaln(remaining[c] - values[c] + 1.0)
+        for c in range(channels)
+    ]
+    prepared = Prepared(
+        record, k, ell, model.lag_bound[k], model.count_only, batch, prefix,
+        values, remaining, lower, upper, valid, rem_final, bb_const,
+    )
+    if record._cache_prepared and (batch is None or cached is None or cached.batch is not batch):
+        record._prepared[key] = prepared
+    return prepared
+
+
+def _stage_weights(prepared, model, k, ell, gamma, h, base=None, override=None):
+    """Per-channel softmax self/rest weights stacked over stages, shape (m, B).
+
+    This is exactly the stage-by-stage score replay: child j reads its lag only
+    when the source epoch precedes the current stage, and the count depletion
+    prefix is capped at the current stage.
+    """
+    target = model.levels[k].targets[ell]
+    batch = prepared.batch
+    idx = batch.indices
+    B, m = idx.shape
+    channels = len(prepared.values)
+    if base is None:
+        base = scores(prepared.record, model, k, ell, gamma, h)[idx]
+    a_src = [np.empty((m, B)) for _ in range(channels)]
+    b_src = [np.empty((m, B)) for _ in range(channels)]
+    if not B:
+        return a_src, b_src
+    prefix = prepared.prefix
+    for channel in range(channels):
+        # Read each lag once per channel; the stage-specific causal censor is
+        # applied inside stage_scores.
+        features = [
+            (p, feature(prepared.record, k, p, channel, override, idx))
+            for p in target.parents
+        ]
+        for i in range(m):
             logits = stage_scores(
-                record,
+                prepared.record,
                 model,
                 k,
                 ell,
@@ -301,32 +447,47 @@ def allocation_logpmf(
                 features=features,
             )
             weights = np.exp(logits - logsumexp(logits, axis=1, keepdims=True))
-            a = concentration * weights[:, i]
-            b = concentration * weights[:, i + 1 :].sum(axis=1)
-            if channel == 0 and not model.count_only:
-                lower = np.maximum(
-                    0, remaining - batch.capacity[:, i + 1 :].sum(axis=1)
-                )
-                upper = np.minimum(batch.capacity[:, i], remaining)
-            else:
-                lower, upper = np.zeros(B, dtype=int), remaining
-            if np.any(a[valid] <= 0):
-                raise FloatingPointError("active allocation softmax weight underflowed")
-            ll = split_logpmf(
-                values[valid, i],
-                remaining[valid],
-                a[valid],
-                b[valid],
-                lower[valid],
-                upper[valid],
-            )
-            result[valid] += ll
-            remaining -= np.where(valid, values[:, i], 0)
-        result = np.where(remaining == 0, result, -np.inf)
-    return result
+            a_src[channel][i] = weights[:, i]
+            b_src[channel][i] = weights[:, i + 1 :].sum(axis=1)
+    return a_src, b_src
 
 
-def target_score(record, model, k, ell, posterior, override=None, *, batch=None):
+@dataclass
+class Frozen:
+    """Softmax allocation weights frozen across a concentration-only refit."""
+
+    prepared: Prepared
+    a_src: list
+    b_src: list
+
+    def logpmf(self, concentration):
+        return self.prepared.logpmf_from_weights(
+            concentration, self.a_src, self.b_src, vectorized=True
+        )
+
+
+def prepare_frozen(record, model, k, ell, gamma, h, override=None):
+    prepared = prepare(record, model, k, ell)
+    a_src, b_src = _stage_weights(prepared, model, k, ell, gamma, h, override=override)
+    return Frozen(prepared, a_src, b_src)
+
+
+def _prepared_logpmf(prepared, model, k, ell, gamma, h, base=None, override=None):
+    a_src, b_src = _stage_weights(
+        prepared, model, k, ell, gamma, h, base=base, override=override
+    )
+    return prepared.logpmf_from_weights(model.levels[k].concentration, a_src, b_src)
+
+
+def allocation_logpmf(
+    record, model, k, ell, gamma, h, *, base=None, batch=None, override=None
+):
+    """Full normalized block masses, replaying observed prefixes."""
+    prepared = prepare(record, model, k, ell, batch=batch)
+    return _prepared_logpmf(prepared, model, k, ell, gamma, h, base=base, override=override)
+
+
+def target_score(record, model, k, ell, posterior, override=None):
     q = posterior[k]
     if model.emission(k):
         ll = np.zeros(len(q.gamma))
@@ -336,10 +497,9 @@ def target_score(record, model, k, ell, posterior, override=None, *, batch=None)
             term = emission_terms(record, model, k, ell, one, q.m_H, override)
             ll += q.gamma[:, m] * term
         return float(ll[record.rows(k, model.lag_bound[k])].sum())
+    prepared = prepare(record, model, k, ell)
     return float(
-        allocation_logpmf(
-            record, model, k, ell, q.gamma, q.m_H, override=override, batch=batch
-        ).sum()
+        _prepared_logpmf(prepared, model, k, ell, q.gamma, q.m_H, override=override).sum()
     )
 
 

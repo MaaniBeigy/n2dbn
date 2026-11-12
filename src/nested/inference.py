@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 from ..inference.posterior import PosteriorSummaries, RegimePosterior
-from .law import allocation_logpmf, blocks, emission_terms, scores
+from .law import allocation_logpmf, emission_terms, prepare, scores
 
 
 def empty_posterior(record, model):
@@ -50,13 +50,14 @@ def potentials(record, model, k, posterior):
                 gamma[:, state] = 1
                 out[:, state] += emission_terms(record, model, k, ell, gamma, q.m_H)
         else:
-            batch = blocks(record, model, k, ell)
+            prepared = prepare(record, model, k, ell)
+            batch = prepared.batch
             if not len(batch.parents):
                 continue
             idx = batch.indices
             base = scores(record, model, k, ell, q.gamma, q.m_H)[idx]
             reference = allocation_logpmf(
-                record, model, k, ell, q.gamma, q.m_H, batch=batch, base=base
+                record, model, k, ell, q.gamma, q.m_H, base=base
             )
             width = idx.shape[1]
             if M == 1:
@@ -68,7 +69,7 @@ def potentials(record, model, k, posterior):
                     changed = base.copy()
                     changed[:, j, :] += target.regime[:, state] - averaged[:, j, :]
                     ll = allocation_logpmf(
-                        record, model, k, ell, q.gamma, q.m_H, batch=batch, base=changed
+                        record, model, k, ell, q.gamma, q.m_H, base=changed
                     )
                     out[idx[:, j], state] += ll - reference + reference / width
     if model.emission(k):

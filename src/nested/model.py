@@ -89,6 +89,10 @@ class Record:
     name: str
     data: MultiScaleData
     _capacity: dict = field(default_factory=dict, repr=False)
+    _prepared: dict = field(default_factory=dict, repr=False)
+    # Only a Fitter enables the replay cache: its cohort arrays are immutable
+    # for the whole fit. Direct callers may mutate record.data between calls.
+    _cache_prepared: bool = False
 
     def rows(self, k, lag):
         """One fixed mask for all candidate sets, never bridge a missing lag."""

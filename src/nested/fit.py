@@ -11,7 +11,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from .inference import infer, monitor, monitor_record, transition_inputs
-from .law import blocks, feature, target_score
+from .law import feature, prepare, prepare_frozen, target_score
 from .model import Parent
 from .parallel import GIB, ordered_map, worker_plan
 
@@ -79,7 +79,6 @@ class Fitter:
         self.shift_checks = []
         self.candidate_refits = 0
         self._candidate_cache = {}
-        self._batches = {}
         self.parallel_phases = []
 
     def budget(self):
@@ -100,7 +99,6 @@ class Fitter:
                 ell,
                 posterior[rec.name],
                 None if overrides is None else overrides.get(rec.name),
-                batch=self._batches.get((id(rec), k, ell)),
             )
             for rec in records
         )
@@ -554,9 +552,8 @@ class Fitter:
             # Validity depends on observed counts/masks and fixed lag bounds,
             # never on a fitted coefficient or a shifted source feature.
             if not model.emission(k):
-                worker._batches = {
-                    (id(rec), k, ell): blocks(rec, model, k, ell) for rec in records
-                }
+                for rec in records:
+                    prepare(rec, model, k, ell)
             worker.profile_target(
                 records,
                 model,
@@ -587,24 +584,33 @@ class Fitter:
             self.shift_checks.extend(checks)
         return sum(row[-1] for row in rows)
 
-    def concentration_value(self, records, model, k, posterior, plan):
-        if plan["workers"] == 1:
-            return sum(
-                self.value(records, model, k, ell, posterior) for ell in range(model.L)
-            )
+    def freeze_concentration(self, records, model, k, posterior, plan):
+        """Freeze the softmax allocation weights for a concentration-only refit.
+
+        Only the two concentration scalars change inside the optimizer, so the
+        per-stage weights (which depend on coefficients and the posterior) are
+        computed once and every objective evaluation replays just the
+        beta-binomial factors with all normalization terms retained. The frozen
+        weights stay in the parent, so each forked pool shares them read-only.
+        """
 
         def work(ell):
             self.budget()
-            return sum(
-                target_score(rec, model, k, ell, posterior[rec.name]) for rec in records
-            )
+            return [
+                prepare_frozen(
+                    rec,
+                    model,
+                    k,
+                    ell,
+                    posterior[rec.name][k].gamma,
+                    posterior[rec.name][k].m_H,
+                )
+                for rec in records
+            ]
 
-        # The optimizer remains serial. Its pooled likelihood evaluations are
-        # independent by target at the proposed concentration. Every map forks
-        # after assigning that proposal, so no worker uses an older value.
-        values = ordered_map(work, range(model.L), plan)
-        self.evaluations += len(values)
-        return sum(values)
+        if plan["workers"] == 1:
+            return [work(ell) for ell in range(model.L)]
+        return ordered_map(work, range(model.L), plan)
 
     def fit(self, records, model):
         self.started = time.perf_counter()
@@ -612,8 +618,11 @@ class Fitter:
         self.evaluations = 0
         self.shift_checks = []
         self.candidate_refits = 0
-        self._batches = {}
         self.parallel_phases = []
+        # The cohort arrays are immutable for the whole fit, so the replay
+        # structures may be cached on the records and shared with fork workers.
+        for rec in records:
+            rec._cache_prepared = True
         inference_start = time.perf_counter()
         model = model.clone()
         if not self.config.depletion:
@@ -653,12 +662,28 @@ class Fitter:
                             model.L,
                             f"iteration {iteration}, scale {k + 1} concentration",
                         )
+                        frozen = self.freeze_concentration(
+                            records, proposal, k, posterior, plan
+                        )
 
                         def objective(v):
+                            self.budget()
                             level.concentration = np.exp(v)
-                            return -self.concentration_value(
-                                records, proposal, k, posterior, plan
-                            )
+                            self.evaluations += 1
+
+                            def work(ell):
+                                return sum(
+                                    fit.logpmf(level.concentration).sum()
+                                    for fit in frozen[ell]
+                                )
+
+                            if plan["workers"] == 1:
+                                total = sum(work(ell) for ell in range(model.L))
+                            else:
+                                # Every map forks after assigning the proposal,
+                                # so no worker uses an older concentration.
+                                total = sum(ordered_map(work, range(model.L), plan))
+                            return -total
 
                         before = objective(old)
                         opt = minimize(

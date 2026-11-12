@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 import pytest
+from scipy.special import logsumexp
 
 from src.nested import law, parallel
 from src.nested.data import from_finest
@@ -94,10 +95,9 @@ def test_cached_likelihood_matches_recomputed_stages(monkeypatch, count_only):
     target.parents[parent] = np.array([0.3, -0.2])
     target.depletion[:] = [0.4, 0.7]
     override = {parent: [np.arange(24) / 24, np.arange(24)[::-1] / 24]}
-    # A stage-by-stage reference deliberately bypasses the optimization.
-    old_stage = law.stage_scores
-    calls = []
+    # The optimized path reads each lagged feature once per channel.
     old_feature = law.feature
+    calls = []
 
     def counted(*args, **kwargs):
         calls.append(1)
@@ -109,15 +109,48 @@ def test_cached_likelihood_matches_recomputed_stages(monkeypatch, count_only):
     )
     assert len(calls) == (1 if count_only else 2)
 
-    def recompute(*args, **kwargs):
-        kwargs.pop("prefix", None)
-        kwargs.pop("features", None)
-        return old_stage(*args, **kwargs)
-
-    monkeypatch.setattr(law, "stage_scores", recompute)
-    slow = law.allocation_logpmf(
-        rec, model, 0, 0, q[0].gamma, q[0].m_H, override=override
-    )
+    # A stage-by-stage reference deliberately recomputes every score from
+    # scratch, bypassing the cached replay structures.
+    batch = law.blocks(rec, model, 0, 0)
+    base = law.scores(rec, model, 0, 0, q[0].gamma, q[0].m_H)[batch.indices]
+    totals = rec.data.X[1][batch.parents, 0]
+    durations = rec.data.Y[1][batch.parents, 0]
+    prefix = np.cumsum(batch.x, axis=1) - batch.x
+    slow = np.zeros(len(batch.parents))
+    for channel in range(1 if count_only else 2):
+        features = [
+            (p, law.feature(rec, 0, p, channel, override, batch.indices))
+            for p in target.parents
+        ]
+        values = batch.x if channel == 0 else batch.y - batch.x
+        remaining = (totals if channel == 0 else durations - totals).copy()
+        concentration = model.levels[0].concentration[channel]
+        for i in range(batch.indices.shape[1]):
+            valid = (
+                np.ones(len(batch.parents), dtype=bool)
+                if channel == 0
+                else batch.x[:, i] > 0
+            )
+            if not valid.any():
+                continue
+            logits = law.stage_scores(
+                rec, model, 0, 0, batch, base, i, channel, override
+            )
+            weights = np.exp(logits - logsumexp(logits, axis=1, keepdims=True))
+            a = concentration * weights[:, i]
+            b = concentration * weights[:, i + 1 :].sum(axis=1)
+            if channel == 0 and not count_only:
+                lower = np.maximum(0, remaining - batch.capacity[:, i + 1 :].sum(axis=1))
+                upper = np.minimum(batch.capacity[:, i], remaining)
+            else:
+                lower, upper = np.zeros(len(batch.parents), dtype=int), remaining
+            ll = law.split_logpmf(
+                values[valid, i], remaining[valid], a[valid], b[valid],
+                lower[valid], upper[valid],
+            )
+            slow[valid] += ll
+            remaining -= np.where(valid, values[:, i], 0)
+        slow = np.where(remaining == 0, slow, -np.inf)
     np.testing.assert_array_equal(fast, slow)
     assert len(calls) > 2
 
@@ -208,3 +241,37 @@ def test_parent_deadline_terminates_workers():
             parallel.ordered_map(lambda i: time.sleep(2), [0, 1], {"workers": 2})
     assert {p.pid for p in mp.active_children()} == before
     assert parallel._FUNCTION is None
+
+
+@pytest.mark.parametrize("count_only", [False, True])
+def test_frozen_concentration_path_matches_direct_replay(count_only):
+    """The concentration refit freezes softmax weights; its objective must equal
+    a from-scratch replay at every proposed concentration."""
+    records, model = small_cohort(count_only)
+    rec = records[0]
+    rec._cache_prepared = True
+    q = empty_posterior(rec, model)
+    target = model.levels[0].targets[0]
+    parent = Parent("behavior", 1, 1)
+    target.parents[parent] = np.array([0.3, -0.2])
+    target.depletion[:] = [0.4, 0.7]
+    frozen = law.prepare_frozen(rec, model, 0, 0, q[0].gamma, q[0].m_H)
+    for conc in (np.array([0.5, 2.0]), np.array([30.0, 30.0]), np.array([200.0, 0.1])):
+        model.levels[0].concentration = conc
+        direct = law.allocation_logpmf(rec, model, 0, 0, q[0].gamma, q[0].m_H)
+        fast = frozen.logpmf(conc)
+        np.testing.assert_allclose(fast, direct, rtol=1e-12, atol=1e-12)
+
+
+def test_prepared_cache_rebuilds_when_lag_bound_changes():
+    records, model = small_cohort()
+    rec = records[0]
+    rec._cache_prepared = True
+    q = empty_posterior(rec, model)
+    first = law.prepare(rec, model, 0, 0)
+    again = law.prepare(rec, model, 0, 0)
+    assert first is again
+    wider = dataclasses.replace(model)
+    wider.lag_bound = (2, 1, 1)
+    rebuilt = law.prepare(rec, wider, 0, 0)
+    assert rebuilt is not first and rebuilt.lag_bound == 2
