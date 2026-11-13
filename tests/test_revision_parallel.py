@@ -275,3 +275,23 @@ def test_prepared_cache_rebuilds_when_lag_bound_changes():
     wider.lag_bound = (2, 1, 1)
     rebuilt = law.prepare(rec, wider, 0, 0)
     assert rebuilt is not first and rebuilt.lag_bound == 2
+
+
+def test_frozen_worker_payload_stays_small_across_a_pipe():
+    """Frozen weights returned by fork workers must not carry the record."""
+    import pickle
+
+    records, model = small_cohort()
+    rec = records[0]
+    rec._cache_prepared = True
+    q = empty_posterior(rec, model)
+    model.levels[0].targets[0].parents[Parent("behavior", 1, 1)] = np.array([0.3, -0.2])
+    frozen = law.prepare_frozen(rec, model, 0, 0, q[0].gamma, q[0].m_H)
+    blob = pickle.dumps(frozen.light())
+    assert len(blob) < 1_000_000
+    model.levels[0].concentration = np.array([7.0, 11.0])
+    direct = law.allocation_logpmf(rec, model, 0, 0, q[0].gamma, q[0].m_H)
+    restored = law.Frozen.assemble(law.prepare(rec, model, 0, 0), pickle.loads(blob))
+    np.testing.assert_allclose(
+        restored.logpmf(model.levels[0].concentration), direct, rtol=1e-12, atol=1e-12
+    )

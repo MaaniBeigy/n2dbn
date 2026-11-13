@@ -290,6 +290,13 @@ class Prepared:
     rem_final: list
     bb_const: list
 
+    def __getstate__(self):
+        # Never serialize the record (all multiscale arrays) across a worker
+        # pipe; the parent rebuilds Prepared from its own records.
+        state = dict(self.__dict__)
+        state["record"] = None
+        return state
+
     def logpmf_from_weights(self, concentration, a_src, b_src, vectorized=False):
         """Replay the observed allocation with precomputed softmax weights.
 
@@ -459,6 +466,15 @@ class Frozen:
     prepared: Prepared
     a_src: list
     b_src: list
+
+    def light(self):
+        """The picklable payload: weight arrays only, no record."""
+        return self.a_src, self.b_src
+
+    @classmethod
+    def assemble(cls, prepared, light):
+        a_src, b_src = light
+        return cls(prepared, a_src, b_src)
 
     def logpmf(self, concentration):
         return self.prepared.logpmf_from_weights(

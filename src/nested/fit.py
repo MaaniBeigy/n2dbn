@@ -11,7 +11,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from .inference import infer, monitor, monitor_record, transition_inputs
-from .law import feature, prepare, prepare_frozen, target_score
+from .law import Frozen, feature, prepare, prepare_frozen, target_score
 from .model import Parent
 from .parallel import GIB, ordered_map, worker_plan
 
@@ -596,21 +596,32 @@ class Fitter:
 
         def work(ell):
             self.budget()
+            # Return only the weight arrays: a Frozen carries its Prepared,
+            # which references the whole record and must not cross a pipe.
             return [
-                prepare_frozen(
+                (rec.name, prepare_frozen(
                     rec,
                     model,
                     k,
                     ell,
                     posterior[rec.name][k].gamma,
                     posterior[rec.name][k].m_H,
-                )
+                ).light())
                 for rec in records
             ]
 
         if plan["workers"] == 1:
-            return [work(ell) for ell in range(model.L)]
-        return ordered_map(work, range(model.L), plan)
+            rows = [work(ell) for ell in range(model.L)]
+        else:
+            rows = ordered_map(work, range(model.L), plan)
+        by_name = {rec.name: rec for rec in records}
+        return [
+            [
+                Frozen.assemble(prepare(by_name[name], model, k, ell), light)
+                for name, light in row
+            ]
+            for ell, row in zip(range(model.L), rows)
+        ]
 
     def fit(self, records, model):
         self.started = time.perf_counter()
