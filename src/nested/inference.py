@@ -64,14 +64,14 @@ def potentials(record, model, k, posterior):
                 out[idx, 0] += reference[:, None] / width
                 continue
             averaged = (q.gamma @ target.regime.T)[idx]
-            for j in range(width):
-                for state in range(M):
-                    changed = base.copy()
-                    changed[:, j, :] += target.regime[:, state] - averaged[:, j, :]
-                    ll = allocation_logpmf(
-                        record, model, k, ell, q.gamma, q.m_H, base=changed
-                    )
-                    out[idx[:, j], state] += ll - reference + reference / width
+            for state in range(M):
+                # The whole block is re-scored under one regime state; the DM
+                # mass is a block-level factor, so this is one pass per state.
+                changed = base + (target.regime[:, state] - averaged)
+                ll = allocation_logpmf(
+                    record, model, k, ell, q.gamma, q.m_H, base=changed
+                )
+                out[idx, state] += ll[:, None] / width
     if model.emission(k):
         out[~record.rows(k, model.lag_bound[k])] = 0
     if not np.isfinite(out).all():

@@ -11,7 +11,15 @@ import numpy as np
 from scipy.optimize import minimize
 
 from .inference import infer, monitor, monitor_record, transition_inputs
-from .law import Frozen, feature, prepare, prepare_frozen, target_score
+from .law import (
+    Frozen,
+    cohort_prepare,
+    cohort_target_score,
+    feature,
+    prepare,
+    prepare_frozen,
+    target_score,
+)
 from .model import Parent
 from .parallel import GIB, ordered_map, worker_plan
 
@@ -79,6 +87,8 @@ class Fitter:
         self.shift_checks = []
         self.candidate_refits = 0
         self._candidate_cache = {}
+        self._cohort_key = None
+        self._cohort = None
         self.parallel_phases = []
 
     def budget(self):
@@ -91,6 +101,17 @@ class Fitter:
     def value(self, records, model, k, ell, posterior, overrides=None):
         self.budget()
         self.evaluations += 1
+        if not model.emission(k):
+            # One replay over the stacked cohort blocks instead of one replay
+            # per record; per-record masses are summed in record order, so the
+            # value is identical to the per-record loop.
+            if self._cohort_key != (k, ell, model.lag_bound[k], model.count_only):
+                self._cohort = cohort_prepare(records, model, k, ell)
+                self._cohort_key = (k, ell, model.lag_bound[k], model.count_only)
+            stacked, parts = self._cohort
+            return cohort_target_score(
+                stacked, parts, records, model, k, ell, posterior, overrides
+            )
         return sum(
             target_score(
                 rec,
@@ -137,8 +158,6 @@ class Fitter:
                     add("zero_context", (-5, 5)),
                 ]
             pieces += [add("regime", (-5, 5)), add("factor", (-5, 5))]
-            if not model.emission(k) and self.config.depletion:
-                pieces += [add("depletion", (-3, 3))]
         parent_order = sorted(target.parents)
         channels = 1 if model.count_only else 2
         pieces += [target.parents[p][:channels].copy() for p in parent_order]
@@ -630,6 +649,8 @@ class Fitter:
         self.shift_checks = []
         self.candidate_refits = 0
         self.parallel_phases = []
+        self._cohort_key = None
+        self._cohort = None
         # The cohort arrays are immutable for the whole fit, so the replay
         # structures may be cached on the records and shared with fork workers.
         for rec in records:

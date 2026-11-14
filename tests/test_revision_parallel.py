@@ -7,7 +7,7 @@ import time
 
 import numpy as np
 import pytest
-from scipy.special import logsumexp
+from scipy.special import gammaln, logsumexp
 
 from src.nested import law, parallel
 from src.nested.data import from_finest
@@ -86,14 +86,13 @@ def test_parallel_fit_matches_serial_parameters_search_and_monitor(
 
 
 @pytest.mark.parametrize("count_only", [False, True])
-def test_cached_likelihood_matches_recomputed_stages(monkeypatch, count_only):
+def test_cached_likelihood_matches_recomputed_dm(monkeypatch, count_only):
     records, model = small_cohort(count_only)
     rec = records[0]
     q = empty_posterior(rec, model)
     target = model.levels[0].targets[0]
     parent = Parent("behavior", 1, 1)
     target.parents[parent] = np.array([0.3, -0.2])
-    target.depletion[:] = [0.4, 0.7]
     override = {parent: [np.arange(24) / 24, np.arange(24)[::-1] / 24]}
     # The optimized path reads each lagged feature once per channel.
     old_feature = law.feature
@@ -109,50 +108,44 @@ def test_cached_likelihood_matches_recomputed_stages(monkeypatch, count_only):
     )
     assert len(calls) == (1 if count_only else 2)
 
-    # A stage-by-stage reference deliberately recomputes every score from
-    # scratch, bypassing the cached replay structures.
+    # A from-scratch reference recomputes every DM block mass by hand,
+    # bypassing the cached replay structures.
     batch = law.blocks(rec, model, 0, 0)
-    base = law.scores(rec, model, 0, 0, q[0].gamma, q[0].m_H)[batch.indices]
-    totals = rec.data.X[1][batch.parents, 0]
-    durations = rec.data.Y[1][batch.parents, 0]
-    prefix = np.cumsum(batch.x, axis=1) - batch.x
+    idx = batch.indices
+    base = law.scores(rec, model, 0, 0, q[0].gamma, q[0].m_H)[idx]
+    conc = model.levels[0].concentration
+    block_start = idx[:, :1]
     slow = np.zeros(len(batch.parents))
     for channel in range(1 if count_only else 2):
-        features = [
-            (p, law.feature(rec, 0, p, channel, override, batch.indices))
-            for p in target.parents
-        ]
-        values = batch.x if channel == 0 else batch.y - batch.x
-        remaining = (totals if channel == 0 else durations - totals).copy()
-        concentration = model.levels[0].concentration[channel]
-        for i in range(batch.indices.shape[1]):
-            valid = (
-                np.ones(len(batch.parents), dtype=bool)
-                if channel == 0
-                else batch.x[:, i] > 0
-            )
-            if not valid.any():
-                continue
-            logits = law.stage_scores(
-                rec, model, 0, 0, batch, base, i, channel, override
-            )
-            weights = np.exp(logits - logsumexp(logits, axis=1, keepdims=True))
-            a = concentration * weights[:, i]
-            b = concentration * weights[:, i + 1 :].sum(axis=1)
-            if channel == 0 and not count_only:
-                lower = np.maximum(0, remaining - batch.capacity[:, i + 1 :].sum(axis=1))
-                upper = np.minimum(batch.capacity[:, i], remaining)
-            else:
-                lower, upper = np.zeros(len(batch.parents), dtype=int), remaining
-            ll = law.split_logpmf(
-                values[valid, i], remaining[valid], a[valid], b[valid],
-                lower[valid], upper[valid],
-            )
-            slow[valid] += ll
-            remaining -= np.where(valid, values[:, i], 0)
-        slow = np.where(remaining == 0, slow, -np.inf)
-    np.testing.assert_array_equal(fast, slow)
-    assert len(calls) > 2
+        eta = base[:, :, channel].copy()
+        for p in target.parents:
+            values = law.feature(rec, 0, p, channel, override, idx)
+            if p.kind == "behavior":
+                lagged = idx - p.lag
+                avail = (lagged >= 0) & (lagged < block_start)
+                values = np.where(avail, values, 0.0)
+            eta += target.parents[p][channel] * values
+        if channel == 1 and not count_only:
+            eta = np.where(batch.x > 0, eta, -np.inf)
+        omega = np.exp(eta - logsumexp(eta, axis=1, keepdims=True))
+        x = batch.x if channel == 0 else batch.y - batch.x
+        a = np.maximum(conc[channel] * omega, 1e-10)
+        if channel == 1 and not count_only:
+            xs = np.where(batch.x > 0, x, 0)
+            term = np.where(batch.x > 0, gammaln(xs + a) - gammaln(a), 0.0).sum(axis=1)
+        else:
+            xs = x
+            term = (gammaln(xs + a) - gammaln(a)).sum(axis=1)
+        n = xs.sum(axis=1)
+        slow += (
+            term
+            + gammaln(conc[channel])
+            - gammaln(n + conc[channel])
+            + gammaln(n + 1)
+            - gammaln(xs + 1).sum(axis=1)
+        )
+    np.testing.assert_allclose(fast, slow, rtol=1e-12, atol=1e-12)
+    assert len(calls) > 2 or count_only
 
 
 @fork_only

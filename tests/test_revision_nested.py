@@ -5,7 +5,7 @@ import itertools
 
 import numpy as np
 import pytest
-from scipy.special import gammaln
+from scipy.special import betaln, gammaln
 from scipy.stats import nbinom
 
 from src.core.scales import ScaleHierarchy
@@ -13,11 +13,10 @@ from src.core.variables import MultiScaleData
 from src.nested.fit import FitConfig, Fitter
 from src.nested.inference import infer, monitor
 from src.nested.law import (
+    _dm_channel_logpmf,
     allocation_logpmf,
     coarse_logpmf,
     sample,
-    split_logpmf,
-    split_sample,
     target_score,
 )
 from src.nested.model import Parent, Record, initialize
@@ -70,35 +69,50 @@ def test_count_only_ignores_duration_values():
     np.testing.assert_array_equal(a, b)
 
 
-def test_truncated_split_sampler_matches_enumerated_mass():
-    support = np.arange(2, 5)
-    p = np.exp(split_logpmf(support, 7, 1.2, 3.4, 2, 4))
-    assert p.sum() == pytest.approx(1)
-    rng = np.random.default_rng(0)
-    draws = np.array([split_sample(7, 1.2, 3.4, 2, 4, rng) for _ in range(6000)])
-    np.testing.assert_allclose([np.mean(draws == x) for x in support], p, atol=0.025)
+def test_dm_channel_mass_sums_to_one_over_allocations():
+    omega = np.array([[0.2, 0.5, 0.3]])
+    total = 0.0
+    for x in itertools.product(range(6), repeat=3):
+        if sum(x) != 5:
+            continue
+        total += np.exp(_dm_channel_logpmf(np.array([x]), omega, 3.7)[0])
+    assert total == pytest.approx(1, abs=1e-12)
+    # The duration channel restricts the support to the active children; the
+    # softmax gives them the full weight (the 1e-10 floor leaves a tiny tail).
+    omega_active = np.array([[0.4, 0.6, 0.0]])
+    active = np.array([[True, True, False]])
+    total = 0.0
+    for s in itertools.product(range(4), repeat=2):
+        if sum(s) != 3:
+            continue
+        x = np.array([[s[0], s[1], 0]])
+        total += np.exp(_dm_channel_logpmf(x, omega_active, 2.1, active=active)[0])
+    assert total == pytest.approx(1, abs=1e-8)
 
 
-@pytest.mark.parametrize("n,lo,hi", [(0, 0, 0), (3, 3, 3), (5, 0, 5)])
-def test_forced_final_child(n, lo, hi):
-    assert split_sample(n, 1, 0, lo, hi, np.random.default_rng(1)) == n
-    assert split_logpmf(np.array([n]), n, 1, 0, lo, hi)[0] == 0
-
-
-def test_fixed_score_unbounded_chain_matches_dm():
+def test_beta_binomial_chain_factorizes_the_dm():
+    # The accepted sampler draws a DM block as a chain of beta-binomial splits;
+    # with the scores held fixed that chain is exactly the joint DM mass.
     x = np.array([2, 0, 3])
     alpha = np.array([1.2, 2.3, 0.7])
-    n = x.sum()
-    sequential = 0.0
+    n = int(x.sum())
+    chain = 0.0
     for i in range(3):
-        sequential += split_logpmf(
-            np.array([x[i]]), n, alpha[i], alpha[i + 1 :].sum(), 0, n
-        )[0]
+        rest = alpha[i + 1 :].sum()
+        if rest == 0:
+            # The last child takes whatever the block has left.
+            assert x[i] == n
+        else:
+            chain += (
+                gammaln(n + 1) - gammaln(x[i] + 1) - gammaln(n - x[i] + 1)
+                + betaln(x[i] + alpha[i], n - x[i] + rest)
+                - betaln(alpha[i], rest)
+            )
         n -= x[i]
     reference = gammaln(x.sum() + 1) - gammaln(x + 1).sum()
     reference += gammaln(alpha.sum()) - gammaln(alpha.sum() + x.sum())
     reference += (gammaln(alpha + x) - gammaln(alpha)).sum()
-    assert sequential == pytest.approx(reference)
+    assert chain == pytest.approx(reference)
 
 
 def test_within_block_lag_joint_mass_sums_to_one():
@@ -108,19 +122,22 @@ def test_within_block_lag_joint_mass_sums_to_one():
         [1.1, -0.4]
     )
     q = infer(rec, fitted, inner=1)
+    rec.data.X[1][:, 0] = 2
+    rec.data.Y[1][:, 0] = 4
     total = 0.0
-    for x in itertools.product(range(2), repeat=3):
+    # The DM support is every allocation of the block totals; the within-block
+    # lag reads use the zero reference, so the weights do not depend on x.
+    for x in itertools.product(range(3), repeat=3):
         if sum(x) != 2:
             continue
         active = np.flatnonzero(x)
-        for first in range(3):
+        for s in itertools.product(range(3), repeat=len(active)):
+            if sum(s) != 2:
+                continue
             y = np.array(x)
-            y[active[0]] += first
-            y[active[1]] += 2 - first
+            y[active] += s
             rec.data.X[0][:, 0] = x
             rec.data.Y[0][:, 0] = y
-            rec.data.X[1][:, 0] = 2
-            rec.data.Y[1][:, 0] = 4
             ll = allocation_logpmf(rec, fitted, 0, 0, q[0].gamma, q[0].m_H)
             total += np.exp(ll).sum()
     assert total == pytest.approx(1, abs=1e-9)
