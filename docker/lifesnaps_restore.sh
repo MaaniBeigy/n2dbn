@@ -15,6 +15,8 @@ set -eu
 ZENODO_RECORD="${ZENODO_RECORD:-6832242}"
 ARCHIVE_NAME="rais_anonymized.zip"
 ZENODO_URL="https://zenodo.org/api/records/${ZENODO_RECORD}/files/${ARCHIVE_NAME}/content"
+# Zenodo's API rejects the default curl UA with 403; send a descriptive one.
+UA="n2dbn-lifesnaps-restore/1.0 (WSDM N2DBN revision; contact: project maintainers)"
 # Checksum and size published by Zenodo for this exact record and file.
 ARCHIVE_MD5="ada6e54d6b75845ed066122725643ef6"
 ARCHIVE_SIZE=642961582
@@ -39,18 +41,49 @@ if ! have curl && ! have wget && ! have python3 && ! have python; then
     DEBIAN_FRONTEND=noninteractive apt-get install -y -qq curl unzip >/dev/null
 fi
 
-download() {
+api_get() {  # api_get <url> [output-file]
     if have curl; then
-        curl -fL --retry 3 --retry-delay 5 -o "$WORK/$ARCHIVE_NAME" "$ZENODO_URL"
+        if [ $# -ge 2 ]; then
+            curl -fL --retry 3 --retry-delay 5 -A "$UA" -H "Accept: application/octet-stream"                 -o "$2" "$1"
+        else
+            curl -fsSL --retry 3 --retry-delay 5 -A "$UA" "$1"
+        fi
     elif have wget; then
-        wget --retry-connrefused --tries=3 -O "$WORK/$ARCHIVE_NAME" "$ZENODO_URL"
+        if [ $# -ge 2 ]; then
+            wget --user-agent="$UA" --retry-connrefused --tries=3 -O "$2" "$1"
+        else
+            wget -q --user-agent="$UA" -O - "$1"
+        fi
     elif have python3; then
-        python3 -c "import sys, urllib.request; urllib.request.urlretrieve(sys.argv[2], sys.argv[1])" \
-            "$WORK/$ARCHIVE_NAME" "$ZENODO_URL"
+        python3 -c "import sys, urllib.request
+req = urllib.request.Request(sys.argv[1], headers={'User-Agent': sys.argv[2]})
+data = urllib.request.urlopen(req).read()
+if len(sys.argv) > 3:
+    open(sys.argv[3], 'wb').write(data)
+else:
+    sys.stdout.buffer.write(data)" "$1" "$UA" ${2:+"$2"}
     else
-        python -c "import sys, urllib.request; urllib.request.urlretrieve(sys.argv[2], sys.argv[1])" \
-            "$WORK/$ARCHIVE_NAME" "$ZENODO_URL"
+        python -c "import sys, urllib.request
+req = urllib.request.Request(sys.argv[1], headers={'User-Agent': sys.argv[2]})
+data = urllib.request.urlopen(req).read()
+if len(sys.argv) > 3:
+    open(sys.argv[3], 'wb').write(data)
+else:
+    sys.stdout.buffer.write(data)" "$1" "$UA" ${2:+"$2"}
     fi
+}
+
+download() {
+    # Primary: the pinned record's own file content endpoint.
+    if api_get "$ZENODO_URL" "$WORK/$ARCHIVE_NAME"; then
+        return 0
+    fi
+    echo "[lifesnaps] direct API content fetch failed; trying the record's published download link"
+    link=$(api_get "https://zenodo.org/api/records/${ZENODO_RECORD}"         | sed -n "s/.*\"key\": *\"${ARCHIVE_NAME}\".*\"self\": *\"\([^\"]*\)\".*//p" | head -1)
+    if [ -n "$link" ] && api_get "$link" "$WORK/$ARCHIVE_NAME"; then
+        return 0
+    fi
+    return 1
 }
 
 verified() {
@@ -69,12 +102,7 @@ else
     echo "[lifesnaps] downloaded $size bytes; checking the digest"
     if ! verified "$WORK/$ARCHIVE_NAME"; then
         actual=$(md5sum "$WORK/$ARCHIVE_NAME" | cut -d' ' -f1)
-        published=""
-        if have curl; then
-            published=$(curl -fsSL "https://zenodo.org/api/records/${ZENODO_RECORD}" 2>/dev/null \
-                | sed -n "s/.*\"key\": *\"${ARCHIVE_NAME}\".*\"checksum\": *\"md5:\([0-9a-f]*\)\".*/\1/p" \
-                | head -1) || published=""
-        fi
+        published=$(api_get "https://zenodo.org/api/records/${ZENODO_RECORD}" 2>/dev/null             | sed -n "s/.*\"key\": *\"${ARCHIVE_NAME}\".*\"checksum\": *\"md5:\([0-9a-f]*\)\".*//p"             | head -1) || published=""
         rm -f "$WORK/$ARCHIVE_NAME"
         echo "[lifesnaps] digest mismatch: got $actual, pinned $ARCHIVE_MD5, Zenodo-published ${published:-unknown}" >&2
         echo "[lifesnaps] the archive was removed; set ZENODO_RECORD to a record whose published" >&2
