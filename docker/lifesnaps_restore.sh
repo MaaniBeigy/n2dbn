@@ -5,17 +5,19 @@
 # needs about 12 GiB free under the mongo volume.  A restore that already ran
 # is left alone unless FORCE is set.
 #
-# The download URL is pinned to the API content endpoint of one specific Zenodo
-# record (6832242). Do NOT use the /records/<id>/files/...?download=1 HTML
-# route: after Zenodo's migration that route follows redirects to the newest
-# version of the concept, whose zip has a different checksum, so the pinned
-# md5 check fails even though the download itself is intact.
+# Download source: the API content endpoint of one pinned Zenodo record
+# (6832242).  Do NOT rely on the /records/<id>/files/...?download=1 HTML
+# route: after Zenodo's migration that route can follow redirects to the
+# newest version of the concept, whose zip has a different checksum.
+# Zenodo's API also rejects curl's default User-Agent with 403 on some
+# networks, so every request sends a descriptive UA and no custom Accept
+# header (a custom Accept: application/octet-stream gets 406).
 set -eu
 
 ZENODO_RECORD="${ZENODO_RECORD:-6832242}"
 ARCHIVE_NAME="rais_anonymized.zip"
 ZENODO_URL="https://zenodo.org/api/records/${ZENODO_RECORD}/files/${ARCHIVE_NAME}/content"
-# Zenodo's API rejects the default curl UA with 403; send a descriptive one.
+ZENODO_HTML_URL="https://zenodo.org/records/${ZENODO_RECORD}/files/${ARCHIVE_NAME}?download=1"
 UA="n2dbn-lifesnaps-restore/1.0 (WSDM N2DBN revision; contact: project maintainers)"
 # Checksum and size published by Zenodo for this exact record and file.
 ARCHIVE_MD5="ada6e54d6b75845ed066122725643ef6"
@@ -41,10 +43,11 @@ if ! have curl && ! have wget && ! have python3 && ! have python; then
     DEBIAN_FRONTEND=noninteractive apt-get install -y -qq curl unzip >/dev/null
 fi
 
-api_get() {  # api_get <url> [output-file]
+# api_get <url> [output-file] : fetch with a descriptive UA, no custom Accept.
+api_get() {
     if have curl; then
         if [ $# -ge 2 ]; then
-            curl -fL --retry 3 --retry-delay 5 -A "$UA" -H "Accept: application/octet-stream"                 -o "$2" "$1"
+            curl -fL --retry 3 --retry-delay 5 -A "$UA" -o "$2" "$1"
         else
             curl -fsSL --retry 3 --retry-delay 5 -A "$UA" "$1"
         fi
@@ -73,17 +76,21 @@ else:
     fi
 }
 
+# published_md5 : the md5 Zenodo lists for this file in this record's JSON.
+published_md5() {
+    api_get "https://zenodo.org/api/records/${ZENODO_RECORD}" 2>/dev/null \
+        | tr '{' '\n' | grep "$ARCHIVE_NAME" \
+        | grep -o '"checksum": *"md5:[0-9a-f]*"' \
+        | grep -o '[0-9a-f]\{32\}' | head -1
+}
+
 download() {
-    # Primary: the pinned record's own file content endpoint.
     if api_get "$ZENODO_URL" "$WORK/$ARCHIVE_NAME"; then
         return 0
     fi
-    echo "[lifesnaps] direct API content fetch failed; trying the record's published download link"
-    link=$(api_get "https://zenodo.org/api/records/${ZENODO_RECORD}"         | sed -n "s/.*\"key\": *\"${ARCHIVE_NAME}\".*\"self\": *\"\([^\"]*\)\".*//p" | head -1)
-    if [ -n "$link" ] && api_get "$link" "$WORK/$ARCHIVE_NAME"; then
-        return 0
-    fi
-    return 1
+    echo "[lifesnaps] API content endpoint failed; falling back to the HTML download route"
+    echo "[lifesnaps] (that route may serve a newer version; the digest check below catches it)"
+    api_get "$ZENODO_HTML_URL" "$WORK/$ARCHIVE_NAME"
 }
 
 verified() {
@@ -102,11 +109,11 @@ else
     echo "[lifesnaps] downloaded $size bytes; checking the digest"
     if ! verified "$WORK/$ARCHIVE_NAME"; then
         actual=$(md5sum "$WORK/$ARCHIVE_NAME" | cut -d' ' -f1)
-        published=$(api_get "https://zenodo.org/api/records/${ZENODO_RECORD}" 2>/dev/null             | sed -n "s/.*\"key\": *\"${ARCHIVE_NAME}\".*\"checksum\": *\"md5:\([0-9a-f]*\)\".*//p"             | head -1) || published=""
+        published=$(published_md5) || published=""
         rm -f "$WORK/$ARCHIVE_NAME"
         echo "[lifesnaps] digest mismatch: got $actual, pinned $ARCHIVE_MD5, Zenodo-published ${published:-unknown}" >&2
-        echo "[lifesnaps] the archive was removed; set ZENODO_RECORD to a record whose published" >&2
-        echo "[lifesnaps] checksum matches, or update ARCHIVE_MD5/ARCHIVE_SIZE, then rerun" >&2
+        echo "[lifesnaps] the archive was removed; if Zenodo-published differs from pinned, the record" >&2
+        echo "[lifesnaps] now serves a different file: set ZENODO_RECORD/ARCHIVE_MD5 accordingly, then rerun" >&2
         exit 1
     fi
 fi
