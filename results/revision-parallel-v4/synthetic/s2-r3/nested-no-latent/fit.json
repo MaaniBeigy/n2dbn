@@ -1,0 +1,365 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": true,
+  "status": "complete",
+  "elapsed_seconds": 16.89278666814789,
+  "score_evaluations": 9068,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -4018.9212779745226,
+      "retained": -4018.9212779745226,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -3504.650840992322,
+      "retained": -3504.650840992322,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -3504.6255232381927,
+      "retained": -3504.6255232381927,
+      "accepted": true
+    }
+  ],
+  "shift_checks": [
+    {
+      "scale": 2,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 1,
+        "lag": 1
+      },
+      "gain": 19.057394158877344,
+      "null_threshold": 8.539156317078657,
+      "null_gains": [
+        5.456369402238636,
+        2.3304830933621474,
+        9.229792852912453,
+        4.39192725733767,
+        3.3478258557805702,
+        4.682241165023356,
+        5.180693425420031,
+        5.068484669040231,
+        2.5415828037756114,
+        3.9798552587246263,
+        8.462418924208237,
+        7.5992396369908874,
+        3.457110347390824,
+        2.857371832456181,
+        3.1292283140013524,
+        2.4625847590810395,
+        7.39095561066091,
+        8.014414278007393,
+        3.3007071537342654
+      ],
+      "passed": true
+    },
+    {
+      "scale": 2,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 1,
+        "lag": 1
+      },
+      "gain": 10.855728396309075,
+      "null_threshold": 4.780618395383799,
+      "null_gains": [
+        2.6796985507620548,
+        1.4356750278150798,
+        4.742419143572874,
+        2.774127873073269,
+        1.81291639746388,
+        2.6815577227600897,
+        3.0070327740957623,
+        3.3025366928643507,
+        1.3061240926076039,
+        1.8785561722417015,
+        5.124411661682132,
+        4.249270153596399,
+        2.0980137853504743,
+        2.117250934552885,
+        1.6348293345370735,
+        1.833967952900423,
+        3.6557313875868545,
+        3.983794842742725,
+        2.1179414580690263
+      ],
+      "passed": true
+    }
+  ],
+  "regimes": [
+    1,
+    1,
+    1
+  ],
+  "factors": [
+    0,
+    0,
+    0
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    14.095034442714592,
+    10.494048144320972,
+    7.700295203420117
+  ],
+  "shared_graph_penalty": 10.494048144320972,
+  "inference_seconds": 0.018658375833183527,
+  "search_seconds": 1.7596226292662323,
+  "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+  "parallel_phases": [
+    {
+      "phase": "initial inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.595836639404297,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 1, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.595836639404297,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.598018646240234,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.608219146728516,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.613822937011719,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.618251800537109,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.582908630371094,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 2, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.582908630371094,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.576236724853516,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.585475921630859,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.572673797607422,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.580959320068359,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.581020355224609,
+      "parent_rss_gb": 0.4845085144042969,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    }
+  ],
+  "candidate_refits": 262,
+  "depletion_coefficients": [
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [
+    {
+      "scale": 2,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 1,
+      "count_coefficient": 0.5915506332857889,
+      "duration_coefficient": 0.17653578191046662
+    }
+  ],
+  "lag_l1_count": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0.5915506332857889,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0
+    ],
+    [
+      0.0
+    ]
+  ]
+}

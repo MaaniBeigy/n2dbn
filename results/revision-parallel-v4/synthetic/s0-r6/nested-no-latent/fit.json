@@ -1,0 +1,427 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": true,
+  "status": "complete",
+  "elapsed_seconds": 31.725737498607486,
+  "score_evaluations": 15010,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -3623.4010495052385,
+      "retained": -3623.4010495052385,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -3586.7784542887794,
+      "retained": -3586.7784542887794,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -3582.675369296375,
+      "retained": -3582.675369296375,
+      "accepted": true
+    },
+    {
+      "iteration": 3,
+      "proposed": -3582.675369282945,
+      "retained": -3582.675369282945,
+      "accepted": true
+    }
+  ],
+  "shift_checks": [
+    {
+      "scale": 2,
+      "target": 1,
+      "parent": {
+        "kind": "behavior",
+        "source": 1,
+        "lag": 1
+      },
+      "gain": 11.334495718770711,
+      "null_threshold": 7.545224043175073,
+      "null_gains": [
+        3.132174557468261,
+        7.915267329124504,
+        4.628701449968105,
+        2.549584334517249,
+        5.0797749634688785,
+        2.041861863234942,
+        2.9911697314423122,
+        1.6848541656049747,
+        3.495936494539535,
+        6.035237082855986,
+        6.768175698733103,
+        6.645759453644132,
+        5.0800827565778945,
+        4.250260081072554,
+        7.504108122514026,
+        4.610166580903751,
+        3.240196823999952,
+        6.236349777790906,
+        4.112351109245424
+      ],
+      "passed": true
+    },
+    {
+      "scale": 2,
+      "target": 3,
+      "parent": {
+        "kind": "behavior",
+        "source": 0,
+        "lag": 1
+      },
+      "gain": 12.00940433729835,
+      "null_threshold": 11.58272688375185,
+      "null_gains": [
+        4.355860208864556,
+        5.37427008998236,
+        6.135602161333736,
+        3.6835147353403954,
+        3.2296405868411284,
+        4.072174322499961,
+        7.605640397779894,
+        6.371559780311657,
+        4.944551742913859,
+        4.263949957770478,
+        6.869219966331514,
+        4.153856041029655,
+        11.00906684415088,
+        3.7445368955120557,
+        2.1079122937113652,
+        13.742604544829533,
+        2.1351138579421445,
+        3.3355931048828893,
+        11.342740476965446
+      ],
+      "passed": true
+    }
+  ],
+  "regimes": [
+    1,
+    1,
+    1
+  ],
+  "factors": [
+    0,
+    0,
+    0
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    14.095034442714592,
+    10.494048144320972,
+    7.700295203420117
+  ],
+  "shared_graph_penalty": 0,
+  "inference_seconds": 0.02629664307460189,
+  "search_seconds": 3.2869172231294215,
+  "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+  "parallel_phases": [
+    {
+      "phase": "initial inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.5968780517578125,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 1, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.5968780517578125,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.594593048095703,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.592853546142578,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.576557159423828,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.579170227050781,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.569286346435547,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 2, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.569286346435547,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.572498321533203,
+      "parent_rss_gb": 0.47467803955078125,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.576740264892578,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.581729888916016,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.582279205322266,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.58331298828125,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 3, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.588741302490234,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.592060089111328,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.590946197509766,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.585834503173828,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.595058441162109,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.579090118408203,
+      "parent_rss_gb": 0.474700927734375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    }
+  ],
+  "candidate_refits": 380,
+  "depletion_coefficients": [
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [],
+  "lag_l1_count": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0
+    ],
+    [
+      0.0
+    ]
+  ]
+}

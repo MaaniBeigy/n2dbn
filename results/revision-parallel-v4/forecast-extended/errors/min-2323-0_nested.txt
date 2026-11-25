@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/revision.py", line 172, in cell
+    result = function()
+             ^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 874, in execute_nested
+    fit, validation = selected_fit(
+                      ^^^^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 334, in selected_fit
+    fit = fitting(
+          ^^^^^^^^
+  File "/workspace/experiments/revision.py", line 253, in fitting
+    return Fitter(config or fit_config(args)).fit(records, model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 734, in fit
+    proposed_q, value = self.infer_all(
+                        ^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 543, in infer_all
+    rec.name: infer(rec, model, self.config.inner) for rec in records
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 182, in infer
+    ll = potentials(record, model, k, posterior)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 78, in potentials
+    raise FloatingPointError(f"non-finite likelihood potentials at scale {k + 1}")
+FloatingPointError: non-finite likelihood potentials at scale 3

@@ -1,0 +1,253 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": true,
+  "status": "complete",
+  "elapsed_seconds": 12.281759740086272,
+  "score_evaluations": 16229,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -3117.4478933803125,
+      "retained": -3117.4478933803125,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -2691.84255515473,
+      "retained": -2691.84255515473,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -2685.248901399796,
+      "retained": -2685.248901399796,
+      "accepted": true
+    },
+    {
+      "iteration": 3,
+      "proposed": -2706.432725194224,
+      "retained": -2685.248901399796,
+      "accepted": false
+    },
+    {
+      "iteration": 4,
+      "proposed": -2706.432725194224,
+      "retained": -2685.248901399796,
+      "accepted": false
+    },
+    {
+      "iteration": 5,
+      "proposed": -2706.432725194224,
+      "retained": -2685.248901399796,
+      "accepted": false
+    }
+  ],
+  "shift_checks": [],
+  "regimes": [
+    1,
+    2,
+    2
+  ],
+  "factors": [
+    0,
+    0,
+    1
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    7.047517221357296,
+    5.247024072160486,
+    3.8501476017100584
+  ],
+  "shared_graph_penalty": 56.87846037749124,
+  "inference_seconds": 1.214311603223905,
+  "search_seconds": 0.0,
+  "candidate_refits": 60,
+  "depletion_coefficients": [
+    [
+      [
+        3.0,
+        -0.012156248372286006
+      ],
+      [
+        -3.0,
+        0.2526240585179417
+      ],
+      [
+        3.0,
+        -0.014370038398789213
+      ],
+      [
+        3.0,
+        -0.006650127919257448
+      ]
+    ],
+    [
+      [
+        3.0,
+        -0.22097626764458603
+      ],
+      [
+        -3.0,
+        -0.7511731593319335
+      ],
+      [
+        3.0,
+        -0.6434151176042164
+      ],
+      [
+        0.4507537170164229,
+        -0.18930300059004931
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [
+    {
+      "scale": 1,
+      "target": "label0",
+      "kind": "behavior",
+      "source": "label3",
+      "lag": 1,
+      "count_coefficient": 0.9257663900420258,
+      "duration_coefficient": 0.08044054502395101
+    },
+    {
+      "scale": 1,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 2,
+      "count_coefficient": 1.541726107969923,
+      "duration_coefficient": 0.16258343290916125
+    },
+    {
+      "scale": 1,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 1,
+      "count_coefficient": 0.6446033069954278,
+      "duration_coefficient": 0.07294020855577758
+    },
+    {
+      "scale": 1,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label3",
+      "lag": 1,
+      "count_coefficient": 0.13513995249316169,
+      "duration_coefficient": 0.15396123925307129
+    },
+    {
+      "scale": 2,
+      "target": "label0",
+      "kind": "behavior",
+      "source": "label0",
+      "lag": 1,
+      "count_coefficient": 0.5542965120770964,
+      "duration_coefficient": 0.2524877659742226
+    },
+    {
+      "scale": 2,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 2,
+      "count_coefficient": -1.7722881574742217,
+      "duration_coefficient": -0.0405391925337249
+    },
+    {
+      "scale": 2,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 1,
+      "count_coefficient": 1.298983907630755,
+      "duration_coefficient": -0.10039158597395145
+    },
+    {
+      "scale": 2,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label3",
+      "lag": 1,
+      "count_coefficient": 0.4743542565522721,
+      "duration_coefficient": 0.32341072110615826
+    },
+    {
+      "scale": 3,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label3",
+      "lag": 1,
+      "count_coefficient": -0.8807864363847192,
+      "duration_coefficient": 0.11202505187751699
+    },
+    {
+      "scale": 3,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label0",
+      "lag": 1,
+      "count_coefficient": -0.2760122800984029,
+      "duration_coefficient": 0.30412992541409956
+    }
+  ],
+  "lag_l1_count": [
+    [
+      0.9257663900420258,
+      1.541726107969923,
+      0.6446033069954278,
+      0.13513995249316169
+    ],
+    [
+      0.5542965120770964,
+      1.7722881574742217,
+      1.298983907630755,
+      0.4743542565522721
+    ],
+    [
+      0,
+      0,
+      0.8807864363847192,
+      0.2760122800984029
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.41645569342784844,
+      0.4580939779277483
+    ]
+  ]
+}

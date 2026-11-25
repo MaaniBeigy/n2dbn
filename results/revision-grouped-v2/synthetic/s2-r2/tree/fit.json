@@ -1,0 +1,253 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": true,
+  "status": "complete",
+  "elapsed_seconds": 13.585804005153477,
+  "score_evaluations": 17235,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -1924.866468170066,
+      "retained": -1924.866468170066,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -1349.1066685195221,
+      "retained": -1349.1066685195221,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -1378.3861992785519,
+      "retained": -1349.1066685195221,
+      "accepted": false
+    },
+    {
+      "iteration": 3,
+      "proposed": -1378.3861992785519,
+      "retained": -1349.1066685195221,
+      "accepted": false
+    },
+    {
+      "iteration": 4,
+      "proposed": -1378.3861992785519,
+      "retained": -1349.1066685195221,
+      "accepted": false
+    },
+    {
+      "iteration": 5,
+      "proposed": -1378.3861992785519,
+      "retained": -1349.1066685195221,
+      "accepted": false
+    }
+  ],
+  "shift_checks": [],
+  "regimes": [
+    1,
+    2,
+    2
+  ],
+  "factors": [
+    0,
+    0,
+    1
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    7.047517221357296,
+    5.247024072160486,
+    3.8501476017100584
+  ],
+  "shared_graph_penalty": 55.48158390704081,
+  "inference_seconds": 1.226766596082598,
+  "search_seconds": 0.0,
+  "candidate_refits": 60,
+  "depletion_coefficients": [
+    [
+      [
+        -3.0,
+        -0.3039214827297724
+      ],
+      [
+        3.0,
+        0.6138081483191208
+      ],
+      [
+        3.0,
+        0.2720396463495722
+      ],
+      [
+        -3.0,
+        0.3071110454658087
+      ]
+    ],
+    [
+      [
+        3.0,
+        -0.12534043067233164
+      ],
+      [
+        3.0,
+        -0.21689945530381105
+      ],
+      [
+        -1.2749710336297602,
+        0.039629965014490676
+      ],
+      [
+        3.0,
+        0.45879009076476385
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [
+    {
+      "scale": 1,
+      "target": "label0",
+      "kind": "behavior",
+      "source": "label0",
+      "lag": 1,
+      "count_coefficient": 0.5991172584725482,
+      "duration_coefficient": -0.13961676125056724
+    },
+    {
+      "scale": 1,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label0",
+      "lag": 1,
+      "count_coefficient": 1.3622883999200617,
+      "duration_coefficient": 0.3309079393653666
+    },
+    {
+      "scale": 1,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 2,
+      "count_coefficient": 2.3680591752162257,
+      "duration_coefficient": -0.013601572907150274
+    },
+    {
+      "scale": 1,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 1,
+      "count_coefficient": 1.4708530555138808,
+      "duration_coefficient": 0.22807810332026565
+    },
+    {
+      "scale": 2,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label0",
+      "lag": 1,
+      "count_coefficient": -0.3686394113201382,
+      "duration_coefficient": 0.035235652907078543
+    },
+    {
+      "scale": 2,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 2,
+      "count_coefficient": 0.7869465476422598,
+      "duration_coefficient": -0.33966864541167924
+    },
+    {
+      "scale": 2,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 1,
+      "count_coefficient": 0.6759252321659558,
+      "duration_coefficient": 0.27812582586577855
+    },
+    {
+      "scale": 3,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 1,
+      "count_coefficient": 0.5038690121891313,
+      "duration_coefficient": 0.1468026940299787
+    },
+    {
+      "scale": 3,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 1,
+      "count_coefficient": 0.45793506278534113,
+      "duration_coefficient": 0.24895800456642178
+    },
+    {
+      "scale": 3,
+      "target": "label3",
+      "kind": "behavior",
+      "source": "label1",
+      "lag": 1,
+      "count_coefficient": -0.01576778069738093,
+      "duration_coefficient": 0.06733804315572248
+    }
+  ],
+  "lag_l1_count": [
+    [
+      0.5991172584725482,
+      1.3622883999200617,
+      2.3680591752162257,
+      1.4708530555138808
+    ],
+    [
+      0,
+      0.3686394113201382,
+      0.7869465476422598,
+      0.6759252321659558
+    ],
+    [
+      0,
+      0.5038690121891313,
+      0.45793506278534113,
+      0.01576778069738093
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.7060654187065063,
+      0.7887196262758824
+    ]
+  ]
+}

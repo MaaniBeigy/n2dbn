@@ -1,0 +1,40 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/revision.py", line 172, in cell
+    result = function()
+             ^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 874, in execute_nested
+    fit, validation = selected_fit(
+                      ^^^^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 334, in selected_fit
+    fit = fitting(
+          ^^^^^^^^
+  File "/workspace/experiments/revision.py", line 253, in fitting
+    return Fitter(config or fit_config(args)).fit(records, model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 734, in fit
+    proposed_q, value = self.infer_all(
+                        ^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 545, in infer_all
+    return posterior, monitor(records, model, posterior)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 224, in monitor
+    sum(monitor_record(rec, model, posteriors[rec.name]) for rec in records)
+  File "/workspace/src/nested/inference.py", line 224, in <genexpr>
+    sum(monitor_record(rec, model, posteriors[rec.name]) for rec in records)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 214, in monitor_record
+    potentials(record, model, k, posterior),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 51, in potentials
+    out[:, state] += emission_terms(record, model, k, ell, gamma, q.m_H)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 123, in emission_terms
+    return coarse_logpmf(
+           ^^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 48, in coarse_logpmf
+    mu = exp_mean(eta)
+         ^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 28, in exp_mean
+    return np.exp(value)
+           ^^^^^^^^^^^^^
+FloatingPointError: overflow encountered in exp

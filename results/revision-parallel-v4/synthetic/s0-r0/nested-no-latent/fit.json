@@ -1,0 +1,440 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": true,
+  "status": "complete",
+  "elapsed_seconds": 5.3402540809474885,
+  "score_evaluations": 11301,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -2767.366616408294,
+      "retained": -2767.366616408294,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -2683.345062829705,
+      "retained": -2683.345062829705,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -2683.344281976844,
+      "retained": -2683.344281976844,
+      "accepted": true
+    }
+  ],
+  "shift_checks": [
+    {
+      "scale": 2,
+      "target": 1,
+      "parent": {
+        "kind": "behavior",
+        "source": 2,
+        "lag": 1
+      },
+      "gain": 13.791478286710372,
+      "null_threshold": 7.151295688348454,
+      "null_gains": [
+        2.3747809657345726,
+        2.222402429318265,
+        3.830165537999477,
+        1.4568837008084188,
+        5.2123759669176195,
+        6.511720378577564,
+        6.851159226426631,
+        4.412481337670528,
+        3.9161750384915877,
+        4.865614231486916,
+        3.5260704583392624,
+        4.400223082373969,
+        4.928504996151759,
+        2.1681011754938027,
+        3.3059555965939467,
+        3.0447902840502366,
+        1.9904636232172663,
+        3.175629267143279,
+        9.852523845644924
+      ],
+      "passed": true
+    },
+    {
+      "scale": 2,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 3,
+        "lag": 1
+      },
+      "gain": 10.88096023611206,
+      "null_threshold": 2.5302094971359277,
+      "null_gains": [
+        2.203215496530504,
+        1.6680904802248904,
+        1.3788366328603274,
+        1.9032183083293717,
+        1.8286476992445273,
+        1.10631467518607,
+        1.443586508253901,
+        1.9484034888640167,
+        1.3211244745863269,
+        0.7752792525928385,
+        1.1881175419337637,
+        2.157991802278957,
+        0.5170843580462758,
+        0.7033009243731385,
+        2.1699755421905422,
+        2.3814666994667846,
+        2.6442681308691363,
+        2.517536315610016,
+        1.8505000679700174
+      ],
+      "passed": true
+    },
+    {
+      "scale": 2,
+      "target": 1,
+      "parent": {
+        "kind": "behavior",
+        "source": 2,
+        "lag": 1
+      },
+      "gain": 15.523635226189327,
+      "null_threshold": 8.209266450480996,
+      "null_gains": [
+        2.9608583161197544,
+        2.636838926068066,
+        4.55076353182605,
+        1.8778727913400246,
+        6.135818418222556,
+        7.657251805565863,
+        7.84141074646692,
+        5.241210064227403,
+        4.6382363278192145,
+        5.612580265099837,
+        4.089278496442489,
+        5.182349594160598,
+        5.663690812482855,
+        2.619041204050319,
+        3.8984093414765937,
+        3.780332322268009,
+        2.3686165678126088,
+        3.8272696764386183,
+        11.519967786607765
+      ],
+      "passed": true
+    },
+    {
+      "scale": 2,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 3,
+        "lag": 1
+      },
+      "gain": 12.319431696635377,
+      "null_threshold": 2.941972526872814,
+      "null_gains": [
+        2.5660260147378153,
+        1.825888555343255,
+        1.6455737503230239,
+        1.8589966168218552,
+        1.7954557409810263,
+        1.2079118035906617,
+        1.3918935691916658,
+        2.1289126696614744,
+        1.437834507022444,
+        0.8313296030096353,
+        1.4000033575806583,
+        2.2147629846295445,
+        0.5072169199708583,
+        0.7743591408988948,
+        2.603009978439701,
+        2.711208911903128,
+        3.0887990971464205,
+        2.9256584635090803,
+        2.1689301250003155
+      ],
+      "passed": true
+    }
+  ],
+  "regimes": [
+    1,
+    1,
+    1
+  ],
+  "factors": [
+    0,
+    0,
+    0
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    7.047517221357296,
+    5.247024072160486,
+    3.8501476017100584
+  ],
+  "shared_graph_penalty": 10.494048144320972,
+  "inference_seconds": 0.017870186362415552,
+  "search_seconds": 2.2143765529617667,
+  "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+  "parallel_phases": [
+    {
+      "phase": "initial inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.653591156005859,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 1, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.653591156005859,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.650058746337891,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.653961181640625,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.660083770751953,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.658843994140625,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.650791168212891,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 2, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.651031494140625,
+      "parent_rss_gb": 0.13238143920898438,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.651683807373047,
+      "parent_rss_gb": 0.13238525390625,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.680389404296875,
+      "parent_rss_gb": 0.13238525390625,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.653209686279297,
+      "parent_rss_gb": 0.13238525390625,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 concentration",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.657440185546875,
+      "parent_rss_gb": 0.13238525390625,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.675045013427734,
+      "parent_rss_gb": 0.13238525390625,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    }
+  ],
+  "candidate_refits": 316,
+  "depletion_coefficients": [
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [
+    {
+      "scale": 2,
+      "target": "label1",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 1,
+      "count_coefficient": 0.8814100200476519,
+      "duration_coefficient": 0.3039848286505539
+    },
+    {
+      "scale": 2,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label3",
+      "lag": 1,
+      "count_coefficient": -0.7854413934651493,
+      "duration_coefficient": 0.27283300054225257
+    }
+  ],
+  "lag_l1_count": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0.8814100200476519,
+      0.7854413934651493,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0
+    ],
+    [
+      0.0
+    ]
+  ]
+}

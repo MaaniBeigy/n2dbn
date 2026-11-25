@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/revision.py", line 172, in cell
+    result = function()
+             ^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 494, in execute
+    fit = fitting(
+          ^^^^^^^^
+  File "/workspace/experiments/revision.py", line 253, in fitting
+    return Fitter(config or fit_config(args)).fit(records, model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 734, in fit
+    proposed_q, value = self.infer_all(
+                        ^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 543, in infer_all
+    rec.name: infer(rec, model, self.config.inner) for rec in records
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 182, in infer
+    ll = potentials(record, model, k, posterior)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/inference.py", line 51, in potentials
+    out[:, state] += emission_terms(record, model, k, ell, gamma, q.m_H)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 123, in emission_terms
+    return coarse_logpmf(
+           ^^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 48, in coarse_logpmf
+    mu = exp_mean(eta)
+         ^^^^^^^^^^^^^
+  File "/workspace/src/nested/law.py", line 28, in exp_mean
+    return np.exp(value)
+           ^^^^^^^^^^^^^
+FloatingPointError: overflow encountered in exp

@@ -1,0 +1,404 @@
+{
+  "model_formulation": "nested-sequential-v1",
+  "count_only": false,
+  "nested": false,
+  "status": "complete",
+  "elapsed_seconds": 2.242089301813394,
+  "score_evaluations": 15134,
+  "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+  "trace": [
+    {
+      "iteration": 0,
+      "proposed": -4965.005899688294,
+      "retained": -4965.005899688294,
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "proposed": -4691.262281686268,
+      "retained": -4691.262281686268,
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "proposed": -4690.040681776105,
+      "retained": -4690.040681776105,
+      "accepted": true
+    },
+    {
+      "iteration": 3,
+      "proposed": -4690.04059451773,
+      "retained": -4690.04059451773,
+      "accepted": true
+    }
+  ],
+  "shift_checks": [
+    {
+      "scale": 1,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 2,
+        "lag": 2
+      },
+      "gain": 8.41177548929852,
+      "null_threshold": 3.0080302669166485,
+      "null_gains": [
+        2.5752047476041753,
+        0.5718087894694008,
+        1.3936505895054552,
+        0.546422844581457,
+        1.7132529828020324,
+        0.8449009450587255,
+        2.2948803608311437,
+        0.07469993828408406,
+        0.19929862291769496,
+        0.1069593834773741,
+        2.303643058864509,
+        3.006229451332729,
+        0.7862195811775337,
+        3.0242376071719264,
+        0.8689826044163738,
+        0.6698986095266264,
+        0.2013916921183636,
+        0.18898468378301914,
+        0.4948085142546006
+      ],
+      "passed": true
+    },
+    {
+      "scale": 1,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 2,
+        "lag": 2
+      },
+      "gain": 10.987052972496258,
+      "null_threshold": 3.0529729562117836,
+      "null_gains": [
+        1.926746589950426,
+        0.7627453240754676,
+        0.9872061393286913,
+        1.090646205459393,
+        2.5795622103821643,
+        1.5910911529782652,
+        3.049569671573636,
+        0.00564262997681908,
+        0.2895276969834413,
+        0.14332681376515666,
+        2.0817687219840764,
+        3.0836025179551143,
+        1.2578798095698858,
+        2.901134019555684,
+        0.7859745983428184,
+        0.30384034641622293,
+        0.3072692555776939,
+        0.13583976861605151,
+        1.0846859040518666
+      ],
+      "passed": true
+    },
+    {
+      "scale": 1,
+      "target": 2,
+      "parent": {
+        "kind": "behavior",
+        "source": 2,
+        "lag": 2
+      },
+      "gain": 10.98696280555339,
+      "null_threshold": 3.0529486298213784,
+      "null_gains": [
+        1.9267659088727669,
+        0.762736096144863,
+        0.9872200913241613,
+        1.090624330705964,
+        2.5795287059017937,
+        1.5910621320568907,
+        3.0495428259274604,
+        0.00564184769905296,
+        0.2895214384030851,
+        0.14332231360208425,
+        2.0817740708591828,
+        3.0836008648666393,
+        1.2578608688630766,
+        2.901136914599988,
+        0.7859762004529784,
+        0.3038507802996264,
+        0.3072622482490033,
+        0.13583884161675996,
+        1.084662133214806
+      ],
+      "passed": true
+    }
+  ],
+  "regimes": [
+    1,
+    1,
+    1
+  ],
+  "factors": [
+    0,
+    0,
+    0
+  ],
+  "lag_bounds": [
+    2,
+    2,
+    1
+  ],
+  "penalties": [
+    7.047517221357296,
+    5.247024072160486,
+    3.8501476017100584
+  ],
+  "shared_graph_penalty": 7.047517221357296,
+  "inference_seconds": 0.022809315472841263,
+  "search_seconds": 2.5705297673121095,
+  "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+  "parallel_phases": [
+    {
+      "phase": "initial inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.547138214111328,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 1, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.547138214111328,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.5550689697265625,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.5584869384765625,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 1 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.561710357666016,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 2, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.561710357666016,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.563007354736328,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.567665100097656,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 2 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.473381042480469,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    },
+    {
+      "phase": "iteration 3, scale 3 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.471698760986328,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 2 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.418556213378906,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3, scale 1 targets",
+      "workers": 4,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.557769775390625,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "fork"
+    },
+    {
+      "phase": "iteration 3 inference",
+      "workers": 1,
+      "requested_jobs": 8,
+      "cpu_limit": 8,
+      "memory_budget_gb": 14.0,
+      "available_gb": 7.569725036621094,
+      "parent_rss_gb": 0.46297454833984375,
+      "estimated_private_gb_per_worker": 1.0,
+      "backend": "serial"
+    }
+  ],
+  "candidate_refits": 393,
+  "depletion_coefficients": [
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "graph": [
+    {
+      "scale": 1,
+      "target": "label2",
+      "kind": "behavior",
+      "source": "label2",
+      "lag": 2,
+      "count_coefficient": 1.6190846750065744,
+      "duration_coefficient": -0.2472034072973169
+    }
+  ],
+  "lag_l1_count": [
+    [
+      0,
+      0,
+      1.6190846750065744,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "factor_spectral_radius": [
+    [
+      0.0
+    ],
+    [
+      0.0
+    ],
+    [
+      0.0
+    ]
+  ]
+}

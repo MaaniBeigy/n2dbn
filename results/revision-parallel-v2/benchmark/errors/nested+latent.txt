@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/workspace/src/nested/parallel.py", line 140, in ordered_map
+    result.append(pending.next(timeout=0.2))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/pool.py", line 868, in next
+    raise TimeoutError from None
+multiprocessing.context.TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/experiments/revision.py", line 172, in cell
+    result = function()
+             ^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 1095, in execute
+    fit, validation = selected_fit(records, args)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/experiments/revision.py", line 334, in selected_fit
+    fit = fitting(
+          ^^^^^^^^
+  File "/workspace/experiments/revision.py", line 253, in fitting
+    return Fitter(config or fit_config(args)).fit(records, model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 665, in fit
+    frozen = self.freeze_concentration(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/fit.py", line 613, in freeze_concentration
+    return ordered_map(work, range(model.L), plan)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/src/nested/parallel.py", line 145, in ordered_map
+    raise RuntimeError(
+RuntimeError: A fitting worker exited unexpectedly; reduce --jobs and inspect container memory
