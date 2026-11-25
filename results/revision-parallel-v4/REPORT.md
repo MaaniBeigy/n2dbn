@@ -22,7 +22,7 @@ Old exp* results and smoke checks are excluded.
 | Experiment | Complete / planned |
 |---|---|
 | synthetic | 638 / 640 |
-| benchmark | 3 / 10 |
+| benchmark | 4 / 10 |
 | lifesnaps | 56 / 56 |
 | forecast | 478 / 480 |
 | forecast-extended | 478 / 480 |
