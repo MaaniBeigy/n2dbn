@@ -1054811,12 +1054811,6839 @@
   },
   {
     "key": "hc-bic",
-    "status": "running",
-    "method": "hc-bic"
+    "status": "complete",
+    "method": "hc-bic",
+    "fit": {
+      "model_formulation": "nested-sequential-v1",
+      "count_only": false,
+      "nested": true,
+      "status": "complete",
+      "elapsed_seconds": 724.0358746307902,
+      "score_evaluations": 477824,
+      "objective_kind": "auxiliary_chain_surrogate_not_elbo",
+      "trace": [
+        {
+          "iteration": 0,
+          "proposed": -1985933.030472381,
+          "retained": -1985933.030472381,
+          "accepted": true
+        },
+        {
+          "iteration": 1,
+          "proposed": -1921570.876080722,
+          "retained": -1921570.876080722,
+          "accepted": true
+        },
+        {
+          "iteration": 2,
+          "proposed": -1918009.329057933,
+          "retained": -1918009.329057933,
+          "accepted": true
+        },
+        {
+          "iteration": 3,
+          "proposed": -1917937.6211421075,
+          "retained": -1917937.6211421075,
+          "accepted": true
+        },
+        {
+          "iteration": 4,
+          "proposed": -1920050.7064776674,
+          "retained": -1917937.6211421075,
+          "accepted": false
+        },
+        {
+          "iteration": 5,
+          "proposed": -1920050.7064776674,
+          "retained": -1917937.6211421075,
+          "accepted": false
+        }
+      ],
+      "shift_checks": [],
+      "regimes": [
+        1,
+        1,
+        2,
+        2
+      ],
+      "factors": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "lag_bounds": [
+        2,
+        2,
+        2,
+        1
+      ],
+      "penalties": [
+        15.104396038547286,
+        11.009075454940662,
+        7.807916628926408,
+        5.799092654460526
+      ],
+      "shared_graph_penalty": 3288.813562915934,
+      "inference_seconds": 18.780550721101463,
+      "search_seconds": 0.0,
+      "search_seconds_measure": "sum of target-worker search intervals; can exceed elapsed wall time",
+      "parallel_phases": [
+        {
+          "phase": "initial inference",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.487548828125,
+          "parent_rss_gb": 5.675727844238281,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 4 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.037151336669922,
+          "parent_rss_gb": 5.742992401123047,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 3 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.634857177734375,
+          "parent_rss_gb": 5.743091583251953,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 3 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.549224853515625,
+          "parent_rss_gb": 5.743175506591797,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 2 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.427745819091797,
+          "parent_rss_gb": 5.743221282958984,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 2 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.385623931884766,
+          "parent_rss_gb": 5.743263244628906,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 1 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.52090072631836,
+          "parent_rss_gb": 5.769355773925781,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1, scale 1 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.111434936523438,
+          "parent_rss_gb": 5.769397735595703,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 1 inference",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.323314666748047,
+          "parent_rss_gb": 5.9039764404296875,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 4 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.152427673339844,
+          "parent_rss_gb": 5.962802886962891,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 3 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.381706237792969,
+          "parent_rss_gb": 5.962837219238281,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 3 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.27078628540039,
+          "parent_rss_gb": 5.962837219238281,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 2 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.22256088256836,
+          "parent_rss_gb": 5.964439392089844,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 2 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.162216186523438,
+          "parent_rss_gb": 5.964439392089844,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 1 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.106681823730469,
+          "parent_rss_gb": 5.992668151855469,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2, scale 1 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.00295639038086,
+          "parent_rss_gb": 5.992668151855469,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 2 inference",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.260066986083984,
+          "parent_rss_gb": 5.997261047363281,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 4 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.05166244506836,
+          "parent_rss_gb": 6.040950775146484,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 3 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.302886962890625,
+          "parent_rss_gb": 6.040950775146484,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 3 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.242916107177734,
+          "parent_rss_gb": 6.040950775146484,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 2 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.191459655761719,
+          "parent_rss_gb": 6.025691986083984,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 2 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.0953369140625,
+          "parent_rss_gb": 6.025691986083984,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 1 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.218891143798828,
+          "parent_rss_gb": 6.025691986083984,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3, scale 1 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.115711212158203,
+          "parent_rss_gb": 6.025691986083984,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 3 inference",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.920803070068359,
+          "parent_rss_gb": 6.146900177001953,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 4 targets",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.891864776611328,
+          "parent_rss_gb": 6.146900177001953,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 3 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.25149154663086,
+          "parent_rss_gb": 6.146900177001953,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 3 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.02920150756836,
+          "parent_rss_gb": 6.146900177001953,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 2 targets",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.959255218505859,
+          "parent_rss_gb": 6.137947082519531,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 2 concentration",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.9619140625,
+          "parent_rss_gb": 6.137947082519531,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 1 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.131645202636719,
+          "parent_rss_gb": 6.137947082519531,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4, scale 1 concentration",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.08614730834961,
+          "parent_rss_gb": 6.137947082519531,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 4 inference",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.982105255126953,
+          "parent_rss_gb": 6.17816162109375,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 4 targets",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.849048614501953,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 3 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.180095672607422,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 3 concentration",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.943279266357422,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 2 targets",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.885784149169922,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 2 concentration",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.980125427246094,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 1 targets",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.041069030761719,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5, scale 1 concentration",
+          "workers": 6,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 7.994739532470703,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        },
+        {
+          "phase": "iteration 5 inference",
+          "workers": 7,
+          "requested_jobs": 8,
+          "cpu_limit": 8,
+          "memory_budget_gb": 14.0,
+          "available_gb": 8.02078628540039,
+          "parent_rss_gb": 6.212333679199219,
+          "estimated_private_gb_per_worker": 1.0,
+          "backend": "fork"
+        }
+      ],
+      "candidate_refits": 1200,
+      "depletion_coefficients": [
+        [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      ],
+      "graph": [
+        {
+          "scale": 1,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 1e-08
+        },
+        {
+          "scale": 1,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "breakfast",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "breakfast",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "dinner",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "dinner",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "lunch",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "lunch",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "breakfast",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "running",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 2,
+          "count_coefficient": 2.8131193089814635,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "gym",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": -0.0006695810932660461,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.025015417427755256
+        },
+        {
+          "scale": 1,
+          "target": "home",
+          "kind": "behavior",
+          "source": "home",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "home",
+          "kind": "behavior",
+          "source": "home",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": 0.5614674918464082,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "running",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "lunch",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.5199953834891438
+        },
+        {
+          "scale": 1,
+          "target": "napping",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "psychological_behavioural_capability",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "walking",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "psychological_behavioural_capability",
+          "kind": "behavior",
+          "source": "office_work",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "raining_or_snowing",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 1e-08
+        },
+        {
+          "scale": 1,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "running",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 1e-08
+        },
+        {
+          "scale": 1,
+          "target": "self_efficacy_belief_for_a_behaviour",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "shower",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "shower",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "sleep",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "meeting",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 2,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "suitable_for_outdoor",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "calm",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 1,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "calm",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.03434617053696889
+        },
+        {
+          "scale": 1,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "physical_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.01704995944930139
+        },
+        {
+          "scale": 1,
+          "target": "with_family",
+          "kind": "behavior",
+          "source": "home",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "action_planning",
+          "kind": "behavior",
+          "source": "alone",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "action_planning",
+          "kind": "behavior",
+          "source": "with_family",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "alone",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.0010972726997155184
+        },
+        {
+          "scale": 2,
+          "target": "anxious",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "anxious",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "breakfast",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "breakfast",
+          "kind": "behavior",
+          "source": "psychological_behavioural_capability",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cleaning",
+          "kind": "behavior",
+          "source": "breakfast",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cleaning",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "coping_planning",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "coping_planning",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cycling",
+          "kind": "behavior",
+          "source": "cycling",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "cycling",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "dinner",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "dinner",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "disposition_to_attend_to_one_s_goals",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "disposition_to_attend_to_one_s_goals",
+          "kind": "behavior",
+          "source": "meeting",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "eldercare",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "eldercare",
+          "kind": "behavior",
+          "source": "eldercare",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.03802531461132808
+        },
+        {
+          "scale": 2,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 2,
+          "count_coefficient": 2.8838854497478392,
+          "duration_coefficient": -0.014100450847483622
+        },
+        {
+          "scale": 2,
+          "target": "gaming",
+          "kind": "behavior",
+          "source": "public_park",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "gaming",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "going_out",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "going_out",
+          "kind": "behavior",
+          "source": "public_park",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "groceries",
+          "kind": "behavior",
+          "source": "cleaning",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "groceries",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "gym",
+          "kind": "behavior",
+          "source": "cycling",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "gym",
+          "kind": "behavior",
+          "source": "cycling",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "calm",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.04997534474987075
+        },
+        {
+          "scale": 2,
+          "target": "home",
+          "kind": "behavior",
+          "source": "alone",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "home",
+          "kind": "behavior",
+          "source": "home",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "with_family",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intend_to_walk",
+          "kind": "behavior",
+          "source": "alone",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intend_to_walk",
+          "kind": "behavior",
+          "source": "with_family",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": 0.01602534180015908
+        },
+        {
+          "scale": 2,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 2,
+          "count_coefficient": 2.6845097588701576,
+          "duration_coefficient": 0.0036081673675332107
+        },
+        {
+          "scale": 2,
+          "target": "journaling",
+          "kind": "behavior",
+          "source": "calm",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "journaling",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "laundry",
+          "kind": "behavior",
+          "source": "breakfast",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "laundry",
+          "kind": "behavior",
+          "source": "breakfast",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "low_self_efficacy",
+          "kind": "behavior",
+          "source": "low_self_efficacy",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "low_self_efficacy",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "lunch",
+          "kind": "behavior",
+          "source": "cleaning",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "lunch",
+          "kind": "behavior",
+          "source": "psychological_behavioural_capability",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "meeting",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "napping",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "napping",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "need_for_autonomy",
+          "kind": "behavior",
+          "source": "need_for_autonomy",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "need_for_autonomy",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "meeting",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "walking",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "habitual_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "physical_behavioural_opportunity",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "psychological_behavioural_capability",
+          "kind": "behavior",
+          "source": "psychological_behavioural_capability",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "psychological_behavioural_capability",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "raining_or_snowing",
+          "kind": "behavior",
+          "source": "suitable_for_outdoor",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "raining_or_snowing",
+          "kind": "behavior",
+          "source": "suitable_for_outdoor",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "running",
+          "kind": "behavior",
+          "source": "meeting",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "running",
+          "kind": "behavior",
+          "source": "running",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "self_efficacy_belief_for_a_behaviour",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "self_efficacy_belief_for_a_behaviour",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "shower",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "shower",
+          "kind": "behavior",
+          "source": "dinner",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "sleep",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "sleep",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "drink_water",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "napping",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "shower",
+          "lag": 2,
+          "count_coefficient": 1.2285458823307034,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 3.0,
+          "duration_coefficient": -0.027321002384325967
+        },
+        {
+          "scale": 2,
+          "target": "study_reading",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "study_reading",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "studying",
+          "kind": "behavior",
+          "source": "breakfast",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "studying",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "suitable_for_outdoor",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "suitable_for_outdoor",
+          "kind": "behavior",
+          "source": "suitable_for_outdoor",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "swimming",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "swimming",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "lunch",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "physical_behavioural_opportunity",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "walking",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "with_family",
+          "kind": "behavior",
+          "source": "alone",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "with_family",
+          "kind": "behavior",
+          "source": "with_family",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "workplace",
+          "kind": "behavior",
+          "source": "hungry",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "workplace",
+          "kind": "behavior",
+          "source": "psychological_behavioural_capability",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "yoga",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 2,
+          "target": "yoga",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "action_planning",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.009049444974691135,
+          "duration_coefficient": -0.02662582898672966
+        },
+        {
+          "scale": 3,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 2,
+          "count_coefficient": 0.026477606022827147,
+          "duration_coefficient": 0.005342069044231121
+        },
+        {
+          "scale": 3,
+          "target": "anxious",
+          "kind": "behavior",
+          "source": "anxious",
+          "lag": 1,
+          "count_coefficient": -0.31350296516038584,
+          "duration_coefficient": -0.07666965807430845
+        },
+        {
+          "scale": 3,
+          "target": "anxious",
+          "kind": "behavior",
+          "source": "anxious",
+          "lag": 2,
+          "count_coefficient": 0.1820647883120466,
+          "duration_coefficient": -0.13256279950719077
+        },
+        {
+          "scale": 3,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.004293945482304953,
+          "duration_coefficient": -0.10767944558889944
+        },
+        {
+          "scale": 3,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": -0.048671193405227776,
+          "duration_coefficient": -0.015899197252033526
+        },
+        {
+          "scale": 3,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 2,
+          "count_coefficient": 0.061365660651546465,
+          "duration_coefficient": 0.012473904615379172
+        },
+        {
+          "scale": 3,
+          "target": "cleaning",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": -0.5459732714386127,
+          "duration_coefficient": -0.0010232726464078099
+        },
+        {
+          "scale": 3,
+          "target": "cleaning",
+          "kind": "behavior",
+          "source": "groceries",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": 0.32761675886812397,
+          "duration_coefficient": -0.04991536420100315
+        },
+        {
+          "scale": 3,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "visit_friends_or_family",
+          "lag": 1,
+          "count_coefficient": -0.01428846519079858,
+          "duration_coefficient": 0.05598846109840875
+        },
+        {
+          "scale": 3,
+          "target": "coping_planning",
+          "kind": "behavior",
+          "source": "coping_planning",
+          "lag": 2,
+          "count_coefficient": -0.27506074256282026,
+          "duration_coefficient": 0.011750235693661756
+        },
+        {
+          "scale": 3,
+          "target": "coping_planning",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 2,
+          "count_coefficient": 0.22740445557129926,
+          "duration_coefficient": 0.026695114780526236
+        },
+        {
+          "scale": 3,
+          "target": "cycling",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.24612891123664973,
+          "duration_coefficient": -0.04581222393636992
+        },
+        {
+          "scale": 3,
+          "target": "cycling",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "disposition_to_attend_to_one_s_goals",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.04515030120291479,
+          "duration_coefficient": -0.08985061829206707
+        },
+        {
+          "scale": 3,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 2,
+          "count_coefficient": 0.030411017558120843,
+          "duration_coefficient": -0.0008208968811412392
+        },
+        {
+          "scale": 3,
+          "target": "eldercare",
+          "kind": "behavior",
+          "source": "eldercare",
+          "lag": 1,
+          "count_coefficient": -0.1023205714211207,
+          "duration_coefficient": -0.003110055693420964
+        },
+        {
+          "scale": 3,
+          "target": "eldercare",
+          "kind": "behavior",
+          "source": "eldercare",
+          "lag": 2,
+          "count_coefficient": 0.12699330193580113,
+          "duration_coefficient": 0.0008685998236578303
+        },
+        {
+          "scale": 3,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": 0.0022185781294067576,
+          "duration_coefficient": 0.00812297549831816
+        },
+        {
+          "scale": 3,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 2,
+          "count_coefficient": 0.05238104193526524,
+          "duration_coefficient": -0.0012822135333303048
+        },
+        {
+          "scale": 3,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 2,
+          "count_coefficient": 0.010203898555367215,
+          "duration_coefficient": -0.0024930937593637334
+        },
+        {
+          "scale": 3,
+          "target": "gaming",
+          "kind": "behavior",
+          "source": "reading",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "gaming",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "going_out",
+          "kind": "behavior",
+          "source": "cleaning",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "going_out",
+          "kind": "behavior",
+          "source": "snacking",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "groceries",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": 0.18764054132660254,
+          "duration_coefficient": 0.03757888731934434
+        },
+        {
+          "scale": 3,
+          "target": "groceries",
+          "kind": "behavior",
+          "source": "walking",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "gym",
+          "kind": "behavior",
+          "source": "laundry",
+          "lag": 2,
+          "count_coefficient": 1.981740543548442,
+          "duration_coefficient": 0.01084283213243633
+        },
+        {
+          "scale": 3,
+          "target": "gym",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.03365826631967472,
+          "duration_coefficient": -0.03273547584738152
+        },
+        {
+          "scale": 3,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "social_behavioural_opportunity",
+          "lag": 2,
+          "count_coefficient": 0.010969766769153011,
+          "duration_coefficient": 0.007164766739520656
+        },
+        {
+          "scale": 3,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.09240666988106556,
+          "duration_coefficient": -0.08581341574129149
+        },
+        {
+          "scale": 3,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.053146618550165746,
+          "duration_coefficient": 0.06519320533436071
+        },
+        {
+          "scale": 3,
+          "target": "home",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.07206485130074407,
+          "duration_coefficient": -0.0219894942045096
+        },
+        {
+          "scale": 3,
+          "target": "intend_to_walk",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.028618670394400827,
+          "duration_coefficient": -0.03602041535345345
+        },
+        {
+          "scale": 3,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_not_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.18503094127756178,
+          "duration_coefficient": 0.08303081510714107
+        },
+        {
+          "scale": 3,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_not_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.08874817044701643,
+          "duration_coefficient": -0.019338649206934552
+        },
+        {
+          "scale": 3,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.01609513798742004,
+          "duration_coefficient": -0.060736322858369225
+        },
+        {
+          "scale": 3,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 2,
+          "count_coefficient": -0.05707545391981476,
+          "duration_coefficient": -0.008657133933501718
+        },
+        {
+          "scale": 3,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.15378435534920093,
+          "duration_coefficient": 0.004026868787982929
+        },
+        {
+          "scale": 3,
+          "target": "journaling",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.06667228334782818,
+          "duration_coefficient": -0.08100078595242163
+        },
+        {
+          "scale": 3,
+          "target": "journaling",
+          "kind": "behavior",
+          "source": "visit_friends_or_family",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "laundry",
+          "kind": "behavior",
+          "source": "groceries",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "laundry",
+          "kind": "behavior",
+          "source": "laundry",
+          "lag": 2,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 1,
+          "count_coefficient": 0.033733087428189146,
+          "duration_coefficient": 0.04347651009240984
+        },
+        {
+          "scale": 3,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.06285044748218603,
+          "duration_coefficient": -0.0453318111685134
+        },
+        {
+          "scale": 3,
+          "target": "low_self_efficacy",
+          "kind": "behavior",
+          "source": "low_self_efficacy",
+          "lag": 1,
+          "count_coefficient": -0.05365275934758751,
+          "duration_coefficient": 0.031037096996312866
+        },
+        {
+          "scale": 3,
+          "target": "low_self_efficacy",
+          "kind": "behavior",
+          "source": "low_self_efficacy",
+          "lag": 2,
+          "count_coefficient": -0.021378879439411264,
+          "duration_coefficient": -0.02431954870749366
+        },
+        {
+          "scale": 3,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.3291181648705226,
+          "duration_coefficient": -0.005665823962055578
+        },
+        {
+          "scale": 3,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "need_for_autonomy",
+          "kind": "behavior",
+          "source": "need_for_autonomy",
+          "lag": 1,
+          "count_coefficient": -0.10615649243174408,
+          "duration_coefficient": -0.053767910554379274
+        },
+        {
+          "scale": 3,
+          "target": "need_for_autonomy",
+          "kind": "behavior",
+          "source": "need_for_autonomy",
+          "lag": 2,
+          "count_coefficient": 0.020906793968225687,
+          "duration_coefficient": 0.02597494189980764
+        },
+        {
+          "scale": 3,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.340376794039023,
+          "duration_coefficient": 0.0037150884868741353
+        },
+        {
+          "scale": 3,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "yoga",
+          "lag": 1,
+          "count_coefficient": 0.40212496876471404,
+          "duration_coefficient": -0.010352162820723343
+        },
+        {
+          "scale": 3,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "energetic",
+          "lag": 2,
+          "count_coefficient": -0.000158187991182566,
+          "duration_coefficient": 0.0034121533990651397
+        },
+        {
+          "scale": 3,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.0138149590390339,
+          "duration_coefficient": -0.014343569045285743
+        },
+        {
+          "scale": 3,
+          "target": "psychological_behavioural_capability",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.023650328192289773,
+          "duration_coefficient": -0.011345965489104421
+        },
+        {
+          "scale": 3,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "reading",
+          "lag": 2,
+          "count_coefficient": -0.2895398858034442,
+          "duration_coefficient": -0.0003665148967679689
+        },
+        {
+          "scale": 3,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 2,
+          "count_coefficient": -0.11336922520844926,
+          "duration_coefficient": -0.016771194531218638
+        },
+        {
+          "scale": 3,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "public_park",
+          "lag": 2,
+          "count_coefficient": -0.0517244886019575,
+          "duration_coefficient": -0.03704213708455153
+        },
+        {
+          "scale": 3,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "study_reading",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "running",
+          "kind": "behavior",
+          "source": "laundry",
+          "lag": 2,
+          "count_coefficient": 2.000822288904071,
+          "duration_coefficient": -0.002401819332975686
+        },
+        {
+          "scale": 3,
+          "target": "running",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "self_efficacy_belief_for_a_behaviour",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.004193903608366644,
+          "duration_coefficient": -0.012985265751289206
+        },
+        {
+          "scale": 3,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "gaming",
+          "lag": 1,
+          "count_coefficient": -0.24961741183529315,
+          "duration_coefficient": -0.03072649986621727
+        },
+        {
+          "scale": 3,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.002518583427785142,
+          "duration_coefficient": -0.011805920970042232
+        },
+        {
+          "scale": 3,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.007690576929661639,
+          "duration_coefficient": 0.006574428397608871
+        },
+        {
+          "scale": 3,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -3.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": -0.01944185310608189,
+          "duration_coefficient": 0.01765145974551984
+        },
+        {
+          "scale": 3,
+          "target": "study_reading",
+          "kind": "behavior",
+          "source": "reading",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "study_reading",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "studying",
+          "kind": "behavior",
+          "source": "reading",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "studying",
+          "kind": "behavior",
+          "source": "snacking",
+          "lag": 1,
+          "count_coefficient": 0.3300749951153345,
+          "duration_coefficient": -0.00851339478084842
+        },
+        {
+          "scale": 3,
+          "target": "swimming",
+          "kind": "behavior",
+          "source": "going_out",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "swimming",
+          "kind": "behavior",
+          "source": "running",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": 0.00552793634235962,
+          "duration_coefficient": -0.04114753626588386
+        },
+        {
+          "scale": 3,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "going_out",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "gym",
+          "lag": 2,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.16883053817112517,
+          "duration_coefficient": -0.05430157846422271
+        },
+        {
+          "scale": 3,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "walking",
+          "lag": 1,
+          "count_coefficient": 0.10715025417918046,
+          "duration_coefficient": 0.04932854292560177
+        },
+        {
+          "scale": 3,
+          "target": "with_family",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": -0.07523713106090357,
+          "duration_coefficient": -0.028355821388355254
+        },
+        {
+          "scale": 3,
+          "target": "workplace",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 2,
+          "count_coefficient": 0.17668221803623424,
+          "duration_coefficient": -0.011319577833641929
+        },
+        {
+          "scale": 3,
+          "target": "workplace",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": 0.05388020891574267,
+          "duration_coefficient": -0.015867849428895422
+        },
+        {
+          "scale": 3,
+          "target": "yoga",
+          "kind": "behavior",
+          "source": "gym",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 3,
+          "target": "yoga",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.0,
+          "duration_coefficient": 0.0
+        },
+        {
+          "scale": 4,
+          "target": "action_planning",
+          "kind": "behavior",
+          "source": "action_planning",
+          "lag": 1,
+          "count_coefficient": -0.2138882313606523,
+          "duration_coefficient": -0.11630878185930962
+        },
+        {
+          "scale": 4,
+          "target": "alone",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.04463836470851894,
+          "duration_coefficient": 0.12892649909732054
+        },
+        {
+          "scale": 4,
+          "target": "anxious",
+          "kind": "behavior",
+          "source": "anxious",
+          "lag": 1,
+          "count_coefficient": -0.29392387573283196,
+          "duration_coefficient": -0.2796570053126632
+        },
+        {
+          "scale": 4,
+          "target": "breakfast",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 1,
+          "count_coefficient": 0.08006083865211192,
+          "duration_coefficient": 0.07521488967935196
+        },
+        {
+          "scale": 4,
+          "target": "calm",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": 0.2558555666000639,
+          "duration_coefficient": 0.1450851586946299
+        },
+        {
+          "scale": 4,
+          "target": "childcare",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": -0.37359660962436053,
+          "duration_coefficient": 0.05907321244696562
+        },
+        {
+          "scale": 4,
+          "target": "cleaning",
+          "kind": "behavior",
+          "source": "cleaning",
+          "lag": 1,
+          "count_coefficient": 0.22036787520358514,
+          "duration_coefficient": 0.12778123774426947
+        },
+        {
+          "scale": 4,
+          "target": "cooking",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": -0.19217981015945826,
+          "duration_coefficient": -0.25268153840272783
+        },
+        {
+          "scale": 4,
+          "target": "coping_planning",
+          "kind": "behavior",
+          "source": "coping_planning",
+          "lag": 1,
+          "count_coefficient": -0.2642920000649385,
+          "duration_coefficient": -0.15948561936822056
+        },
+        {
+          "scale": 4,
+          "target": "cycling",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": 0.0016976473917498583,
+          "duration_coefficient": -0.11786785212822723
+        },
+        {
+          "scale": 4,
+          "target": "dinner",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 1,
+          "count_coefficient": 0.21776890921835057,
+          "duration_coefficient": -0.09919769425316688
+        },
+        {
+          "scale": 4,
+          "target": "disposition_to_attend_to_one_s_goals",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 1,
+          "count_coefficient": -0.1843052657557184,
+          "duration_coefficient": -0.08040429909452425
+        },
+        {
+          "scale": 4,
+          "target": "drink_water",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": 0.04802121596207675,
+          "duration_coefficient": 0.021240533253292455
+        },
+        {
+          "scale": 4,
+          "target": "eldercare",
+          "kind": "behavior",
+          "source": "eldercare",
+          "lag": 1,
+          "count_coefficient": -0.5520204711653217,
+          "duration_coefficient": -0.3560595440944953
+        },
+        {
+          "scale": 4,
+          "target": "energetic",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.15426794382147685,
+          "duration_coefficient": 0.2742637559002229
+        },
+        {
+          "scale": 4,
+          "target": "external_regulation",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.05136503554624456,
+          "duration_coefficient": -0.04788640163131966
+        },
+        {
+          "scale": 4,
+          "target": "gaming",
+          "kind": "behavior",
+          "source": "study_reading",
+          "lag": 1,
+          "count_coefficient": 0.3683205815473142,
+          "duration_coefficient": -0.12842557711507038
+        },
+        {
+          "scale": 4,
+          "target": "going_out",
+          "kind": "behavior",
+          "source": "tired",
+          "lag": 1,
+          "count_coefficient": -0.45949064991830685,
+          "duration_coefficient": 0.1044745835439592
+        },
+        {
+          "scale": 4,
+          "target": "groceries",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": -0.1983465830021623,
+          "duration_coefficient": -0.04524374227765716
+        },
+        {
+          "scale": 4,
+          "target": "gym",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 2.0739397955358077,
+          "duration_coefficient": -0.14505309862746413
+        },
+        {
+          "scale": 4,
+          "target": "habitual_behaviour",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": -0.09239524352968538,
+          "duration_coefficient": -0.024793086893061766
+        },
+        {
+          "scale": 4,
+          "target": "happy",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.25191350185565864,
+          "duration_coefficient": -0.11233560697305937
+        },
+        {
+          "scale": 4,
+          "target": "home",
+          "kind": "behavior",
+          "source": "study_reading",
+          "lag": 1,
+          "count_coefficient": 0.03553471907554441,
+          "duration_coefficient": -0.033296876561490524
+        },
+        {
+          "scale": 4,
+          "target": "hungry",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 1,
+          "count_coefficient": 0.09421206111983456,
+          "duration_coefficient": 0.09169269048362709
+        },
+        {
+          "scale": 4,
+          "target": "intend_to_walk",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": 0.15195245253243808,
+          "duration_coefficient": 0.3249645248437465
+        },
+        {
+          "scale": 4,
+          "target": "intention_not_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "intention_not_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.09693234322917382,
+          "duration_coefficient": -0.07074974905315634
+        },
+        {
+          "scale": 4,
+          "target": "intention_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "yoga",
+          "lag": 1,
+          "count_coefficient": -0.018575106640856397,
+          "duration_coefficient": -0.039055685016673725
+        },
+        {
+          "scale": 4,
+          "target": "intrinsic_motivation",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.06855301720579121,
+          "duration_coefficient": 0.23027800173528576
+        },
+        {
+          "scale": 4,
+          "target": "journaling",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": 0.1099549121303392,
+          "duration_coefficient": -0.1006616775580787
+        },
+        {
+          "scale": 4,
+          "target": "laundry",
+          "kind": "behavior",
+          "source": "childcare",
+          "lag": 1,
+          "count_coefficient": 0.13887880548489823,
+          "duration_coefficient": -0.003187772983822749
+        },
+        {
+          "scale": 4,
+          "target": "low_physical_opportunity_to_enact_a_behaviour",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": -0.8783180956563368,
+          "duration_coefficient": -0.2703330553367566
+        },
+        {
+          "scale": 4,
+          "target": "low_self_efficacy",
+          "kind": "behavior",
+          "source": "low_self_efficacy",
+          "lag": 1,
+          "count_coefficient": 0.099397702487577,
+          "duration_coefficient": -0.039993400848998564
+        },
+        {
+          "scale": 4,
+          "target": "lunch",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 1,
+          "count_coefficient": 0.1001876916471653,
+          "duration_coefficient": 0.14410662859505424
+        },
+        {
+          "scale": 4,
+          "target": "meeting",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": -0.06846285649407115,
+          "duration_coefficient": -0.033980887940540855
+        },
+        {
+          "scale": 4,
+          "target": "napping",
+          "kind": "behavior",
+          "source": "sleep",
+          "lag": 1,
+          "count_coefficient": 0.24600204022248393,
+          "duration_coefficient": 0.056652968231785804
+        },
+        {
+          "scale": 4,
+          "target": "need_for_autonomy",
+          "kind": "behavior",
+          "source": "need_for_autonomy",
+          "lag": 1,
+          "count_coefficient": -0.09678065101587563,
+          "duration_coefficient": -0.029054681131415672
+        },
+        {
+          "scale": 4,
+          "target": "office_work",
+          "kind": "behavior",
+          "source": "office_work",
+          "lag": 1,
+          "count_coefficient": 0.04192381750180202,
+          "duration_coefficient": 0.007637428159614307
+        },
+        {
+          "scale": 4,
+          "target": "physical_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.021750284625535445,
+          "duration_coefficient": 0.10939282721304777
+        },
+        {
+          "scale": 4,
+          "target": "psychological_behavioural_capability",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": 0.40333821149908095,
+          "duration_coefficient": 0.11809628939208108
+        },
+        {
+          "scale": 4,
+          "target": "public_park",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.33867601592523505,
+          "duration_coefficient": -0.1369179228674511
+        },
+        {
+          "scale": 4,
+          "target": "reading",
+          "kind": "behavior",
+          "source": "low_physical_opportunity_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": -0.005959643923306529,
+          "duration_coefficient": -0.11155752301871734
+        },
+        {
+          "scale": 4,
+          "target": "running",
+          "kind": "behavior",
+          "source": "intention_to_enact_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 1.4948424500083604,
+          "duration_coefficient": -0.08467543166366708
+        },
+        {
+          "scale": 4,
+          "target": "self_efficacy_belief_for_a_behaviour",
+          "kind": "behavior",
+          "source": "self_efficacy_belief_for_a_behaviour",
+          "lag": 1,
+          "count_coefficient": 0.014480099859192422,
+          "duration_coefficient": 0.21263033038428106
+        },
+        {
+          "scale": 4,
+          "target": "shower",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 1,
+          "count_coefficient": 0.12951847636775657,
+          "duration_coefficient": 0.06609634789091667
+        },
+        {
+          "scale": 4,
+          "target": "sleep",
+          "kind": "behavior",
+          "source": "cooking",
+          "lag": 1,
+          "count_coefficient": 0.13879006671905006,
+          "duration_coefficient": 0.026487485779821355
+        },
+        {
+          "scale": 4,
+          "target": "snacking",
+          "kind": "behavior",
+          "source": "studying",
+          "lag": 1,
+          "count_coefficient": 0.36230524964321614,
+          "duration_coefficient": 0.15174817472080798
+        },
+        {
+          "scale": 4,
+          "target": "social_behavioural_opportunity",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.13257681680862077,
+          "duration_coefficient": 0.14082419614660033
+        },
+        {
+          "scale": 4,
+          "target": "socialising",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.9511987115403319,
+          "duration_coefficient": 0.5124745031889735
+        },
+        {
+          "scale": 4,
+          "target": "stress_episode",
+          "kind": "behavior",
+          "source": "cleaning",
+          "lag": 1,
+          "count_coefficient": 0.07507464224746825,
+          "duration_coefficient": 0.021875991224549522
+        },
+        {
+          "scale": 4,
+          "target": "study_reading",
+          "kind": "behavior",
+          "source": "study_reading",
+          "lag": 1,
+          "count_coefficient": 0.16104450548150182,
+          "duration_coefficient": -0.06506005699304666
+        },
+        {
+          "scale": 4,
+          "target": "studying",
+          "kind": "behavior",
+          "source": "study_reading",
+          "lag": 1,
+          "count_coefficient": 0.32211238316779917,
+          "duration_coefficient": 0.09401807514765348
+        },
+        {
+          "scale": 4,
+          "target": "swimming",
+          "kind": "behavior",
+          "source": "intend_to_walk",
+          "lag": 1,
+          "count_coefficient": 0.048190037734966676,
+          "duration_coefficient": 0.09804216523526442
+        },
+        {
+          "scale": 4,
+          "target": "tired",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": -0.1830388839724373,
+          "duration_coefficient": -0.21394747323661772
+        },
+        {
+          "scale": 4,
+          "target": "visit_friends_or_family",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.4561526237742972,
+          "duration_coefficient": 0.050617964589790586
+        },
+        {
+          "scale": 4,
+          "target": "walking",
+          "kind": "behavior",
+          "source": "socialising",
+          "lag": 1,
+          "count_coefficient": 0.059057902972990226,
+          "duration_coefficient": 0.1541719672433495
+        },
+        {
+          "scale": 4,
+          "target": "with_family",
+          "kind": "behavior",
+          "source": "journaling",
+          "lag": 1,
+          "count_coefficient": -0.25406567896568055,
+          "duration_coefficient": -0.13006835307574305
+        },
+        {
+          "scale": 4,
+          "target": "workplace",
+          "kind": "behavior",
+          "source": "workplace",
+          "lag": 1,
+          "count_coefficient": -0.2484025117527969,
+          "duration_coefficient": -0.07272979586585995
+        },
+        {
+          "scale": 4,
+          "target": "yoga",
+          "kind": "behavior",
+          "source": "swimming",
+          "lag": 1,
+          "count_coefficient": -0.42427851209034184,
+          "duration_coefficient": -0.34130565959284853
+        }
+      ],
+      "lag_l1_count": [
+        [
+          0,
+          6.0,
+          0,
+          0.0,
+          0.0,
+          0.0,
+          0,
+          3.0,
+          0,
+          0,
+          0.0,
+          0,
+          6.0,
+          0,
+          3.0,
+          5.813119308981463,
+          0,
+          0,
+          0,
+          0,
+          3.0,
+          3.000669581093266,
+          0.0,
+          0.5614674918464082,
+          0,
+          0.0,
+          3.0,
+          6.0,
+          0,
+          0,
+          3.0,
+          0,
+          0.0,
+          3.0,
+          0.0,
+          0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          3.0,
+          6.0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          3.0,
+          3.0,
+          3.0,
+          0,
+          0,
+          3.0,
+          0,
+          0.0,
+          3.0,
+          6.0,
+          3.0,
+          0,
+          0
+        ],
+        [
+          3.0,
+          3.0,
+          0.0,
+          3.0,
+          0.0,
+          6.0,
+          3.0,
+          0.0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          3.0,
+          6.0,
+          0.0,
+          5.883885449747839,
+          0.0,
+          3.0,
+          6.0,
+          6.0,
+          0.0,
+          6.0,
+          3.0,
+          6.0,
+          3.0,
+          0.0,
+          0.0,
+          5.684509758870158,
+          0.0,
+          0.0,
+          3.0,
+          3.0,
+          3.0,
+          0.0,
+          6.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          6.0,
+          0.0,
+          0.0,
+          0.0,
+          6.0,
+          3.0,
+          0.0,
+          0.0,
+          4.228545882330703,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          3.0,
+          0.0,
+          0.0,
+          3.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.009049444974691135,
+          0.026477606022827147,
+          0.4955677534724324,
+          0,
+          0.004293945482304953,
+          0.11003685405677424,
+          0.5459732714386127,
+          0.34190522405892254,
+          0.5024651981341195,
+          0.24612891123664973,
+          0,
+          0.04515030120291479,
+          0.030411017558120843,
+          0.22931387335692183,
+          0.054599620064672,
+          0.010203898555367215,
+          0.0,
+          3.0,
+          3.1876405413266027,
+          4.981740543548442,
+          0.044628033088827734,
+          0.1455532884312313,
+          0.0,
+          0.07206485130074407,
+          0.028618670394400827,
+          0.2737791117245782,
+          0.01609513798742004,
+          0.21085980926901568,
+          0.06667228334782818,
+          3.0,
+          0.09658353491037518,
+          0.07503163878699877,
+          0,
+          0.3291181648705226,
+          0,
+          0.12706328639996978,
+          0.742501762803737,
+          0.013973147030216465,
+          0.023650328192289773,
+          0.4029091110118935,
+          0,
+          0.0517244886019575,
+          5.000822288904072,
+          0.004193903608366644,
+          0,
+          0,
+          0.24961741183529315,
+          0.01020916035744678,
+          3.0,
+          0.01944185310608189,
+          0.0,
+          0.3300749951153345,
+          0,
+          0.0,
+          0.00552793634235962,
+          0.0,
+          0.27598079235030565,
+          0.07523713106090357,
+          0.2305624269519769,
+          0.0
+        ],
+        [
+          0.2138882313606523,
+          0.04463836470851894,
+          0.29392387573283196,
+          0.08006083865211192,
+          0.2558555666000639,
+          0.37359660962436053,
+          0.22036787520358514,
+          0.19217981015945826,
+          0.2642920000649385,
+          0.0016976473917498583,
+          0.21776890921835057,
+          0.1843052657557184,
+          0.04802121596207675,
+          0.5520204711653217,
+          0.15426794382147685,
+          0.05136503554624456,
+          0.3683205815473142,
+          0.45949064991830685,
+          0.1983465830021623,
+          2.0739397955358077,
+          0.09239524352968538,
+          0.25191350185565864,
+          0.03553471907554441,
+          0.09421206111983456,
+          0.15195245253243808,
+          0.09693234322917382,
+          0.018575106640856397,
+          0.06855301720579121,
+          0.1099549121303392,
+          0.13887880548489823,
+          0.8783180956563368,
+          0.099397702487577,
+          0.1001876916471653,
+          0.06846285649407115,
+          0.24600204022248393,
+          0.09678065101587563,
+          0.04192381750180202,
+          0.021750284625535445,
+          0.40333821149908095,
+          0.33867601592523505,
+          0,
+          0.005959643923306529,
+          1.4948424500083604,
+          0.014480099859192422,
+          0.12951847636775657,
+          0.13879006671905006,
+          0.36230524964321614,
+          0.13257681680862077,
+          0.9511987115403319,
+          0.07507464224746825,
+          0.16104450548150182,
+          0.32211238316779917,
+          0,
+          0.048190037734966676,
+          0.1830388839724373,
+          0.4561526237742972,
+          0.059057902972990226,
+          0.25406567896568055,
+          0.2484025117527969,
+          0.42427851209034184
+        ]
+      ],
+      "factor_spectral_radius": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.8790364670401979,
+          0.9714103186681041
+        ]
+      ]
+    },
+    "validation": {
+      "selection": "external count-graph search; duration-specific typed rules not evaluated"
+    },
+    "manifest": [
+      {
+        "source": "gym",
+        "target": "gym",
+        "lag": 7,
+        "source_quantity": "count",
+        "target_quantity": "episodes",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": false,
+        "reason": "grouped count changed, cross-quantity, maximum-duration functional, missing label, or lag outside search",
+        "selected_label_relation": false,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      },
+      {
+        "source": "meeting",
+        "target": "journaling",
+        "lag": 1,
+        "source_quantity": "count",
+        "target_quantity": "duration",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": false,
+        "reason": "grouped count changed, cross-quantity, maximum-duration functional, missing label, or lag outside search",
+        "selected_label_relation": false,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      },
+      {
+        "source": "office_work",
+        "target": "sleep",
+        "lag": 1,
+        "source_quantity": "total_duration",
+        "target_quantity": "duration",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": true,
+        "reason": "same-quantity log predictor in lag bound",
+        "selected_label_relation": false,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      },
+      {
+        "source": "running",
+        "target": "yoga",
+        "lag": 1,
+        "source_quantity": "count",
+        "target_quantity": "episodes",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": true,
+        "reason": "same-quantity log predictor in lag bound",
+        "selected_label_relation": false,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      },
+      {
+        "source": "sleep",
+        "target": "walking",
+        "lag": 1,
+        "source_quantity": "max_duration",
+        "target_quantity": "episodes",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": false,
+        "reason": "grouped count changed, cross-quantity, maximum-duration functional, missing label, or lag outside search",
+        "selected_label_relation": false,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      },
+      {
+        "source": "walking",
+        "target": "walking",
+        "lag": 1,
+        "source_quantity": "count",
+        "target_quantity": "episodes",
+        "observation_definition": "coincident-annotation-groups-v1",
+        "count_quantity_changed_by_grouping": false,
+        "expressible": true,
+        "reason": "same-quantity log predictor in lag bound",
+        "selected_label_relation": true,
+        "interpretation": "label-level correspondence; inspect fitted channel coefficient before any typed recovery claim"
+      }
+    ],
+    "observation_definition": "coincident-annotation-groups-v1",
+    "stationary_target_edges": [
+      {
+        "scale": 1,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 1e-08
+      },
+      {
+        "scale": 1,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "breakfast",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "breakfast",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "dinner",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "dinner",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "lunch",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "lunch",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 2,
+        "count_coefficient": 2.8131193089814635,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "gym",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 1,
+        "count_coefficient": 0.5614674918464082,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "running",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "shower",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "lunch",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "napping",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "walking",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "psychological_behavioural_capability",
+        "kind": "behavior",
+        "source": "office_work",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "raining_or_snowing",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 1e-08
+      },
+      {
+        "scale": 1,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "self_efficacy_belief_for_a_behaviour",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "shower",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "shower",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "meeting",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 2,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "suitable_for_outdoor",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "calm",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 1,
+        "target": "with_family",
+        "kind": "behavior",
+        "source": "home",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "action_planning",
+        "kind": "behavior",
+        "source": "alone",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "action_planning",
+        "kind": "behavior",
+        "source": "with_family",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "alone",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": -0.0010972726997155184
+      },
+      {
+        "scale": 2,
+        "target": "anxious",
+        "kind": "behavior",
+        "source": "intend_to_walk",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "anxious",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "breakfast",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "breakfast",
+        "kind": "behavior",
+        "source": "psychological_behavioural_capability",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "cleaning",
+        "kind": "behavior",
+        "source": "breakfast",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "cleaning",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "coping_planning",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "coping_planning",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "cycling",
+        "kind": "behavior",
+        "source": "cycling",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "cycling",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "dinner",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "dinner",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "disposition_to_attend_to_one_s_goals",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "disposition_to_attend_to_one_s_goals",
+        "kind": "behavior",
+        "source": "meeting",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "eldercare",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "eldercare",
+        "kind": "behavior",
+        "source": "eldercare",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": -0.03802531461132808
+      },
+      {
+        "scale": 2,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 2,
+        "count_coefficient": 2.8838854497478392,
+        "duration_coefficient": -0.014100450847483622
+      },
+      {
+        "scale": 2,
+        "target": "gaming",
+        "kind": "behavior",
+        "source": "public_park",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "gaming",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "going_out",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "going_out",
+        "kind": "behavior",
+        "source": "public_park",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "groceries",
+        "kind": "behavior",
+        "source": "cleaning",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "groceries",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "with_family",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intend_to_walk",
+        "kind": "behavior",
+        "source": "alone",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intend_to_walk",
+        "kind": "behavior",
+        "source": "with_family",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intend_to_walk",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": 0.01602534180015908
+      },
+      {
+        "scale": 2,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 2,
+        "count_coefficient": 2.6845097588701576,
+        "duration_coefficient": 0.0036081673675332107
+      },
+      {
+        "scale": 2,
+        "target": "laundry",
+        "kind": "behavior",
+        "source": "breakfast",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "laundry",
+        "kind": "behavior",
+        "source": "breakfast",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "low_self_efficacy",
+        "kind": "behavior",
+        "source": "low_self_efficacy",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "low_self_efficacy",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "lunch",
+        "kind": "behavior",
+        "source": "cleaning",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "lunch",
+        "kind": "behavior",
+        "source": "psychological_behavioural_capability",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "napping",
+        "kind": "behavior",
+        "source": "drink_water",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "napping",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "need_for_autonomy",
+        "kind": "behavior",
+        "source": "need_for_autonomy",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "need_for_autonomy",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "habitual_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "physical_behavioural_opportunity",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "psychological_behavioural_capability",
+        "kind": "behavior",
+        "source": "psychological_behavioural_capability",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "psychological_behavioural_capability",
+        "kind": "behavior",
+        "source": "studying",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "raining_or_snowing",
+        "kind": "behavior",
+        "source": "suitable_for_outdoor",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "raining_or_snowing",
+        "kind": "behavior",
+        "source": "suitable_for_outdoor",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "shower",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "self_efficacy_belief_for_a_behaviour",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "self_efficacy_belief_for_a_behaviour",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "shower",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "shower",
+        "kind": "behavior",
+        "source": "dinner",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "studying",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "shower",
+        "lag": 2,
+        "count_coefficient": 1.2285458823307034,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 3.0,
+        "duration_coefficient": -0.027321002384325967
+      },
+      {
+        "scale": 2,
+        "target": "study_reading",
+        "kind": "behavior",
+        "source": "hungry",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "study_reading",
+        "kind": "behavior",
+        "source": "studying",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "studying",
+        "kind": "behavior",
+        "source": "breakfast",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "studying",
+        "kind": "behavior",
+        "source": "studying",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "suitable_for_outdoor",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "suitable_for_outdoor",
+        "kind": "behavior",
+        "source": "suitable_for_outdoor",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "lunch",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "swimming",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "with_family",
+        "kind": "behavior",
+        "source": "alone",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 2,
+        "target": "with_family",
+        "kind": "behavior",
+        "source": "with_family",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "action_planning",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.009049444974691135,
+        "duration_coefficient": -0.02662582898672966
+      },
+      {
+        "scale": 3,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 2,
+        "count_coefficient": 0.026477606022827147,
+        "duration_coefficient": 0.005342069044231121
+      },
+      {
+        "scale": 3,
+        "target": "anxious",
+        "kind": "behavior",
+        "source": "anxious",
+        "lag": 1,
+        "count_coefficient": -0.31350296516038584,
+        "duration_coefficient": -0.07666965807430845
+      },
+      {
+        "scale": 3,
+        "target": "anxious",
+        "kind": "behavior",
+        "source": "anxious",
+        "lag": 2,
+        "count_coefficient": 0.1820647883120466,
+        "duration_coefficient": -0.13256279950719077
+      },
+      {
+        "scale": 3,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 1,
+        "count_coefficient": -0.048671193405227776,
+        "duration_coefficient": -0.015899197252033526
+      },
+      {
+        "scale": 3,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 2,
+        "count_coefficient": 0.061365660651546465,
+        "duration_coefficient": 0.012473904615379172
+      },
+      {
+        "scale": 3,
+        "target": "cleaning",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 1,
+        "count_coefficient": -0.5459732714386127,
+        "duration_coefficient": -0.0010232726464078099
+      },
+      {
+        "scale": 3,
+        "target": "cleaning",
+        "kind": "behavior",
+        "source": "groceries",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "coping_planning",
+        "kind": "behavior",
+        "source": "coping_planning",
+        "lag": 2,
+        "count_coefficient": -0.27506074256282026,
+        "duration_coefficient": 0.011750235693661756
+      },
+      {
+        "scale": 3,
+        "target": "coping_planning",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 2,
+        "count_coefficient": 0.22740445557129926,
+        "duration_coefficient": 0.026695114780526236
+      },
+      {
+        "scale": 3,
+        "target": "cycling",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.24612891123664973,
+        "duration_coefficient": -0.04581222393636992
+      },
+      {
+        "scale": 3,
+        "target": "cycling",
+        "kind": "behavior",
+        "source": "swimming",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "disposition_to_attend_to_one_s_goals",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.04515030120291479,
+        "duration_coefficient": -0.08985061829206707
+      },
+      {
+        "scale": 3,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 2,
+        "count_coefficient": 0.030411017558120843,
+        "duration_coefficient": -0.0008208968811412392
+      },
+      {
+        "scale": 3,
+        "target": "eldercare",
+        "kind": "behavior",
+        "source": "eldercare",
+        "lag": 1,
+        "count_coefficient": -0.1023205714211207,
+        "duration_coefficient": -0.003110055693420964
+      },
+      {
+        "scale": 3,
+        "target": "eldercare",
+        "kind": "behavior",
+        "source": "eldercare",
+        "lag": 2,
+        "count_coefficient": 0.12699330193580113,
+        "duration_coefficient": 0.0008685998236578303
+      },
+      {
+        "scale": 3,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 2,
+        "count_coefficient": 0.010203898555367215,
+        "duration_coefficient": -0.0024930937593637334
+      },
+      {
+        "scale": 3,
+        "target": "gaming",
+        "kind": "behavior",
+        "source": "reading",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "gaming",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "going_out",
+        "kind": "behavior",
+        "source": "cleaning",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "going_out",
+        "kind": "behavior",
+        "source": "snacking",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "groceries",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 1,
+        "count_coefficient": 0.18764054132660254,
+        "duration_coefficient": 0.03757888731934434
+      },
+      {
+        "scale": 3,
+        "target": "groceries",
+        "kind": "behavior",
+        "source": "walking",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.03365826631967472,
+        "duration_coefficient": -0.03273547584738152
+      },
+      {
+        "scale": 3,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "social_behavioural_opportunity",
+        "lag": 2,
+        "count_coefficient": 0.010969766769153011,
+        "duration_coefficient": 0.007164766739520656
+      },
+      {
+        "scale": 3,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.07206485130074407,
+        "duration_coefficient": -0.0219894942045096
+      },
+      {
+        "scale": 3,
+        "target": "intend_to_walk",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.028618670394400827,
+        "duration_coefficient": -0.03602041535345345
+      },
+      {
+        "scale": 3,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_not_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.18503094127756178,
+        "duration_coefficient": 0.08303081510714107
+      },
+      {
+        "scale": 3,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_not_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.08874817044701643,
+        "duration_coefficient": -0.019338649206934552
+      },
+      {
+        "scale": 3,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -0.01609513798742004,
+        "duration_coefficient": -0.060736322858369225
+      },
+      {
+        "scale": 3,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 2,
+        "count_coefficient": -0.05707545391981476,
+        "duration_coefficient": -0.008657133933501718
+      },
+      {
+        "scale": 3,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.15378435534920093,
+        "duration_coefficient": 0.004026868787982929
+      },
+      {
+        "scale": 3,
+        "target": "laundry",
+        "kind": "behavior",
+        "source": "groceries",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "laundry",
+        "kind": "behavior",
+        "source": "laundry",
+        "lag": 2,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 1,
+        "count_coefficient": 0.033733087428189146,
+        "duration_coefficient": 0.04347651009240984
+      },
+      {
+        "scale": 3,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": 0.06285044748218603,
+        "duration_coefficient": -0.0453318111685134
+      },
+      {
+        "scale": 3,
+        "target": "low_self_efficacy",
+        "kind": "behavior",
+        "source": "low_self_efficacy",
+        "lag": 1,
+        "count_coefficient": -0.05365275934758751,
+        "duration_coefficient": 0.031037096996312866
+      },
+      {
+        "scale": 3,
+        "target": "low_self_efficacy",
+        "kind": "behavior",
+        "source": "low_self_efficacy",
+        "lag": 2,
+        "count_coefficient": -0.021378879439411264,
+        "duration_coefficient": -0.02431954870749366
+      },
+      {
+        "scale": 3,
+        "target": "need_for_autonomy",
+        "kind": "behavior",
+        "source": "need_for_autonomy",
+        "lag": 1,
+        "count_coefficient": -0.10615649243174408,
+        "duration_coefficient": -0.053767910554379274
+      },
+      {
+        "scale": 3,
+        "target": "need_for_autonomy",
+        "kind": "behavior",
+        "source": "need_for_autonomy",
+        "lag": 2,
+        "count_coefficient": 0.020906793968225687,
+        "duration_coefficient": 0.02597494189980764
+      },
+      {
+        "scale": 3,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "energetic",
+        "lag": 2,
+        "count_coefficient": -0.000158187991182566,
+        "duration_coefficient": 0.0034121533990651397
+      },
+      {
+        "scale": 3,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.0138149590390339,
+        "duration_coefficient": -0.014343569045285743
+      },
+      {
+        "scale": 3,
+        "target": "psychological_behavioural_capability",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.023650328192289773,
+        "duration_coefficient": -0.011345965489104421
+      },
+      {
+        "scale": 3,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "public_park",
+        "lag": 2,
+        "count_coefficient": -0.0517244886019575,
+        "duration_coefficient": -0.03704213708455153
+      },
+      {
+        "scale": 3,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "study_reading",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "self_efficacy_belief_for_a_behaviour",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.004193903608366644,
+        "duration_coefficient": -0.012985265751289206
+      },
+      {
+        "scale": 3,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.002518583427785142,
+        "duration_coefficient": -0.011805920970042232
+      },
+      {
+        "scale": 3,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.007690576929661639,
+        "duration_coefficient": 0.006574428397608871
+      },
+      {
+        "scale": 3,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -3.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "swimming",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 1,
+        "count_coefficient": -0.01944185310608189,
+        "duration_coefficient": 0.01765145974551984
+      },
+      {
+        "scale": 3,
+        "target": "study_reading",
+        "kind": "behavior",
+        "source": "reading",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "study_reading",
+        "kind": "behavior",
+        "source": "workplace",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "studying",
+        "kind": "behavior",
+        "source": "reading",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "studying",
+        "kind": "behavior",
+        "source": "snacking",
+        "lag": 1,
+        "count_coefficient": 0.3300749951153345,
+        "duration_coefficient": -0.00851339478084842
+      },
+      {
+        "scale": 3,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "going_out",
+        "lag": 1,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "gym",
+        "lag": 2,
+        "count_coefficient": 0.0,
+        "duration_coefficient": 0.0
+      },
+      {
+        "scale": 3,
+        "target": "with_family",
+        "kind": "behavior",
+        "source": "intention_to_enact_a_behaviour",
+        "lag": 2,
+        "count_coefficient": -0.07523713106090357,
+        "duration_coefficient": -0.028355821388355254
+      },
+      {
+        "scale": 4,
+        "target": "action_planning",
+        "kind": "behavior",
+        "source": "action_planning",
+        "lag": 1,
+        "count_coefficient": -0.2138882313606523,
+        "duration_coefficient": -0.11630878185930962
+      },
+      {
+        "scale": 4,
+        "target": "alone",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.04463836470851894,
+        "duration_coefficient": 0.12892649909732054
+      },
+      {
+        "scale": 4,
+        "target": "anxious",
+        "kind": "behavior",
+        "source": "anxious",
+        "lag": 1,
+        "count_coefficient": -0.29392387573283196,
+        "duration_coefficient": -0.2796570053126632
+      },
+      {
+        "scale": 4,
+        "target": "breakfast",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 1,
+        "count_coefficient": 0.08006083865211192,
+        "duration_coefficient": 0.07521488967935196
+      },
+      {
+        "scale": 4,
+        "target": "childcare",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 1,
+        "count_coefficient": -0.37359660962436053,
+        "duration_coefficient": 0.05907321244696562
+      },
+      {
+        "scale": 4,
+        "target": "cleaning",
+        "kind": "behavior",
+        "source": "cleaning",
+        "lag": 1,
+        "count_coefficient": 0.22036787520358514,
+        "duration_coefficient": 0.12778123774426947
+      },
+      {
+        "scale": 4,
+        "target": "coping_planning",
+        "kind": "behavior",
+        "source": "coping_planning",
+        "lag": 1,
+        "count_coefficient": -0.2642920000649385,
+        "duration_coefficient": -0.15948561936822056
+      },
+      {
+        "scale": 4,
+        "target": "cycling",
+        "kind": "behavior",
+        "source": "journaling",
+        "lag": 1,
+        "count_coefficient": 0.0016976473917498583,
+        "duration_coefficient": -0.11786785212822723
+      },
+      {
+        "scale": 4,
+        "target": "dinner",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 1,
+        "count_coefficient": 0.21776890921835057,
+        "duration_coefficient": -0.09919769425316688
+      },
+      {
+        "scale": 4,
+        "target": "disposition_to_attend_to_one_s_goals",
+        "kind": "behavior",
+        "source": "intend_to_walk",
+        "lag": 1,
+        "count_coefficient": -0.1843052657557184,
+        "duration_coefficient": -0.08040429909452425
+      },
+      {
+        "scale": 4,
+        "target": "drink_water",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 1,
+        "count_coefficient": 0.04802121596207675,
+        "duration_coefficient": 0.021240533253292455
+      },
+      {
+        "scale": 4,
+        "target": "eldercare",
+        "kind": "behavior",
+        "source": "eldercare",
+        "lag": 1,
+        "count_coefficient": -0.5520204711653217,
+        "duration_coefficient": -0.3560595440944953
+      },
+      {
+        "scale": 4,
+        "target": "external_regulation",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.05136503554624456,
+        "duration_coefficient": -0.04788640163131966
+      },
+      {
+        "scale": 4,
+        "target": "gaming",
+        "kind": "behavior",
+        "source": "study_reading",
+        "lag": 1,
+        "count_coefficient": 0.3683205815473142,
+        "duration_coefficient": -0.12842557711507038
+      },
+      {
+        "scale": 4,
+        "target": "going_out",
+        "kind": "behavior",
+        "source": "tired",
+        "lag": 1,
+        "count_coefficient": -0.45949064991830685,
+        "duration_coefficient": 0.1044745835439592
+      },
+      {
+        "scale": 4,
+        "target": "groceries",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": -0.1983465830021623,
+        "duration_coefficient": -0.04524374227765716
+      },
+      {
+        "scale": 4,
+        "target": "habitual_behaviour",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": -0.09239524352968538,
+        "duration_coefficient": -0.024793086893061766
+      },
+      {
+        "scale": 4,
+        "target": "hungry",
+        "kind": "behavior",
+        "source": "intend_to_walk",
+        "lag": 1,
+        "count_coefficient": 0.09421206111983456,
+        "duration_coefficient": 0.09169269048362709
+      },
+      {
+        "scale": 4,
+        "target": "intend_to_walk",
+        "kind": "behavior",
+        "source": "journaling",
+        "lag": 1,
+        "count_coefficient": 0.15195245253243808,
+        "duration_coefficient": 0.3249645248437465
+      },
+      {
+        "scale": 4,
+        "target": "intention_not_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "intention_not_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -0.09693234322917382,
+        "duration_coefficient": -0.07074974905315634
+      },
+      {
+        "scale": 4,
+        "target": "intention_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "yoga",
+        "lag": 1,
+        "count_coefficient": -0.018575106640856397,
+        "duration_coefficient": -0.039055685016673725
+      },
+      {
+        "scale": 4,
+        "target": "intrinsic_motivation",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.06855301720579121,
+        "duration_coefficient": 0.23027800173528576
+      },
+      {
+        "scale": 4,
+        "target": "laundry",
+        "kind": "behavior",
+        "source": "childcare",
+        "lag": 1,
+        "count_coefficient": 0.13887880548489823,
+        "duration_coefficient": -0.003187772983822749
+      },
+      {
+        "scale": 4,
+        "target": "low_physical_opportunity_to_enact_a_behaviour",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": -0.8783180956563368,
+        "duration_coefficient": -0.2703330553367566
+      },
+      {
+        "scale": 4,
+        "target": "low_self_efficacy",
+        "kind": "behavior",
+        "source": "low_self_efficacy",
+        "lag": 1,
+        "count_coefficient": 0.099397702487577,
+        "duration_coefficient": -0.039993400848998564
+      },
+      {
+        "scale": 4,
+        "target": "lunch",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 1,
+        "count_coefficient": 0.1001876916471653,
+        "duration_coefficient": 0.14410662859505424
+      },
+      {
+        "scale": 4,
+        "target": "napping",
+        "kind": "behavior",
+        "source": "sleep",
+        "lag": 1,
+        "count_coefficient": 0.24600204022248393,
+        "duration_coefficient": 0.056652968231785804
+      },
+      {
+        "scale": 4,
+        "target": "need_for_autonomy",
+        "kind": "behavior",
+        "source": "need_for_autonomy",
+        "lag": 1,
+        "count_coefficient": -0.09678065101587563,
+        "duration_coefficient": -0.029054681131415672
+      },
+      {
+        "scale": 4,
+        "target": "physical_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.021750284625535445,
+        "duration_coefficient": 0.10939282721304777
+      },
+      {
+        "scale": 4,
+        "target": "psychological_behavioural_capability",
+        "kind": "behavior",
+        "source": "swimming",
+        "lag": 1,
+        "count_coefficient": 0.40333821149908095,
+        "duration_coefficient": 0.11809628939208108
+      },
+      {
+        "scale": 4,
+        "target": "reading",
+        "kind": "behavior",
+        "source": "low_physical_opportunity_to_enact_a_behaviour",
+        "lag": 1,
+        "count_coefficient": -0.005959643923306529,
+        "duration_coefficient": -0.11155752301871734
+      },
+      {
+        "scale": 4,
+        "target": "self_efficacy_belief_for_a_behaviour",
+        "kind": "behavior",
+        "source": "self_efficacy_belief_for_a_behaviour",
+        "lag": 1,
+        "count_coefficient": 0.014480099859192422,
+        "duration_coefficient": 0.21263033038428106
+      },
+      {
+        "scale": 4,
+        "target": "shower",
+        "kind": "behavior",
+        "source": "cooking",
+        "lag": 1,
+        "count_coefficient": 0.12951847636775657,
+        "duration_coefficient": 0.06609634789091667
+      },
+      {
+        "scale": 4,
+        "target": "social_behavioural_opportunity",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.13257681680862077,
+        "duration_coefficient": 0.14082419614660033
+      },
+      {
+        "scale": 4,
+        "target": "socialising",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.9511987115403319,
+        "duration_coefficient": 0.5124745031889735
+      },
+      {
+        "scale": 4,
+        "target": "stress_episode",
+        "kind": "behavior",
+        "source": "cleaning",
+        "lag": 1,
+        "count_coefficient": 0.07507464224746825,
+        "duration_coefficient": 0.021875991224549522
+      },
+      {
+        "scale": 4,
+        "target": "study_reading",
+        "kind": "behavior",
+        "source": "study_reading",
+        "lag": 1,
+        "count_coefficient": 0.16104450548150182,
+        "duration_coefficient": -0.06506005699304666
+      },
+      {
+        "scale": 4,
+        "target": "studying",
+        "kind": "behavior",
+        "source": "study_reading",
+        "lag": 1,
+        "count_coefficient": 0.32211238316779917,
+        "duration_coefficient": 0.09401807514765348
+      },
+      {
+        "scale": 4,
+        "target": "visit_friends_or_family",
+        "kind": "behavior",
+        "source": "socialising",
+        "lag": 1,
+        "count_coefficient": 0.4561526237742972,
+        "duration_coefficient": 0.050617964589790586
+      },
+      {
+        "scale": 4,
+        "target": "with_family",
+        "kind": "behavior",
+        "source": "journaling",
+        "lag": 1,
+        "count_coefficient": -0.25406567896568055,
+        "duration_coefficient": -0.13006835307574305
+      }
+    ],
+    "reachable_label_relations": 3,
+    "reachable_label_matches": 1,
+    "wall_seconds": 1723.7109691030346,
+    "process_peak_rss_gb": 14.176578521728516
   },
   {
     "key": "hc-bdeu",
-    "status": "pending"
+    "status": "running",
+    "method": "hc-bdeu"
   },
   {
     "key": "exhaustive",
