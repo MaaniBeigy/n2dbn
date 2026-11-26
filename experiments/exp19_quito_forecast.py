@@ -51,6 +51,7 @@ Run
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import time
@@ -309,6 +310,7 @@ def one_series(
     device,
     seed,
     train_blocks,
+    compare_reconciliation=False,
 ):
     """
     One row per method and origin for one series.
@@ -347,12 +349,25 @@ def one_series(
         for name, flat in anchor_forecasts(counts, panel, origin, horizon).items():
             predictions[name] = levels_of(flat, window)
         if device is not None:
-            predictions.update(
-                deep_forecasts(counts, panel, start, origin, horizon, device, seed)
-            )
+            if compare_reconciliation:
+                import torch
+
+                torch.manual_seed(seed)
+            deep = deep_forecasts(counts, panel, start, origin, horizon, device, seed)
+            predictions.update(deep)
+            if compare_reconciliation:
+                from src.nested.evaluate import reconcile
+
+                for name, levels in deep.items():
+                    predictions[f"{name}-native-hour"] = levels
+                    predictions[f"{name}-bottom-up"] = levels_of(levels[0], window)
+                    predictions[f"{name}-ols"] = reconcile(levels, window.hierarchy)
 
         for name, levels in predictions.items():
-            at_scale = collapse(np.asarray(levels[0], dtype=float), score_units)
+            if name.endswith(("-native-hour", "-ols")):
+                at_scale = levels[1]
+            else:
+                at_scale = collapse(np.asarray(levels[0], dtype=float), score_units)
             at_scale = at_scale[:scored]
             rows.append(
                 {
@@ -391,6 +406,10 @@ def summarize(rows: Sequence[Dict[str, object]]) -> Dict[str, Dict[str, float]]:
         for metric in metrics:
             values = np.array([float(r[metric]) for r in picked])
             finite = values[np.isfinite(values)]
+            entry[f"{metric}_nonfinite"] = int(values.size - finite.size)
+            entry[f"{metric}_max"] = (
+                float(finite.max()) if finite.size else float("nan")
+            )
             entry[metric] = float(np.median(finite)) if finite.size else float("nan")
             entry[f"{metric}_mean"] = (
                 float(finite.mean()) if finite.size else float("nan")
@@ -443,7 +462,14 @@ def main(
     device: Optional[str] = "cuda",
     output_dir: str = "results/exp19",
     data_root: str = "data/quito",
+    compare_reconciliation: bool = False,
 ) -> None:
+    if compare_reconciliation and (
+        panel_name != "min" or score_units != 6 or device is None
+    ):
+        raise ValueError(
+            "Hourly reconciliation requires the ten-minute panel, six slots per hour and deep forecasts"
+        )
     os.makedirs(output_dir, exist_ok=True)
     write_provenance(output_dir)
     panel = PANELS[panel_name]
@@ -477,6 +503,7 @@ def main(
                 device,
                 seed + i,
                 train_blocks,
+                compare_reconciliation=compare_reconciliation,
             )
         )
         if (i + 1) % 10 == 0:
@@ -489,6 +516,8 @@ def main(
 
     summary = summarize(rows)
     order = list(BASELINES) + (list(DEEP) if device is not None else []) + [MODEL]
+    if compare_reconciliation:
+        order = list(summary)
     for method in order:
         if method not in summary:
             continue
@@ -498,13 +527,20 @@ def main(
             f"  coherence {s['coh']:.4g}  relative {s['coh_rel']:.3g}"
         )
 
-    path = os.path.join(output_dir, f"exp19_{panel.name}_{split}.json")
+    stem = "reconciled-traffic" if compare_reconciliation else "exp19"
+    path = os.path.join(output_dir, f"{stem}_{panel.name}_{split}.json")
+    with open(os.path.join(data_root, panel.filename), "rb") as source:
+        digest = hashlib.file_digest(source, "sha256").hexdigest()
     with open(path, "w") as handle:
         json.dump(
             {
                 "panel": panel.name,
                 "split": split,
                 "train_blocks": train_blocks,
+                "source_sha256": digest,
+                "training_start": str(grid[origins[0] - train_blocks * panel.block]),
+                "forecast_start": str(grid[origins[0]]),
+                "last_forecast_epoch": str(grid[origins[0] + horizon - 1]),
                 "origins": [int(o) for o in origins],
                 "horizon": horizon,
                 "score_units": score_units,
@@ -531,6 +567,7 @@ def _parse(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--no-deep", action="store_true")
+    ap.add_argument("--compare-reconciliation", action="store_true")
     ap.add_argument("--output-dir", default="results/exp19")
     ap.add_argument("--data-root", default="data/quito")
     return ap.parse_args(argv)
@@ -549,4 +586,5 @@ if __name__ == "__main__":
         device=None if args.no_deep else args.device,
         output_dir=args.output_dir,
         data_root=args.data_root,
+        compare_reconciliation=args.compare_reconciliation,
     )

@@ -539,10 +539,16 @@ def _summary(rows: List[dict], sortability: List[dict]) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     add_budget_arguments(parser)
+    parser.add_argument("--sortability-only", action="store_true")
     parser.add_argument("--epochs", type=int, default=0)
     parser.add_argument("--iters", type=int, default=6)
     parser.add_argument("--output-dir", default="results/exp9")
     args = parser.parse_args()
+    if args.sortability_only:
+        os.makedirs(args.output_dir, exist_ok=True)
+        write_provenance(args.output_dir)
+        _save([], sortability_rows(args.epochs or 4000), args.output_dir)
+        sys.exit(0)
     main(
         quick=args.quick,
         n_epochs=args.epochs,

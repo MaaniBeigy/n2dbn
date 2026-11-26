@@ -154,7 +154,8 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-Web, mobile, and wearable systems log human activity as timestamped events with durations. Dynamic Bayesian network (DBN) structure learning identifies such dependencies, and standard formulations fix one granularity and assume stationarity. Human activity logs violate both, since dependence changes over time and behaviors span minutes to weeks, and fitting one granularity at a time gives disagreeing answers. We present the nested non-stationary dynamic Bayesian network (N$^2$DBN) which models event starts and durations jointly under a zero-inflated negative binomial emission at the coarsest resolution and constrained Dirichlet-multinomial allocation below it, so coarser counts are deterministic sums needing no reconciliation. A regime chain and a latent factor model the non-stationarity, and variational Structural Expectation-Maximization with resolution-aware search learns the graph top-down across scales. In simulated experiments with ground truth, it recovers more structure than eight published learners, among them hill climbing, exhaustive search, greedy equivalence search, and Peter-Clark. It alone reaches a structural error below the empty graph's, and on a declared-pattern benchmark matches them with far fewer spurious edges. Applied to LifeSnaps, it places every calendar relation on the hour scale and every persistence relation on the day and week scales, and its simulated logs match observed counts and durations four times closer than an intercept baseline, preserving trend, drift and week scale changepoints (F\_1 = 0.96). In the QuitoBench application traffic forecasting benchmark, accuracy was close to the state of the art, behind the PatchTST transformer by $23\%$ and DLinear by 26\%, while its cross-scale coherence is much better, $8\times10^{-15}\%$ against their 4 to 5\%. We demonstrate that N²DBN learns structure from human behavior event logs, simulates faithful replicas, and forecasts them coherently.
+Web, mobile, and wearable systems log human activity as timestamped events with durations. Dynamic Bayesian network (DBN) structure learning identifies such dependencies, and standard formulations fix one granularity and assume stationarity. Human activity logs violate both, since dependence changes over time and behaviors span minutes to weeks, and fitting one granularity at a time gives disagreeing answers. We present the nested non-stationary dynamic Bayesian network (N$^2$DBN) which models event starts and durations jointly under a zero-inflated negative binomial emission at the coarsest resolution and constrained Dirichlet-multinomial allocation below it, so coarser counts are deterministic sums needing no reconciliation. A regime chain and a latent factor model the non-stationarity, and variational Structural Expectation-Maximization with resolution-aware search learns the graph top-down across scales. In simulated experiments with ground truth, it recovers more structure than eight published learners, among them hill climbing, exhaustive search, greedy equivalence search, and Peter-Clark. It alone reaches a structural error below the empty graph's, and on a declared-pattern benchmark matches them with far fewer spurious edges. In LifeSnaps, eight of 23 selected dependencies recur in at least three quarters of the half-panel fits. Simulated counts are within 7\% of observation for four of six labels, but survey responses, the most frequent label, reach only 53\% of their observed count. On QuitoBench, the nested point forecasts agree across resolutions. Their median hourly absolute error exceeds those of seasonal persistence, DLinear and PatchTST, and a small number of series have large errors.
+
 \end{abstract}
 
 %%
@@ -231,9 +232,9 @@ A behavioral event log records the start times and durations of labeled activity
 
 Dynamic Bayesian networks (DBNs) are the natural starting point. DBNs are directed probabilistic graphical models for temporal stochastic processes. They represent the joint distribution over time in a factored form, can include observed and latent variables, and make temporal dependencies interpretable through their graph structure \citep{murphy_2002_dbn}. DBN structure learning extends Bayesian network structure learning to time-lagged trajectories, using the same broad score-based, constraint-based and hybrid optimization-based families \citep{kitson_survey_2023,kungurtsev_learning_2025}. However, standard DBNs are specified at a chosen time granularity; changing the granularity changes the transition model, so DBNs fitted separately at hourly and daily resolutions are not automatically constrained to agree under aggregation or marginalization \citep{saria_reasoning_2007}. This leaves a central modeling gap. A framework for event logs must represent non-stationary dependencies at their relevant timescales while preserving exact aggregation relationships across temporal resolutions.
 
-N$^2$DBN addresses this gap within a single generative formulation. It defines the likelihood once at the configured finest temporal resolution over event starts and their durations, and represents counts and durations at every coarser resolution as deterministic aggregations of these quantities. Non-stationary components and temporal dependencies can therefore be evaluated at their respective timescales without fitting independent models that may disagree on their implied aggregates. A resolution-aware variational Structural Expectation-Maximization (SEM) procedure jointly learns the dependency structure under these constraints. Thus, N$^2$DBN incorporates cross-resolution consistency into the probabilistic model itself, so separately estimated temporal views never have to be reconciled.
+N$^2$DBN addresses this gap within a single generative formulation. It draws totals at the coarsest resolution and allocates them to successively finer epochs. Summing the resulting starts and durations recovers each coarser total. Non-stationary components and temporal dependencies can therefore be evaluated at their respective timescales without fitting independent models that may disagree on their implied aggregates. A resolution-aware variational Structural Expectation-Maximization (SEM) procedure jointly learns the dependency structure under these constraints. Thus, N$^2$DBN incorporates cross-resolution consistency into the probabilistic model itself, so separately estimated temporal views never have to be reconciled.
 
-The remainder of this paper is organized as follows. Section~\ref{sec:related-work} reviews related work. Section~\ref{sec:preliminaries} formulates the problem and introduces N$^2$DBN. Section~\ref{sec:methodology} presents the proposed structure- and parameter-learning algorithm. Section~\ref{sec:experiments} evaluates the modeling fidelity and structure-learning accuracy of N$^2$DBN through extensive experiments. Section~\ref{sec:case-study} presents a case study on the LifeSnaps dataset, an observed log with no ground-truth graph, and grades the learned structure, the fidelity of the simulated log and the preservation of its non-stationary patterns. Finally, Section~\ref{sec:conclusions} concludes the paper.
+Section~\ref{sec:methodology} defines the model and learning procedure. Sections~\ref{sec:experiments}--\ref{sec:exp:forecast} give the benchmark comparisons. Section~\ref{sec:case-study} examines graph stability and log fidelity on LifeSnaps.
 
 \section{Related Work}
 \label{sec:related-work}
@@ -249,9 +250,9 @@ Multi-scale temporal modeling has been studied from several complementary perspe
 Moreover, researchers have explored multi-scale modeling outside the field of DBN structure learning. ProbRules, for example, integrates biological mechanisms operating at different rates through probabilistic rules \citep{gross_multiscale_2019}, while recent neural architectures such as DynaMamba construct pyramidal representations by progressively down-sampling a time series and fusing information across resolutions \citep{chen_dynamamba_2026}. These methods demonstrate the value of representing temporal phenomena at more than one scale.
 % but their notions of scale concern adaptive inference, temporal partitioning, mechanism-specific rates, or learned feature representations. They do not impose an aggregation identity under which quantities at every coarser temporal resolution are deterministic functions of a common finest-scale stochastic process.
 
-The requirement that predictions remain consistent across a hierarchy has been studied explicitly in hierarchical time-series forecasting. In this setting, series are organized in a predefined hierarchy in which values at parent nodes equal sums of their children. Traditional approaches first produce forecasts independently and subsequently reconcile them to satisfy these aggregation constraints, whereas end-to-end and top-down probabilistic models can enforce coherence by construction \citep{das_topdown_2023}. This concept is closely related to the consistency requirement considered in our work, but the hierarchy has a different meaning. Hierarchical forecasting primarily relates distinct series through a cross-sectional aggregation structure at a common temporal index. Our setting instead concerns \emph{temporal aggregation of the same event process}; for example, hourly activity counts and durations must equal the corresponding sums of their constituent fine-resolution intervals. Moreover, hierarchical forecasting addresses prediction under a known aggregation hierarchy. Learning directed temporal dependencies among event processes lies outside its scope.
+Temporal hierarchies aggregate one series over nonoverlapping intervals and combine forecasts across these resolutions \citep{athanasopoulos_temporal_2017}. For example, a bottom-up hourly forecast sums six ten-minute forecasts. Reconciliation also allows an independently fitted hourly forecast to inform that sum. Top-down probabilistic models can learn the distribution of a total and its child proportions \citep{das_topdown_2023}. We use the same temporal summation constraint and also estimate which earlier labels predict episode counts and durations at each resolution. Coherence alone cannot distinguish these approaches.
 
-Taken together, these lines of research address complementary aspects of the problem: DBN methods learn temporal dependency structure, non-stationary DBNs allow dependencies or their strengths to evolve over time, multi-scale models capture phenomena at different temporal resolutions, and hierarchical forecasting provides mechanisms for aggregation coherence. However, they do not jointly learn directed, non-stationary dependencies across nested temporal resolutions while deriving every coarser observation from the same fine-resolution event process. N$^2$DBN is designed to fill this gap.
+
 
 \section{Preliminaries}
 \label{sec:preliminaries}
@@ -269,7 +270,7 @@ Let \(\mathcal{L}\) be the finite set of event labels, with \(L=\lvert\mathcal{L
 
 Counting durations in slots keeps both observed channels on the integer lattice, allowing the same allocation law to be used for counts and durations at every scale. The full duration of an episode is assigned to the epoch in which that episode starts. Therefore, \(Y_t^{(k,\ell)}\) may include a duration that extends beyond the end of epoch \(t\); it does not represent only the time for which label \(\ell\) is active within that epoch. Two structural constraints follow from this finest-scale representation.
 
-First, the atomic start and duration support is
+First, for event logs with at most one start per label and slot and a positive mark per episode, the atomic start and duration support is
 \begin{equation}
   \begin{aligned}
     X_t^{(1,\ell)}&\in\{0,1\}, &
@@ -305,12 +306,12 @@ Given \(Z^{(1:K)}\), \(\mathcal K^{(1:K)}\), and the fixed hierarchy, the proble
   &-\sum_{k=1}^{K}\lambda_k|\mathcal E^{(k)}|\Big],
   \label{eq:problem_objective}
 \end{align}
-where \(\lambda_k\) is the penalty on an edge at scale \(k\). In addition, every distribution allowed by Equation~\eqref{eq:problem_objective} must satisfy \(\mathcal A_{j-1}\cdots\mathcal A_kZ^{(k)}=Z^{(j)}\) almost surely for every \(k<j\). The required output is therefore one learned multiresolution model in which the graph, parameters, latent progression, forecasts, and generated event logs remain consistent with the same observed event process.
+where \(\lambda_k\) is the penalty on an edge at scale \(k\). In addition, every distribution allowed by Equation~\eqref{eq:problem_objective} must satisfy \(\mathcal A_{j-1}\cdots\mathcal A_kZ^{(k)}=Z^{(j)}\) almost surely for every \(k<j\). Section~\ref{sec:nested_generative_model} states the recovery generator's boundary convention when a drawn duration is smaller than its count. Sections~\ref{sec:exp:forecast} and~\ref{sec:case-study:data} give the observation rules used for traffic and survey records.
 
 \section{Methodology}
 \label{sec:methodology}
 
-This section presents N$^2$DBN as the model used to solve Equation~\eqref{eq:problem_objective}. We first define its nested generative construction, latent states, and resolution-specific temporal graphs. We then describe the variational Structural Expectation-Maximization (vSEM) procedure for inferring the latent trajectories and learning the conditional parameters and graph structure.
+Equation~\eqref{eq:problem_objective} gives the estimation objective for N$^2$DBN. We first define its nested generative construction, latent states, and resolution-specific temporal graphs. We then describe the variational Structural Expectation-Maximization (vSEM) procedure for inferring the latent trajectories and learning the conditional parameters and graph structure.
 
 \subsection{Nested Generative Model}
 \label{sec:nested_generative_model}
@@ -328,7 +329,7 @@ For scale \(k\), epoch \(t\), and target label \(\ell\), let \(\eta_{t,\ell}^{(k
   \log(1+Y_{t-d}^{(k,a)}).
   \label{eq:lagged_parent_terms}
 \end{align}
-The ellipses in Equation~\eqref{eq:lagged_parent_terms} contain the remaining additive terms, including the intercept, context, latent-state effects, and contributions from other selected parents. Thus, \(\eta_{t,\ell}^{(k)}\) and \(\zeta_{t,\ell}^{(k)}\) are real-valued intermediate scores. A predicted count or duration is obtained from them by the transformations that follow. At the coarsest scale, exponentiation converts them into the negative-binomial count-component and duration-surplus means. At finer scales, block softmax functions convert them into allocation weights. The \(\log(1+\cdot)\) transformation allows zero values and moderates the influence of large counts and durations. The coefficients \(\beta_{a,d}^{(k,\ell)}\) and \(\alpha_{a,d}^{(k,\ell)}\) are fitted from all scale-\(k\) epochs during the structure-learning step described in Section~\ref{sec:structure_parameter_learning}.
+The remaining terms are the intercept, context, latent state and other selected parents. The \(\log(1+x)\) transformation admits zeros and moderates large values. Section~\ref{sec:structure_parameter_learning} describes the coefficient estimates.
 
 At the coarsest scale \(k=K\), let \(\varpi_t^{(K,\ell)}\in[0,1]\) be the structural-zero probability, let \(\phi_\ell^{(K)}>0\) be the count dispersion, and let \(\mu_t^{(K,\ell)}=\exp(\eta_{t,\ell}^{(K)})\) be the mean of the negative-binomial count component. The count emission draws an uncapped value and applies the count capacity,
 \begin{equation}
@@ -342,41 +343,26 @@ At the coarsest scale \(k=K\), let \(\varpi_t^{(K,\ell)}\in[0,1]\) be the struct
 \end{equation}
 The zero-inflated negative binomial (ZINB) distribution is a mixture. With probability \(\varpi_t^{(K,\ell)}\), it generates a structural zero. With probability \(1-\varpi_t^{(K,\ell)}\), it draws from the negative-binomial component, which may also generate zero. Consequently, \(P(X=0)=\varpi+(1-\varpi)P_{\mathrm{NB}}(0)\). The cap ensures \(0\leq X_t^{(K,\ell)}\leq n_K\). The log-odds \(\log\{\varpi/(1-\varpi)\}\) is fitted from intercept, context, and latent-state effects and contains no selected lagged-parent term. A learned lag therefore affects the coarsest count distribution through \(\mu\).
 
-For the duration channel, let \(s_\ell^{(K)}>0\) be the duration dispersion and let \(\nu_t^{(K,\ell)}=\exp(\zeta_{t,\ell}^{(K)})\) be the mean duration surplus. Conditional on \(X_t^{(K,\ell)}>0\), draw \(R_t^{(K,\ell)}\sim\operatorname{NB}(s_\ell^{(K)},\nu_t^{(K,\ell)})\) and define
+For a positive count, the recovery generator draws a total duration with dispersion \(s_\ell^{(K)}>0\) and mean \(\nu=\max\{1,\exp(\zeta)\}\) before capping. The duration predictor includes the current \(\log(1+X)\). Suppressing epoch and label indices gives
 \begin{equation}
-  Y_t^{(K,\ell)}=
-  \begin{cases}
-    0, & X_t^{(K,\ell)}=0,\\
-    X_t^{(K,\ell)}+R_t^{(K,\ell)},
-      & X_t^{(K,\ell)}>0.
-  \end{cases}
-  \label{eq:coarsest_duration}
+ Y=\begin{cases}0 & X=0,\\
+ \min\{\widetilde Y,n_K\},\quad \widetilde Y\sim\mathrm{NB}(s_\ell^{(K)},\nu) & X>0 .
+ \end{cases}
+ \label{eq:coarsest_duration}
 \end{equation}
-This construction places the coarsest emission inside the support of Equation~\eqref{eq:atomic_support}.
-
-Consider a two-scale hierarchy in which \(k=1\) denotes days and \(k=2\) denotes weeks. Let \(\mathrm{notification}\) be the source label, \(\mathrm{walk}\) the target label, and let the lag be one. At the weekly scale, this lag refers to the preceding week. Suppose that the other count terms sum to \(-0.3\), the notification-to-walk count coefficient is \(\beta_{\mathrm{notification},1}^{(2,\mathrm{walk})}=0.8\), and the preceding week contains \(X_{t-1}^{(2,\mathrm{notification})}=2\) notifications. The weekly walk-count score is then
-\begin{equation*}
-  \eta_{t,\mathrm{walk}}^{(2)}
-  =-0.3+0.8\log(1+2)\approx0.579.
-\end{equation*}
-The negative-binomial count component has mean \(\exp(0.579)\approx1.78\) weekly walk episodes. The structural-zero probability \(\varpi_t^{(2,\mathrm{walk})}\) is determined by its separate predictor. With no notification in the preceding week, the count-component mean is \(\exp(-0.3)\approx0.74\). For duration, suppose that the other terms sum to \(1.0\), the notification-to-walk duration coefficient is \(\alpha_{\mathrm{notification},1}^{(2,\mathrm{walk})}=0.4\), and the preceding-week notification duration is \(Y_{t-1}^{(2,\mathrm{notification})}=5\) slots. This gives
-\begin{equation*}
-  \zeta_{t,\mathrm{walk}}^{(2)}
-  =1.0+0.4\log(1+5)\approx1.717,
-\end{equation*}
-and a conditional mean duration surplus of \(\exp(1.717)\approx5.57\) slots. For a generated weekly walk count \(X_t^{(2,\mathrm{walk})}>0\), the corresponding conditional total-duration mean is \(X_t^{(2,\mathrm{walk})}+5.57\) slots.
-
-At the daily scale \(k=1\), lag one refers to the preceding day, and the scores allocate a generated weekly total among its seven days. Suppose that Wednesday has walk-count score \(\eta_{\mathrm{Wed},\mathrm{walk}}^{(1)}=0.6\) after Tuesday's notification contribution is included, while each of the other six days has score zero. Wednesday's softmax weight is \(\exp(0.6)/(\exp(0.6)+6)\approx0.233\), and each other day has weight \(1/(\exp(0.6)+6)\approx0.128\). For a weekly total of four walk episodes, the unconstrained Dirichlet--multinomial reference means are \(4(0.233)\approx0.93\) episodes for Wednesday and \(4(0.128)\approx0.51\) for each other day. The kernel \(W_1\) uses these weights but generates only feasible integer allocations in \(\mathcal F_1\). Every draw sums to four, each daily count is at most \(n_1=1\), and the count and duration pair satisfies Equation~\eqref{eq:atomic_support}. Its constrained conditional means therefore need not equal the reference values. Hence, for the walk target, lag one means one week at scale 2 and one day at scale 1. The collection \(\mathcal G=\{\mathcal P_{k,\ell}\}_{k,\ell}\) instantiates the graph in Equation~\eqref{eq:problem_objective}. Its positive-lag edges give acyclic finite unrollings. Fixed aggregation, latent, and contextual links are excluded from \(\mathcal G\).
+At the cap, the probability for either channel includes its entire upper tail. An NB draw can give \(Y<X\). Equation~\eqref{eq:atomic_support} describes a log with positive episode lengths. The recovery generator enforces the count capacity and the aggregation identities for every draw, and enforces the duration floor whenever the parent supplies enough duration. For a model requiring that floor on every draw one can draw a surplus and set \(Y=X+\widetilde Y\) for \(X>0\). The recovery results below use Equation~\eqref{eq:coarsest_duration}.
 
 Each scale and epoch has \(U_t^{(k)}=(S_t^{(k)},H_t^{(k)})\), where \(S_t^{(k)}\in\{1,\ldots,M_k\}\) is a regime for persistent changes and \(H_t^{(k)}\in\mathbb R^{r_k}\) is a factor for same-epoch co-movement. Their kernel \(R_k\) depends on the previous state, the containing state at scale \(k+1\), and \(\mathcal K_t^{(k)}\), with boundary arguments omitted. Count and duration scores are
 \begin{equation}
-  (\eta_{t,\ell}^{(k)},\zeta_{t,\ell}^{(k)})
-  =f_{k,\ell}(\mathcal P_{k,\ell}^{X}(t),
-  \mathcal P_{k,\ell}^{Y}(t),U_t^{(k)},
-  \mathcal K_t^{(k)};\Theta^{(k)}),
+  \begin{aligned}
+    \eta_{t,\ell}^{(k)} &= f^X_{k,\ell}(t)
+       +\beta_P\log(1+X_c)+\beta_D\log(1+Y_c),\\
+    \zeta_{t,\ell}^{(k)} &= f^Y_{k,\ell}(t)
+       +\alpha_X\log(1+X_t)+\alpha_P\log(1+Y_c).
+  \end{aligned}
   \label{eq:predictor_scores}
 \end{equation}
-where \(\mathcal P_{k,\ell}^{X}(t)\) and \(\mathcal P_{k,\ell}^{Y}(t)\) contain the selected lagged values. The block \(\Theta^{(k)}\) contains regime transitions, factor dynamics, regression coefficients, and distribution parameters.
+Here \(c=\pi_k(t)\), and the count, duration and coefficient indices for the target label are suppressed. Each \(f\) sums an intercept, a regime-specific offset, linear terms in \(H_t^{(k)}\) and \(\mathcal K_t^{(k)}\), and the selected lag terms in Equation~\eqref{eq:lagged_parent_terms} for its channel. At \(k=K\) omit both parent totals. Within a child block they are constant and cancel from its softmax. The duration score reads the current count after count allocation.
 
 N\(^{2}\)DBN generates the coarsest array and then unfolds it down the hierarchy,
 \begin{align}
@@ -386,46 +372,62 @@ N\(^{2}\)DBN generates the coarsest array and then unfolds it down the hierarchy
   Z^{(k)}&\sim W_k(\boldsymbol\eta^{(k)},\boldsymbol\zeta^{(k)},
   Z^{(k+1)};\Theta^{(k)}),
   \label{eq:top_down_generation}\\[-2pt]
-  \operatorname{supp}W_k&=\mathcal F_k(Z^{(k+1)}).
+  \mathcal A_k Z^{(k)}&=Z^{(k+1)}\quad\text{almost surely}.
   \nonumber
 \end{align}
-for \(k=K-1,\ldots,1\), conditional on \(U^{(k)}\) and \(\mathcal K^{(k)}\) through Equation~\eqref{eq:predictor_scores}. The coarsest emission \(E_K\) uses the ZINB count model in Equation~\eqref{eq:coarsest_zinb} and the conditional duration-surplus model in Equation~\eqref{eq:coarsest_duration}. Each \(W_k\) uses constrained Dirichlet--multinomial allocations with count weights \(\operatorname{softmax}_{\operatorname{ch}_k(c)}(\eta)\), duration-surplus weights \(\operatorname{softmax}_{\{t:X_t>0\}}(\zeta)\), and concentrations \(\kappa_k,\tau_k\). Capacity and the active-child duration floor define the admissible fiber, while sequential depletion changes the allocation weights within that fiber. Consequently, for every draw and \(k<j\),
+for \(k=K-1,\ldots,1\), conditional on \(U^{(k)}\) and \(\mathcal K^{(k)}\) through Equation~\eqref{eq:predictor_scores}. The following conditional law specifies \(W_k\) for the recovery generator. Work in chronological block order and fixed label order. Write \(N=X_c\), \(D=Y_c\) and index the \(m\) children by \(i\). All predictors read previously written entries of the fine arrays, with unwritten entries initialized to zero. Thus a lag can read an earlier label already drawn in the block. Write \(\mathrm{DM}(N,a)\) for the law obtained by drawing \(p\sim\mathrm{Dirichlet}(a)\) followed by \(z\sim\mathrm{Multinomial}(N,p)\).
+
+If every selected count lag spans at least \(m\) epochs, draw preliminary counts \(z\sim\mathrm{DM}(N,\kappa_k w)\), where \(w=\mathrm{softmax}(\eta)\) over all children. Otherwise start with \(R=N\). At child \(i\), recompute the scores over children \(i,\ldots,m\) using the current array and let \(u\) be the first weight of this suffix softmax. Draw
+\[
+ z_i\sim\mathrm{BetaBinomial}(R,\kappa_k u,\kappa_k(1-u)),
+ \qquad R\gets R-z_i .
+\]
+Write \(z_i\) before scoring the next child. The last child takes the remainder. The concentration multiplies the newly normalized suffix weights at each draw. This sequential law can therefore differ from one joint DM draw even with fixed scores. For numerical evaluation the generator floors the two beta shapes at \(10^{-6}\) and adds \(10^{-10}\) to each Dirichlet shape in joint draws.
+
+For either proposal, set \(x_i=\min(z_i,n_k)\). Move each of the \(N-\sum_i x_i\) excess starts in turn to a child with room, with probability proportional to its block weight among children still below capacity. If all receiver weights underflow numerically, the draw is uniform among children with room. For the sequential proposal recompute the full block weights after writing the preliminary counts and keep them fixed during redistribution. Let \(C(x\mid z)\) be the probability of this repair, obtained by summing the products of these receiver probabilities over paths ending at \(x\). The exact count mass is \(\sum_z P(z)C(x\mid z)\), where \(P(z)\) is the joint DM mass or the product of the sequential masses above.
+
+Given the final \(x\), only children in \(A=\{i:x_i>0\}\) receive duration. For \(D\ge N>0\), draw \(v_A\sim\mathrm{DM}(D-N,\tau_k\,\mathrm{softmax}_A(\zeta))\), set \(y_i=x_i+v_i\) on \(A\), and set \(y_i=0\) elsewhere. Duration scores use the final counts and the duration history available before writing this label's block. If \(0\le D<N\), the generator assigns \(\lfloor D x_i/N\rfloor\) to each active child and adds one unit to successive active children in time order until the total is \(D\). A zero parent count has zero duration and gives a point mass at the all-zero block.
+
+These steps define the full block mass as the repaired count mass times the conditional duration mass. It sums to one because each proposal, repair step and conditional duration draw is normalized. Redistribution preserves \(N\), and the duration allocation exhausts \(D\). Induction over adjacent scales gives
+
 \begin{equation}
   \mathcal A_{j-1}\cdots\mathcal A_kZ^{(k)}=Z^{(j)}
   \quad\text{almost surely}.
   \label{eq:exact_coherence}
 \end{equation}
 
-Let \(\Pi_k\) replace each score in a child block by its block mean. The softmax identifies the within-block detail \((I-\Pi_k)\boldsymbol\eta^{(k)}\), while the parent total identifies the block-constant shadow \(\Pi_k\boldsymbol\eta^{(k)}\), and likewise for \(\boldsymbol\zeta^{(k)}\). Learning therefore passes information in both directions.
+A block softmax is invariant to a common additive shift of its scores. Writing \(\Pi_k\) for within-block averaging, only \((I-\Pi_k)\eta\) can affect a joint count split. The parent emission models its own total. The conditional split alone gives no estimate of the common shift.
 
 \subsection{Structure and Parameter Learning}
 \label{sec:structure_parameter_learning}
 
-Write \(Z=Z^{(1:K)}\), \(U=U^{(1:K)}\), and \(\mathcal K=\mathcal K^{(1:K)}\). Variational Structural Expectation-Maximization estimates \(\Theta=\{\Theta^{(k)}\}_k\) and \(\mathcal G\) with a structured approximation \(q(U)\) by maximizing
+Write \(Z=Z^{(1:K)}\), \(U=U^{(1:K)}\) and \(P(\mathcal G)=\sum_{k,\ell}\lambda_k|\mathcal P_{k,\ell}|\). For a fixed model the penalized variational objective is
 \begin{align}
-  \mathcal J(q,\Theta,\mathcal G)
-  &=\mathbb E_q[\log p(Z,U,\mathcal G,\Theta\mid\mathcal K)]
-  +\mathbb H[q]\nonumber\\
-  &\quad-\sum_{k,\ell}\lambda_k|\mathcal P_{k,\ell}|.
-  \label{eq:penalized_elbo}
+ \mathcal J(q,\Theta,\mathcal G)
+ &=\mathbb E_q[\log p_{\Theta,\mathcal G}(Z,U\mid\mathcal K)]
+   +\mathbb H[q]-P(\mathcal G).
+ \label{eq:penalized_elbo}
 \end{align}
-Here, \(\mathbb H[q]\) is entropy. The approximation keeps each regime chain and conditional Gaussian factor trajectory intact, factorizes top-down across scales, and passes observed parent totals and regime marginals.
+Subtracting this expression from the penalized observed log likelihood gives \(\mathrm{KL}(q\,\|\,p_{\Theta,\mathcal G}(U\mid Z,\mathcal K))\). Classical structural EM takes \(q\) to be the current posterior. The bound then touches the current likelihood, so a gain in the penalized expected complete-data score implies at least that gain in penalized observed likelihood \citep{friedman_structural_1998}. Three approximations affect this argument here.
 
-Each iteration alternates three updates. The E-step obtains \(q\) with forward--backward recursion for \(S^{(k)}\) and Kalman smoothing for \(H^{(k)}\), with a measurement update at the coarsest scale and the smoothed prior trajectory below it. The M-step fits \(\Theta\), accepting the regime and predictor blocks when their own term does not fall and updating the factor block in closed form. The S-step uses
-\begin{align}
-  Q_{k,\ell}(\mathcal P)
-  &=\max_{\boldsymbol\beta_{\mathcal P},
-  \boldsymbol\alpha_{\mathcal P}}
-  \mathbb E_q[\log p(Z^{(k,\ell)}\mid
-  U^{(k)},\mathcal K^{(k)},\mathcal P)],
-  \nonumber\\
-  \widehat{\mathcal P}_{k,\ell}
-  &=\arg\max_{\substack{\mathcal P\subseteq\mathcal C_{k,\ell}\\
-  |\mathcal P|\leq D_k}}
-  [Q_{k,\ell}(\mathcal P)-\lambda_k|\mathcal P|],
-  \label{eq:profiled_structure_score}
-\end{align}
-where \(\boldsymbol\beta_{\mathcal P}\) and \(\boldsymbol\alpha_{\mathcal P}\) are refitted for every candidate by bounded gradient ascent from the coefficients \(\Theta\) already has. The expectation is taken over \(q(S^{(K)})\) at the coarsest scale and is evaluated at the regime-averaged predictor \(\mathbb E_q[\boldsymbol\eta^{(k)}]\) below it, which is what keeps one score per candidate at every scale. The score retains the normalized allocation likelihood, and positive lags separate the scale-target problems. Each iteration visits the scales from the coarsest to the finest and is retained only if penalized evidence improves; coarse associations order candidates without filtering. Information reaches a scale from both of its neighbors within one iteration. The parent totals a scale is allocated from are the block sums of the scale below it, so the finer observations enter its likelihood, and the parent regime marginals enter its transition kernel. Every accepted edge is then tested against \(B\) shifted copies of its own column, shifted circularly at the coarsest scale and rolled inside each parent block below it, which keep the values of the feature and remove its alignment with the target, so a persistent latent state is not selected as a lagged edge. The weakest failing edge leaves and the survivors are scored again against the retained set, until none fails. Algorithm~\ref{alg:n2dbn} states the fit, in which \(\mathcal V_k\) is the scale-\(k\) variational log evidence returned by the forward--backward recursion and \(\sum_k\mathcal V_k\) stands for the first two terms of Equation~\eqref{eq:penalized_elbo}.
+First, the recovery fit scores the uncensored coarse emissions and uses an ordinary DM working score below them, with observed lagged inputs, including within-block lags. The working predictors also include separate coefficients on \(\log(1+\sum_{j<i}x_j)\), the observed starts already used in the block. This fitted covariate differs from updating the number of starts left to draw. The duration score uses \(Y\) on active children. The sampler can instead allocate \(Y-X\), update suffix weights and move excess starts. For example, when two starts must fill two capacity-one slots, the sampler assigns \((1,1)\) probability one. An ordinary DM with two positive weights gives positive probability to \((2,0)\). Thus the exact mass defined above evaluates the simulator's law, while the fitted score agrees with the ordinary DM part only when its histories, allocated totals and constraints agree. The reported recovery comparisons use this working score.
+
+Second, the E-step passes parent regime probabilities into the child transition logits and evaluates emissions at the factor mean \(\bar H_t\). For a fine epoch it varies that epoch's regime and fixes its siblings' scores at their regime means in the block denominator. This gives one local potential per epoch and regime. Forward--backward is exact for the chain with these fixed potentials. For the factor, a local quadratic expansion of the regime-weighted coarse emission score at \(\bar H_t\) gives a Gaussian pseudo-observation with covariance \(V_t=(-\nabla^2\ell_t)^{-1}\) and mean \(\bar H_t+V_t\nabla\ell_t\), after flooring the precision eigenvalues. Kalman smoothing uses regime-averaged dynamics and these measurements. Finer scales use only the factor dynamics. Alternating the two updates gives approximate regime probabilities \(\gamma_{tm}\) and factor means.
+
+Third, let \(\ell_{k,\ell}\) denote the local working log score, dropping terms constant across candidate sets at fixed concentration. For each child block the fine-scale term in Equation~\eqref{eq:penalized_elbo} is \(\mathbb E_q[\log W_k]\), with the observed parent total, context and history fixed. It averages the log of the repaired block mass over latent paths. For candidate coefficients the search evaluates
+\begin{equation}
+ \widetilde Q_{k,\ell}=
+ \begin{cases}
+ \sum_{t,m}\gamma_{tm}\ell_{t,\ell}(m,\bar H_t), & k=K,\\
+ \sum_c\ell_{c,\ell}(\bar{\boldsymbol\eta},\bar{\boldsymbol\zeta}), & k<K,
+ \end{cases}
+ \label{eq:profiled_structure_score}
+\end{equation}
+where \(\bar\eta_t=\sum_m\gamma_{tm}\eta_t(m,\bar H_t)\), and likewise for \(\bar\zeta_t\). The block softmax and log gamma terms are nonlinear, so evaluating them at the average predictor generally differs from their expectation. The search refits each candidate's lag coefficients by at most 20 gradient steps per coefficient block, subtracts the edge penalty and checks selected edges against shifted copies of their columns. The recovery comparison uses 32 circular shifts of a column at the coarsest scale and shifts within each parent block at finer scales.
+
+Algorithm~\ref{alg:n2dbn} uses the forward--backward log normalizer \(\mathcal V_k\) from each scale's E-step. The M- and S-steps follow that E-step. The outer check subtracts the updated graph penalty from the saved normalizers. The next sweep recomputes the potentials and normalizers under the updated parameters and graph. There is no fresh post-search evaluation before the check. The implementation allows roundoff of \(10^{-9}(1+|A|)\) on the sweep score \(A\). Its stored best score is the running maximum and is nondecreasing by definition. The score combines quantities from different stages of the sweep and need not bound the current likelihood. Neither likelihood ascent nor convergence to a stationary point of Equation~\eqref{eq:penalized_elbo} follows. The tolerances and iteration limits are stopping rules.
+
+For \(L p_k\) candidate sources and lags, exhaustive search profiles \(\sum_{d=0}^{D_k}\binom{L p_k}{d}\) sets per target before the shift checks. At fixed predictors, one forward--backward pass costs \(O(T_k M_k^2)\) and dense Gaussian smoothing costs \(O(T_k r_k^3)\), excluding construction of the local scores and their derivatives.
 
 \begin{algorithm}[t]
 \caption{N$^2$DBN variational structural EM}
@@ -433,29 +435,29 @@ where \(\boldsymbol\beta_{\mathcal P}\) and \(\boldsymbol\alpha_{\mathcal P}\) a
 \small
 \begin{algorithmic}[1]
 \Require \(Z^{(1:K)}\), \(\mathcal K^{(1:K)}\), hierarchy \(\{\pi_k\}\), lag bound \(p_k\), in-degree bound \(D_k\), latent orders \(M_k,r_k\), sparsity coefficients \(c_k\), shift count \(B\)
-\Ensure \(\Theta\), \(\mathcal G=\{\mathcal P_{k,\ell}\}\), \(q(U)\)
+\Ensure Fitted parameters and graph, and sweep scores
 \parState{\(\mathcal C_{k,\ell}\gets\mathcal L\times\{1,\dots,p_k\}\) and
   \(\lambda_k\gets c_k\log T_k\) for every \(k\) and \(\ell\)}
 \parState{\(\mathcal P_{k,\ell}\gets\emptyset\) for every \(k\) and \(\ell\);
-  \(\Theta\gets\) moment estimates; \(\mathcal J^\star\gets-\infty\); \(b\gets0\)}
+  \(\Theta\gets\) initial parameters; \(A^\star\gets-\infty\); \(b\gets0\)}
 \Repeat
 \For{\(k=K,K-1,\dots,1\)}
   \State \(\bar H\gets\mathbf 0\)
     \Comment{E-step at scale \(k\)}
   \Repeat
-    \parState{\(\log p(Z_t^{(k)}\mid S_t^{(k)}{=}m,\bar H_t)\) from \(E_K\) at
-      \(k=K\), from \(W_k\) given \(Z^{(k+1)}\) below it}
+    \parState{Build local working potentials at \((m,\bar H_t)\) from the emissions at
+      \(k=K\), from sibling-averaged allocation scores below it}
     \parState{\(q(S^{(k)}),\mathcal V_k\gets\) forward--backward under
       \(R_k\), coupled to \(q(S^{(k+1)})\)}
     \parState{\(q(H^{(k)}),\bar H\gets\) Kalman smoothing when \(r_k>0\), with a
       measurement update at \(k=K\)}
-  \Until{\(\mathcal V_k\) settles}
+  \Until{the inner stopping rule or iteration limit is reached}
   \parState{\(\Theta^{(k)}\gets\) regime and predictor blocks, each accepted
-    when its own term of \(\mathbb E_q[\log p]\) does not fall, and the factor
+    after checks on their working scores, and the factor
     block in closed form \hfill\(\triangleright\) M-step}
   \For{\(\ell\in\mathcal L\)}
     \parState{\(\mathcal P_{k,\ell}\gets\) the maximizer of
-      \(Q_{k,\ell}(\mathcal P)-\lambda_k|\mathcal P|\) over every
+      \(\widetilde Q_{k,\ell}(\mathcal P)-\lambda_k|\mathcal P|\) over every
       \(\mathcal P\subseteq\mathcal C_{k,\ell}\) with \(|\mathcal P|\leq D_k\)
       \hfill\(\triangleright\) Eq.~\eqref{eq:profiled_structure_score}}
     \parState{while some \((a,d)\in\mathcal P_{k,\ell}\) has a gain over
@@ -466,32 +468,32 @@ where \(\boldsymbol\beta_{\mathcal P}\) and \(\boldsymbol\alpha_{\mathcal P}\) a
       \(\boldsymbol\alpha_{\mathcal P}\) in \(\Theta^{(k)}\)}
   \EndFor
 \EndFor
-\parState{\(\mathcal J\gets\sum_k\mathcal V_k
+\parState{Using the pre-update normalizers, set \(A\gets\sum_k\mathcal V_k
   -\sum_{k,\ell}\lambda_k|\mathcal P_{k,\ell}|\)}
-\If{\(\mathcal J\geq\mathcal J^\star\)}
-  \parState{\(\mathcal J^\star\gets\mathcal J\); store
+\If{\(A\geq A^\star\)}
+  \parState{\(A^\star\gets A\); store
     \((\Theta,\mathcal G,q)\); \(b\gets0\)}
 \Else
   \parState{restore the stored \((\Theta,\mathcal G,q)\); halve the M-step
     step size; \(b\gets b+1\)}
 \EndIf
-\Until{\(\mathcal J^\star\) settles or \(b\) reaches the allowed number of
-  consecutive rejected iterations}
-\State \Return \((\Theta,\mathcal G,q)\)
+\Until{\(A^\star\) settles or \(b\) reaches the allowed number of
+  consecutive rejections or the iteration limit is reached}
+\State \Return fitted \((\Theta,\mathcal G)\) and score history
 \end{algorithmic}
 \end{algorithm}
 
-An implementation is available at \url{https://anonymous.4open.science/r/n2dbn-849F/README.md}. We select the number of discrete behavioral regimes \(M_k\), the continuous latent factor dimension \(r_k\) at each scale, and the graph-sparsity coefficients \(c_k\) on held-out validation evidence. For the \(T_k\) epochs at scale \(k\), the edge penalty is \(\lambda_k=c_k\log T_k\). We select \(c_k\) per scale, since \(\log T_k\) alone does not track how much evidence an edge at scale \(k\) has, since the coarsest scale has far fewer epochs than the finest, and the coefficient we select there is four times smaller. We fix the temporal hierarchy, the maximum admissible lag \(p_k\) and the maximum in-degree \(D_k\) before fitting. The fitted forecasts and synthetic logs satisfy Equation~\eqref{eq:exact_coherence} without subsequent reconciliation.
+The recovery comparison fixes the hierarchy, the scenario's latent dimensions, and the lag and degree bounds before fitting. Its edge penalty is \(\lambda_k=c_k\log T_k\), with \(c_1=c_2=2\) and \(c_3=0.5\). The smaller coarse coefficient was chosen on validation evidence.
 
 \section{Experiments}
 \label{sec:experiments}
 
-The implementation scripts that produce every table are available at \url{https://anonymous.4open.science/r/n2dbn-849F/README.md}. We evaluate N$^2$DBN on two questions a real log cannot answer. The first is whether the learned graph recovers dependencies known to be present, which requires a generator with available truth (Section~\ref{sec:exp:recovery}); the second is whether a log simulated from a fitted model is faithful to the log it was fitted on, against patterns declared before any fit (Section~\ref{sec:exp:fidelity}). Section~\ref{sec:exp:coherence} measures what fitting one granularity at a time costs in coherence, Section~\ref{sec:exp:external} compares N$^2$DBN with eight published learners on the declared benchmark, and Section~\ref{sec:exp:forecast} scores it against published forecasters on QuitoBench.
+We measure graph recovery on simulated data with known truth, fidelity to patterns declared before fitting, and agreement across resolutions. We then evaluate recovery of CalendarBench rules and forecast QuitoBench traffic. The experiment scripts are available at \url{https://anonymous.4open.science/r/n2dbn-849F/README.md}.
 
 \subsection{Structure Recovery}
 \label{sec:exp:recovery}
 
-The simulated benchmark includes $18$ scenarios from two generating families, nine driven by a regime process and nine by a continuous latent factor, each fitted on three replicates at a seed fixed by the scenario, for $540$ scored fits over ten methods. One property of the generator governs how the table reads. The finest scale has no true lagged edge in any replicate, because an edge there can only shift which slot of a block opens an episode, which is worth less than the penalty it would pay. We therefore report the two truth-bearing scales, the middle one and the coarsest.
+The simulated benchmark includes $18$ scenarios from two generating families, nine driven by a regime process and nine by a continuous latent factor, each fitted on three replicates with seeds fixed by scenario and replicate, for $540$ scored fits over ten methods. One property of the generator governs how the table reads. The finest scale has no true lagged edge in any replicate, because the generating graphs specify zero finest-scale in-degree. We therefore report the two truth-bearing scales, the middle one and the coarsest.
 
 We conducted methods with a common interface and the same counts, with the same in-degree and lag bounds, starting it from the same graph with no edges and the same parameters with their lag coefficients cleared, and fitting its parameters afterwards with the same code, so the only difference between two rows is the criterion that chose the graph. N$^2$DBN enumerates every parent set inside the in-degree bound $D_k$. A scenario with $L=10$ offers $Lp_k$ candidates, $20$ at the middle scale and $10$ at the coarsest, so with $D_2=2$ and $D_3=1$ the enumeration covers at most $211$ and $11$ parent sets per label and returns the maximizer of its own penalized score.
 
@@ -525,9 +527,11 @@ Empty graph & $0.000$ & $0.000$ & $11.02$ & $1.00$ \\
 \end{threeparttable}
 \end{table}
 
-N$^2$DBN leads at both truth-bearing scales by a factor of nearly three, and is the only method whose structural distance improves on reporting nothing at all; the eight published learners all land above the empty graph.
+N$^2$DBN has the highest mean $F_1$ at both truth-bearing scales, and is the only method whose structural distance improves on reporting nothing at all; the eight published learners all land above the empty graph.
 
-The gap comes from a confound any latent-free criterion shares. The generator drives every label from a regime that persists across epochs, so each driven label is autocorrelated whether or not a lagged edge points into it, and a criterion conditioned on nothing has one place to put that autocorrelation, namely an edge from a label to itself. At the middle scale, eight of the eight latent-free entries recover between $0.504$ and $1.000$ of the true lagged self edges, and none of the eight recovers more than $0.194$ of the cross-label ones. N$^2$DBN recovers $0.833$ and $0.484$, and is the only entry above a quarter on cross-label edges. Conditioning the local score on $q(U)$ removes the autocorrelation before an edge is scored, which is what separates a dependence between two labels from the persistence of one.
+At the middle scale the eight latent-free criteria recover between \(0.504\) and \(1.000\) of the true self edges and at most \(0.194\) of the cross-label edges. N$^2$DBN recovers \(0.833\) and \(0.484\), respectively. Persistent regimes and factors can produce serial association without a lagged edge. Table~\ref{tab:exp-recovery} changes both the graph score and its access to latent states, so it cannot attribute the difference to nesting or latent conditioning alone.
+
+\paragraph{Latent-matched structure recovery.} A paired experiment compares the nested search with a separate latent DBN fitted at each resolution. Both use the same generated record, training split, regime and factor dimensions, empty initial graphs, training-data initialization, lag and degree bounds, edge penalties and coefficient-fitting budget. Both arms select by the same penalty alone, since a within-parent shift test would supply the independent fit with the block boundaries. The independent DBNs each fit a ZINB count and NB duration emission. They receive neither a parent total nor a parent regime distribution. We compare middle- and coarse-scale \(F_1\) and total SHD within each scenario and replicate. The comparison uses the first 70\% of each record for fitting, split on complete coarse epochs. It measures allocation and cross-scale conditioning together. Table~\ref{tab:exp-recovery} reports the original comparison.
 
 \paragraph{The benchmark is not won by a variance ordering.} A benchmark generated from an additive noise model often orders its variables by marginal variance along the causal order, and a baseline using only that order can then match the learners it is compared against \citep{reisach_beware_2021}, so we report the property for ours. Varsortability is the share of directed paths along which the marginal variance increases, and R-squared sortability replaces the variance with the share the others explain \citep{reisach_scale_2023,lohse_sortability_2025}. Over the $44$ scale cells of these scenarios varsortability averages $0.633$ and R-squared sortability $0.577$, with $9$ and $6$ cells above $0.8$, past the one half an uninformative score reaches, and the tiled networks of the external comparison are more sortable still at $0.800$.
 
@@ -536,11 +540,11 @@ Whether that regularity is strong enough to exploit is a separate question, so w
 \subsection{Fidelity to Declared Patterns}
 \label{sec:exp:fidelity}
 
-The fidelity benchmark is CalendarBench \citep{calendarbench_2026}, a declared log of $30$ simulated participants over $12$ weeks and $60$ labels, generated from three behavioral personas with trends, seasonalities and temporal dependencies written down before any fit. We fit N$^2$DBN to eight participants and simulate $64$ replicate logs on the same horizon and mask. For each declared quantity we ask whether the value realized in the source log falls inside the central $90$ percent interval of the $64$ replicates.
+The fidelity benchmark is CalendarBench \citep{calendarbench_2026}, a declared log of $30$ simulated participants over $12$ weeks and $60$ labels, generated from three behavioral personas with trends, seasonalities and temporal dependencies written down before any fit. For this log experiment we fit a minute-scale Bernoulli start model and shifted NB duration marks with calendar predictors separately to eight participants and simulate $64$ replicate logs on the same horizon and mask. For each declared quantity we ask whether the value realized in the source log falls inside the central $90$ percent interval of the $64$ replicates.
 
 Across $520$ checks the coarser counts and durations of every simulated log equal the sums of their children with zero error, which establishes a valid event log and separates nothing, since any log written as events reconciles when read back. The next measurement is what separates.
 
-Over $14\,066$ tested cells spanning episode counts per day, episode lengths, totals, hour-of-day profile, weekend contrast and week index, $12.6$ percent fall outside a nominal $10$ percent interval, with episode length and episodes per day accounting for $674$ of the $1022$. All four declared question families are reproduced, with weekly walking episodes inside the interval on $11$ of $13$ weeks, the weekday against weekend contrast on $3$ of $3$ rows, the hour-of-day walking profile on $8$ of $8$ bands, and weekly gym episodes on $12$ of $13$ weeks, with no declared row rejected at the $5$ percent level.
+Over $14\,066$ tested cells spanning episode counts per day, episode lengths, totals, hour-of-day profile, weekend contrast and week index, $12.6$ percent fall outside the central $90$ percent interval, with episode length and episodes per day accounting for $674$ of the $1022$. All four declared question families are reproduced, with weekly walking episodes inside the interval on $11$ of $13$ weeks, the weekday against weekend contrast on $3$ of $3$ rows, the hour-of-day walking profile on $8$ of $8$ bands, and weekly gym episodes on $12$ of $13$ weeks, with no declared row rejected at the $5$ percent level.
 
 \subsection{The Cost of Fitting One Granularity at a Time}
 \label{sec:exp:coherence}
@@ -553,9 +557,9 @@ Section~\ref{sec:introduction} claims that a model fitted at one granularity at 
   -\hat\mu_c^{(k+1,\ell)}\Bigr| .
   \label{eq:coherence_gap}
 \end{equation}
-For N$^2$DBN a finer scale is an allocation of its parent total, so its unconditional mean is the parent's mean times weights that sum to one over each block, and Equation~\eqref{eq:coherence_gap} vanishes by the tower property for every block and label whatever those weights are. For two models fitted at two granularities nothing constrains the sum of one to the other.
+For any common forecast history \(\mathcal H\), Equation~\eqref{eq:aggregation_constraints} and linearity give \(\sum_{t\in\operatorname{ch}_k(c)}\mathbb E[X_t\mid\mathcal H]=\mathbb E[X_c\mid\mathcal H]\). Thus Equation~\eqref{eq:coherence_gap} vanishes for coherent conditional means. For two models fitted at two granularities nothing constrains the sum of one to the other.
 
-We measure it on $22$ scenarios at three replicates. The nested arm fits the model at the parameters the generator wrote; the per-granularity arm gives every scale its own zero-inflated emission, intercept and lag block, with no allocation and no message between scales, fitted independently at each. Over the $66$ replicates the nested arm reaches $7.0\times10^{-16}$ episodes per coarse epoch and label, floating-point zero, while the per-granularity arm reaches $5.06$, median $2.75$, maximum $41.4$. The disagreement the introduction names is therefore several episodes per epoch, and the nested construction removes it with no reconciliation applied.
+We measure it on $22$ scenarios at three replicates. The nested arm uses the generating parameters and multiplies each predicted parent total by normalized child weights. These point predictions satisfy the same sum identity. The experiment does not integrate over the capacity repair to estimate child means. The per-resolution arm estimates separate emissions from each resolution's data and runs inference without parent messages. Over the $66$ replicates the nested arm reaches $7.0\times10^{-16}$ episodes per coarse epoch and label, floating-point zero, while the per-granularity arm reaches $5.06$, median $2.75$, maximum $41.4$. The disagreement the introduction names is therefore several episodes per epoch, and the nested construction removes it with no reconciliation applied.
 
 \subsection{Recovery on the Declared Benchmark}
 \label{sec:exp:external}
@@ -592,44 +596,48 @@ Chow--Liu tree & $0/3$ & $14$ \\
 \end{threeparttable}
 \end{table}
 
-On declared recall the methods tie, since every learner that recovers anything recovers the same rule, walking driving its own next-day episodes, and none recovers the other two. The separation is in what else is placed. The Chow--Liu tree is quiet and finds nothing, returning $20$ edges in all, the search-based learners fill the stationary block while recovering at most one rule, and N$^2$DBN recovers that rule while leaving the block nearly empty. The mechanism is the acceptance threshold of Section~\ref{sec:structure_parameter_learning}. At $120$ candidates per target that threshold is the $0.998$ quantile of a measured null, so about one null candidate in $480$ may clear it, against a measured clearance rate of $0.002$.
+On declared recall the methods tie, since every learner that recovers anything recovers the same rule, walking driving its own next-day episodes, and none recovers the other two. The separation is in what else is placed. The Chow--Liu tree is quiet and finds nothing, returning $20$ edges in all, the search-based learners fill the stationary block while recovering at most one rule, and N$^2$DBN recovers that rule while leaving the block nearly empty. This pooled count search uses a permutation-calibrated acceptance threshold. At $120$ candidates per target that threshold is the $0.998$ quantile of a measured null, so about one null candidate in $480$ may clear it, against a measured clearance rate of $0.002$.
 
 The gym rule at lag seven is recovered by no method. N$^2$DBN can express it at the week scale and does not select it there at any cohort size, and it lies outside the largest lag $p_k$ every daily learner is given. Its recall against cohort size was pre-registered, predicting $0.604$ at $30$ participants against a measured $0.333$, so the sufficiency ledger behind that prediction is optimistic here and we report the gap as measured.
 
 \section{Forecasting Benchmark}
 \label{sec:exp:forecast}
 
-The hierarchical forecasting literature produces a base forecast at every node and repairs the disagreement between resolutions with a reconciliation map. N$^2$DBN applies no such map. Its finer resolutions allocate the total above them, so a forecast already lies in the coherent subspace. We measure what that construction costs in accuracy against forecasters built for the task.
+We use the QuitoBench ten-minute panel of payment-platform traffic \citep{xue_quitobench_2026}. It contains 773 series with 5,904 observations over 41 days. We keep the four count channels and omit the continuous channel. The reader maps values at or below \(10^{-4}\) to zero and rounds the remaining counts to integers. Of the 230 series with at least one positive observation in each count channel over the record, we take the first 40 by series identifier. Eligibility uses the full record, including the test period. A ten-minute observation can contain many transactions. The forecast model therefore relaxes the binary slot constraint in Equation~\eqref{eq:atomic_support} and uses nonnegative counts at ten-minute, hourly and daily resolutions. QuitoBench supplies no episode durations. The shared fitting interface fills its duration arrays with zeros, which can enter the coarse NB working score at positive counts. Only counts are forecast and evaluated.
 
-We use QuitoBench \citep{xue_quitobench_2026}, production payment-platform traffic published at two sampling rates. Its ten-minute split provides $773$ series of $5904$ consecutive epochs over $41$ days on one shared timestamp grid, with five anonymised variates each. Four are integer at every epoch and are counts, so their block sums are the counts of the coarser epoch; the fifth is continuous, so it is a rate that a model summing to its coarse resolutions cannot represent. We keep the $230$ series with all four count channels active and draw $40$ of them, which is what fitting five methods at three resolutions affords. The hierarchy is ten minutes, hour, day.
+The main comparison has one origin per series, at July 28, 2023, 00:00. Each fit reads the preceding 18 complete days (2,592 ten-minute observations, 432 hours or 18 daily totals) and forecasts the next two days (288 observations, 48 hours or two totals) without updating on test observations. The extended split uses the first 39 days and forecasts the last two, with a later origin inside the benchmark test period. The N$^2$DBN forecast uses two regimes per resolution and no continuous factor. The point forecast propagates the final regime probabilities, uses observed and then predicted daily counts for coarse lags, and allocates each predicted total using normalized weights. The forecast call supplies no fine-scale lag history. DLinear and PatchTST are fitted separately at each resolution for 25 epochs. At the cutoff their input lengths are 864 ten-minute observations, 144 hours and 14 days, respectively.
 
-We split at the benchmark's declared boundary of 2023-07-28, leaving $18$ days of history, forecast the following two days, and score hourly on the benchmark's own standardized error. We compare N$^2$DBN with DLinear and PatchTST, each fitted once per resolution, and their disagreement across those three answers is the coherence column.
+For each series we sum the finest forecasts to hours and average the absolute or squared error over all \(48\times4\) hour-channel observations. Each channel is standardized with its own hourly training mean and standard deviation, with a \(10^{-8}\) floor on the latter. Coherence compares the independently produced forecasts in count units. Bottom-up DLinear and PatchTST keep the same finest predictions and replace both coarser predictions by their sums. Their hourly errors in this evaluation therefore equal those obtained by summing their respective finest forecasts, and their coherence gaps are zero by construction.
 
 \begin{table}[t]
 \caption{Forecasting two held-out days of application traffic.}
 \label{tab:exp-forecast}
 \small
 \begin{threeparttable}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-Method & MAE & MSE & Coherence \\
+ & \multicolumn{2}{c}{MAE} & MSE & Relative \\
+Method & Median & Mean & Median & gap \\
 \midrule
-Naive & $1.150$ & $4.055$ & $0$ \\
-Seasonal naive, daily & $\mathbf{0.565}$ & $\mathbf{1.212}$ & $0$ \\
-DLinear, per resolution & $0.590$ & $1.269$ & $4.13\times10^{-2}$ \\
-PatchTST, per resolution & $0.604$ & $1.315$ & $4.66\times10^{-2}$ \\
-N$^2$DBN & $0.742$ & $1.746$ & $\mathbf{7.6\times10^{-17}}$ \\
+Naive & 1.150 & 3.786 & 2.672 & 0 \\
+Seasonal naive, daily & \textbf{0.565} & \textbf{2.913} & 1.359 & 0 \\
+DLinear & 0.590 & 2.938 & \textbf{0.912} & 0.0413 \\
+DLinear, bottom-up & 0.590 & 2.938 & \textbf{0.912} & 0 \\
+PatchTST & 0.604 & 2.962 & 1.216 & 0.0466 \\
+PatchTST, bottom-up & 0.604 & 2.962 & 1.216 & 0 \\
+N$^2$DBN & 0.742 & 73.046 & 1.259 & $7.6\,10^{-17}$ \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
-\item MAE, mean absolute error. MSE, mean squared error. Both on the standardized scale.
-\item Coherence, the mean absolute discrepancy between a method's forecast at one resolution and the sum of its own forecast at the resolution below, as a fraction of the coarsest forecast.
-\item Naive, the last observed epoch repeated. SNaive-day, the same epoch of the previous day.
+\item Summaries across the 40 series at the declared cutoff. Relative gap is the median of the mean absolute discrepancy across adjacent resolutions divided by the mean absolute daily forecast. The bottom-up entries follow by summation of the same finest forecasts.
 \end{tablenotes}
+
 \end{threeparttable}
 \end{table}
 
-N$^2$DBN reproduces the coherence its construction promises and places mid-field on accuracy. Both deep forecasters disagree across their three fitted resolutions by four to five percent of the coarsest total, where N$^2$DBN is at floating-point zero and a simulated trajectory agrees exactly in integer arithmetic. With $39$ days of history every method improves and the ordering holds. The seasonal naive daily copy leads every fitted method on both windows, since this traffic repeats closely enough from one day to the next that copying it is hard to improve on. Depth in the ladder pays. Adding the ten-minute resolution beneath the hour moved hourly error from $0.491$ to $0.370$ and removed an instability, with mean error falling from $355.8$ to $0.419$, though the two ladders also read different calendar columns, so this comparison cannot separate the two causes. Two limits bound the arm. Every row is a point forecast, and two series in eight forecast several orders of magnitude too large, which is why we report medians. The cause is the lagged term, a coefficient on the log of a count that dominates at counts of order $10^{5}$; bounding it during estimation is the repair, and we do not apply it here.
+Seasonal persistence and both deep models have lower median MAE than N$^2$DBN. The largest two N$^2$DBN series MAEs are \(113.9\) and \(2773.3\). Across all 40 its mean MSE is \(1.22\times10^6\). With 39 training days its median MAE falls to \(0.503\), while its mean remains \(73.19\). In a recursive coarse forecast, a lag term \(\beta\log(1+x)\) multiplies the NB mean by \((1+x)^\beta\) before numerical clipping. Large counts and positive feedback can amplify an error and allocation then distributes the excessive total coherently. This mechanism explains how large forecasts are possible. The summaries alone cannot establish the cause for an individual series.
+
+\paragraph{Reconciled deep forecasts.} To test whether forecasts fitted at coarser resolutions add predictive information, we also specify an ordinary least-squares reconciliation on the same origins. Let \(A\) stack the identity and the hourly and daily summation operators, and let \(f\) stack all three base forecasts for one channel in count units. We compare the independently fitted hourly forecast, the bottom-up hourly sum and the hourly component of \(A\hat b\), where \(\hat b=\arg\min_b\|A b-f\|_2^2\). All three use the same fitted deep models. We retain per-series errors and report the mean, median and maximum to expose unstable forecasts. Table~\ref{tab:exp-forecast} gives the archived finest-to-hour results.
 
 \section{Case Study}
 \label{sec:case-study}
@@ -639,20 +647,20 @@ We apply N$^2$DBN to LifeSnaps, a four-month multi-modal study of wearable and s
 \subsection{Data and Preparation}
 \label{sec:case-study:data}
 
-The published dataset covers $71$ participants and the derived event log $60$. Each contributes their first eight complete calendar weeks from their own first Monday; $51$ clear that window, at a mean observed share of $0.985$ and a minimum of $0.88$. The horizon is $56$ days per participant, $2688$ observed participant-days, on a ladder of $80\,640$ minute slots, $1344$ hours, $56$ days and $8$ weeks.
+The published dataset covers 71 participants and the derived log contains 60. The preparation requires at least 56 observed days and 90\% day coverage over a participant's record, then selects eight calendar weeks beginning on that participant's first Monday. The saved fit includes 51 participants, each with at most 80,640 minute slots. A day counts as observed if any event was recorded. Mean day coverage before masking incomplete weeks was \(0.985\). A week with any unobserved day is excluded in full, and the simulation uses the same observation schedule. On a retained day a minute without a label is recorded as zero. This convention assumes day-level event presence adequately describes observation. It cannot distinguish every unrecorded episode from inactivity.
 
-Six behavior labels are targets: \texttt{gym}, \texttt{mindfulness}, \texttt{nap}, \texttt{sleep}, \texttt{survey\_response} and \texttt{walk}. Nine columns are exogenous: six harmonic and index encodings of hour of day, day of week and study week, and the scheduled \texttt{notification\_received}, which the participant does not set. Three survey columns collapse into one node, since the read column equals the sum of the other two on $0.971$ of participant-days and three targets would allow an edge that is an accounting identity.
+The six targets are gym, mindfulness, nap, sleep, survey response and walk. Calendar encodings and scheduled notifications are exogenous. The reader relabels notification reads, mood surveys and step-goal surveys as \texttt{survey\_response} and keeps each annotation. On \(97.1\%\) of participant-days with survey activity, the read count equals the sum of the other two counts. Each positive recorded duration is rounded to minutes with a one-minute floor. For a nonpositive survey duration, the reader assigns a deterministic one- or two-second mark, which becomes one slot. That slot records the presence of a response and gives no measurement of time spent answering.
 
-Following Section~\ref{sec:problem_formulation}, we define the likelihood, the episode starts and their durations at the minute slot, and learn dependencies at the hour, day and week scales. We fit one graph over the cohort, since the objective sums the participants' log likelihoods and eight weeks is too little to support an edge alone. Each participant keeps their own level, and we score an edge once against a permutation null on the same candidate space. We offered minute-scale candidates and none cleared that null, as expected of a binary start process where a lagged edge can only move which minute of a block opens an episode.
+The panel counts every same-label annotation in its start minute and adds its duration. The pooled case-study fit uses a finest-minute Bernoulli response \(\mathbf 1\{X_t>0\}\) on observed minutes when the label is at risk of starting, a shifted NB mark for the summed duration in an occupied minute and hour-, day- and week-scale predictors. Its simulator draws at most one start per label and minute. Thus the raw annotation counts used for volume comparisons can exceed the binary response used in fitting. This is a finest-scale event model with deterministic aggregation. The case-study graphs and log comparisons come from this fit, separately from the top-down allocation experiment in Section~\ref{sec:exp:recovery}.
 
 \subsection{The Learned Structure}
 \label{sec:case-study:structure}
 
 The search scores $180$ candidates and accepts $23$ edges at a penalized threshold of $21.31$ nats (the natural-logarithm unit of information), against a permutation null with median $0.51$ nats and maximum $1604.0$ over the same candidate space. Of the $23$, sixteen are at the hour scale, twelve of them exogenous and four reading the target's own past; the day scale contributes four and the week scale three, all of them self edges; and none reads a different behavior label.
 
-We observe the split across scales the model predicts: every exogenous relation is selected at the hour scale, and every day- and week-scale edge reads a label's own past. A calendar column is a deterministic function of the epoch, so by Section~\ref{sec:nested_generative_model} it enters the scale-$k$ likelihood only through its within-block detail $(I-\Pi_k)$; hour-of-day harmonics therefore have their home at the hour scale, where a day is the parent. The day and week scales express persistence, which lives in the block-constant shadow $\Pi_k$ that an hour-scale fit cannot identify. Both ends of the ladder yield structure, and neither yields what the other does.
+Every selected calendar relation is at the hour scale. The four hour-scale self edges and all seven day- and week-scale edges indicate dependence on the target's own past. These are associations in the full panel. The half-panel refits below measure their reproducibility.
 
-\paragraph{A calendar column helps only at the scale where it varies.} We run the same search three times on the same panel, with the calendar columns withheld, offered at their identifying scale, and offered at every scale, accepting $21$, $23$ and $25$ edges. Offering them where they are identified is worth $2295.64$ nats of penalized log likelihood over withholding them, and offering them everywhere costs $33.90$ nats against the identifying-scale arm while selecting two more edges. The identifying scale of a calendar column is the finest scale at which a parent epoch spans one full period of it. Both halves of the corollary hold, since the columns repay their penalty where they vary inside a parent block and the penalty paid above that scale is wasted.
+\paragraph{A calendar column helps only at the scale where it varies.} We run the same search three times on the same panel, with the calendar columns withheld, offered at their identifying scale, and offered at every scale, accepting $21$, $23$ and $25$ edges. Offering them where they are identified is worth $2295.64$ nats of penalized log likelihood over withholding them, and offering them everywhere costs $33.90$ nats against the identifying-scale arm while selecting two more edges. The identifying scale of a calendar column is the finest scale at which a parent epoch spans one full period of it. The identifying-scale fit has the largest penalized score of the three.
 
 \paragraph{Falsification.} With no ground-truth graph, we grade the learned structure by what it declines to select, against a protocol we froze and hashed before the first fit. Of $78$ declared negatives, $72$ are structural, since the scheduled notification is exogenous and the axis cannot express an edge into it; the test stands on the remaining six and the search selects none. A sham label drawn independently of every column offers $362$ candidates and the search selects one, a false-positive rate of $0.003$. Of six declared positives, the search recovers both hour-scale ones at lags one and two, and selects the same-epoch read the protocol does not declare.
 
@@ -691,14 +699,16 @@ Label & Observed & Drawn & N$^2$DBN & Baseline \\
 \end{threeparttable}
 \end{table}
 
-Four of the six labels land within $6$ percent of their observed count, so the learned graph is four times closer to the panel than an intercept with a participant level. Withholding the calendar columns puts that summary at $0.061$, so they supply half of the gain.
+For \texttt{gym}, \texttt{nap}, \texttt{sleep} and \texttt{walk}, the mean absolute log count ratio is \(0.034\), versus \(0.137\) for the intercept baseline. This fourfold difference applies to these four labels. Across all six labels the simulation averages \(9507.8\) episodes per log against \(14\,034\) observed, a shortfall of \(32.3\%\).
 
-The two labels that miss are the two the panel supports least. \texttt{mindfulness} occurs once per $40$ participant-days and the simulation doubles it, and \texttt{survey\_response}, which accounts for $72$ percent of the panel's behavioral episodes and is instantaneous on $98.9$ percent of them, is simulated at roughly half its observed rate. Across the $46$ tested cells below, the standardized observed-to-simulated difference has median $|g| = 0.216$, interquartile range $[0.056, 0.507]$, and $91$ percent of cells below $|g| = 0.8$.
+Survey responses account for \(10\,162/14\,034=72.4\%\) of the observed episodes. The model generates \(5418.4\) on average, or \(53.3\%\) of the observed count. A separate preparation audit of the available extract found \(10\,163\) survey annotations in observed weeks. All had nonpositive recorded duration. They occupied only \(5229\) distinct participant-minutes, including \(4011\) minutes with two to four annotations. Only three further label-minutes had multiple starts, one for gym and two for mindfulness. The audit differs by one survey annotation from Table~\ref{tab:case-volume}. It illustrates how multiple records can enter one binary start and why duration provides little information for this label. The evidence does not identify a separate effect of class frequency or duration on the error. At the other extreme, only 68 mindfulness episodes were observed and the model generated \(132.2\).
+
+Across the $46$ tested cells below, the standardized observed-to-simulated difference has median $|g| = 0.216$, interquartile range $[0.056, 0.507]$, and $91$ percent of cells below $|g| = 0.8$.
 
 \subsection{Preservation of Non-Stationarity}
 \label{sec:case-study:nonstationarity}
 
-We compare the two logs on an enumerated set of $21$ non-stationarity forms over six labels and three calendar scales, $228$ cells, each a two one-sided equivalence test at its own declared tolerance with the participant as sampling unit \citep{lakens_equivalence_2017}. We test a cell only where the observed panel supports one, leaving $182$ descriptive for a declared reason, $127$ of them because the tolerance falls inside the precision this cohort resolves.
+We compare 21 forms of non-stationarity over six labels and three calendar scales. The design covers 228 cells. Each eligible cell uses two one-sided equivalence tests at a declared tolerance with the participant as the sampling unit \citep{lakens_equivalence_2017}. We test a cell only where the observed panel supports one, leaving $182$ descriptive for a declared reason, $127$ of them because the tolerance falls inside the precision this cohort resolves.
 
 We read the outcome against a positive control. Grading one simulated replicate against the other four, which nothing separates, five of the $11$ tested rows fail: seasonality-amplitude drift, dispersion, factor share, same-epoch and lagged dependence drift. A row failing its own replicate noise has a tolerance narrower than the spread across replicates, so a failure there grades that spread and not the model. Six rows retain evidence once those five are removed, and the simulated log matches on four, namely the normalized trend, the Dickey--Fuller and KPSS pair, the share of Haar detail energy at the coarsest level, and the windowed maximum mean discrepancy, departing on the within-day harmonic profile and the drift in persistence. The segmentation below tests the same question directly.
 
@@ -711,9 +721,7 @@ Between-participant dispersion, the coefficient of quartile variation over weekl
 \section{Conclusions}
 \label{sec:conclusions}
 
-We present N$^2$DBN, a generative model for behavioral event logs that defines one likelihood at the finest configured resolution over episode starts and durations and obtains every coarser count and duration as a deterministic sum of it, so cross-resolution consistency holds by construction on every fit we report. A variational structural Expectation-Maximization procedure estimates the graph and the conditional parameters together, from the coarsest resolution to the finest, so a dependency is selected and its coefficients fitted at the resolution where the block decomposition identifies them.
-
-We evaluated the model on three benchmarks. On simulated data with known ground truth it recovers more structure at both truth-bearing scales than eight previously published learners. Against published forecasters on QuitoBench, its accuracy is comparable while its resolutions agree where their methods do not. We applied N$^2$DBN to LifeSnaps event logs based on wearables and self-report app data, and our learned graph placed every calendar relation at the hour scale and every persistence relation at the day and week scales, and the simulated log reproduced the observed counts, trend and week-scale changepoints. Event logs have no ground-truth graph, which is why we measured structure recovery on simulated data.
+N$^2$DBN allocates counts and durations across nested temporal resolutions, so generated totals agree under aggregation. Structure search uses approximate latent-state scores and a check on the recorded sweep score. On simulated data it recovers more edges by \(F_1\) at both truth-bearing scales than the eight published learners in Table~\ref{tab:exp-recovery}. The QuitoBench forecasts agree across scales, including on series with large errors. Seasonal persistence has lower median absolute error and bottom-up deep forecasts also agree across scales. In the LifeSnaps event model, eight of 23 edges pass the half-panel stability threshold. Four labels have simulated counts close to their observed counts, while the most frequent label, survey responses, is undercounted by nearly half.
 
 Future work on N$^2$DBN may raise forecasting accuracy by bounding the lagged coefficient during estimation, and may extend the estimation pass with a fine-to-coarse leg, so that parameters at a coarse resolution are informed by the resolutions below it.
 
@@ -721,7 +729,7 @@ Future work on N$^2$DBN may raise forecasting accuracy by bounding the lagged co
 
 N$^2$DBN is fitted to logs of personal behavior, which are sensitive records, and a fitted model reproduces a participant's weekly rhythm closely enough to stand in for it. We use public datasets collected under their own consent procedures, LifeSnaps \citep{yfantidou_lifesnaps_2022} and anonymized application traffic \citep{xue_quitobench_2026}, we fit a single graph over the whole cohort so that no per-participant structure is published, and participant-level quantities appear only in aggregate. Two risks remain. Synthetic logs retain a per-participant level and should be handled as personal data until that level is withheld, and a model of habit persistence could support manipulative nudging if it were deployed outside the consent under which such logs are collected.
 
-An AI coding assistant (Claude Code, Anthropic) was used in the implementation and documentation, and editing this manuscript; the authors verified every reported result and take full responsibility for its content. Overleaf's Writefull was used for grammar and spelling.
+AI coding assistants (Claude Code, Anthropic, and Codex, OpenAI) were used in the implementation and documentation, and editing this manuscript; the authors take responsibility for the reported results. Overleaf's Writefull was used for grammar and spelling.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
