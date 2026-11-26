@@ -1,18 +1,5 @@
-# Services for the N2DBN benchmark.
-#
-#   docker compose run --rm tests            full suite with coverage
-#   docker compose run --rm exp1             one experiment on the full grid
-#   docker compose run --rm shell            interactive session
-#   docker compose run --rm gpu-info         what the GPU service can see
-#   docker compose run --rm exp5-gpu         algorithm comparison on the GPU
-#
-# `results/` and `paper/` are bind-mounted, so an interrupted run keeps the rows
-# it finished and a rebuilt image never loses an output.
-#
-# JOBS sets how many (scenario, replicate) pairs are fitted at once.  Every
-# worker holds its own copy of the dataset, so the ceiling is memory rather than
-# cores; `python -m src.utils.resources` prints what this machine allows.
-
+# Paper experiments use the source in the built image and read host data.
+# Rebuild once after a source change with docker compose build tests.
 x-common: &common
   build:
     context: .
@@ -34,172 +21,13 @@ x-common: &common
     - ./paper:/workspace/paper
   shm_size: "2gb"
 
-x-gpu: &gpu
-  build:
-    context: .
-    dockerfile: docker/Dockerfile.gpu
-    args:
-      GIT_REV: ${GIT_REV:-unknown}
-  image: n2dbn:gpu
-  working_dir: /workspace
-  environment:
-    PYTHONPATH: /workspace
-    PYTHONHASHSEED: "0"
-    OMP_NUM_THREADS: "1"
-    OPENBLAS_NUM_THREADS: "1"
-    MKL_NUM_THREADS: "1"
-    NUMEXPR_NUM_THREADS: "1"
-    MPLBACKEND: Agg
-    NVIDIA_VISIBLE_DEVICES: all
-    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+x-data: &data
+  <<: *common
   volumes:
     - ./results:/workspace/results
-    - ./paper:/workspace/paper
-  shm_size: "2gb"
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
+    - ./data:/workspace/data:ro
 
 services:
-  # Revised manuscript: common normalized nested law, separate output root.
-  # exp* services below retain the historical implementations and results.
-  revision-tests:
-    <<: *common
-    volumes:
-      - .:/workspace
-    command: python -m pytest tests/test_revision_nested.py tests/test_revision_pipeline.py tests/test_revision_calendarbench.py tests/test_revision_parallel.py tests/test_frozen_allocation_path.py -q
-
-  revision-smoke:
-    <<: *common
-    command: >-
-      python -m experiments.revision smoke
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --outer 1 --inner 1 --profile 2 --shifts 0
-      --output results/${REV_ROOT:-revision}/smoke
-
-  revision-synthetic:
-    <<: *common
-    command: >-
-      python -m experiments.revision synthetic --tune
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
-      --output results/${REV_ROOT:-revision}/synthetic
-
-  revision-lifesnaps-audit:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision lifesnaps --audit-only
-      --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
-      --participants 51 --weeks 8
-      --output results/${REV_ROOT:-revision}/lifesnaps-audit
-
-  revision-benchmark-audit:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision benchmark --audit-only
-      --csv data/dynamic_patterns/event_log.tsv
-      --manifest data/dynamic_patterns/manifest_declared.json --participants 30
-      --output results/${REV_ROOT:-revision}/benchmark-audit
-
-  revision-benchmark:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision benchmark --tune
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --csv data/dynamic_patterns/event_log.tsv
-      --manifest data/dynamic_patterns/manifest_declared.json --participants 30
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
-      --output results/${REV_ROOT:-revision}/benchmark
-
-  revision-lifesnaps:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision lifesnaps --tune
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --csv ${REV_CSV:-data/observed_lifesnaps_event_log.csv}
-      --participants 51 --weeks 8 --pairs ${REV_PAIRS:-25}
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --replicates ${REV_REPLICATES:-10} --seconds ${REV_SECONDS:-0}
-      --output results/${REV_ROOT:-revision}/lifesnaps
-
-  revision-forecast:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision forecast --tune
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --data data/quito --panels min --series 40 --windows 1
-      --split cutoff --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --seconds ${REV_SECONDS:-0}
-      --output results/${REV_ROOT:-revision}/forecast
-
-  revision-forecast-extended:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.revision forecast --tune
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --data data/quito --panels min --series 40 --windows 1
-      --split extended --horizon-blocks 2 --train-blocks 39 --epochs ${REV_EPOCHS:-30}
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --seconds ${REV_SECONDS:-0}
-      --output results/${REV_ROOT:-revision}/forecast-extended
-
-  revision-scalability:
-    <<: *common
-    command: >-
-      python -m experiments.revision scalability
-      --jobs ${REV_JOBS:-4} --memory-gb ${REV_MEMORY_GB:-12}
-      --outer ${REV_OUTER:-5} --inner ${REV_INNER:-3}
-      --profile ${REV_PROFILE:-25} --shifts ${REV_SHIFTS:-19}
-      --replicates ${REV_SCALE_REPLICATES:-3} --seconds ${REV_SCALE_SECONDS:-3600}
-      --output results/${REV_ROOT:-revision}/scalability
-
-  revision-report:
-    <<: *common
-    command: >-
-      python -m experiments.revision report
-      --output results/${REV_ROOT:-revision}
-
-  # ---------------------------------------------------------------- CPU ----
-  # The three development services mount the working tree over the copy baked
-  # into the image, so an edit takes effect without a rebuild.  The experiment
-  # services deliberately do not, so a published run is reproducible from its
-  # image rather than from whatever the tree happened to hold.
   tests:
     <<: *common
     volumes:
@@ -241,287 +69,97 @@ services:
     <<: *common
     command: python -m src.utils.resources
 
-  exp1:
+  synthetic-structure-recovery:
     <<: *common
     command: >-
-      python -m experiments.exp1_ideal_recovery
-      --jobs ${JOBS:-4} --output-dir results/exp1
+      python -m experiments.exp5_algorithm_comparison --jobs ${JOBS:-4}
+      --output-dir results/paper/synthetic-structure-recovery
 
-  exp2:
+  ordering-baselines:
     <<: *common
     command: >-
-      python -m experiments.exp2_hierarchy_benefit
-      --jobs ${JOBS:-4} --output-dir results/exp2
+      python -m experiments.exp5_algorithm_comparison --jobs ${JOBS:-4}
+      --algorithms var-sortnregress,r2-sortnregress,random-sortnregress
+      --output-dir results/paper/ordering-baselines
 
-  exp3:
+  benchmark-sortability:
     <<: *common
     command: >-
-      python -m experiments.exp3_ablation
-      --jobs ${JOBS:-4} --output-dir results/exp3
+      python -m experiments.exp9_selection_and_search --sortability-only
+      --output-dir results/paper/benchmark-sortability
 
-  exp4:
+  latent-matched-recovery:
     <<: *common
     command: >-
-      python -m experiments.exp4_misspecification
-      --jobs ${JOBS:-4} --output-dir results/exp4
+      python -m experiments.latent_matched_recovery --jobs ${JOBS:-4}
+      --output-dir results/paper/latent-matched-recovery
 
-  # ALGORITHMS names a subset of the published learners, and the three sorting
-  # baselines are requested by name.  OUT keeps such an arm off the stored run:
-  #   ALGORITHMS=var-sortnregress,r2-sortnregress,random-sortnregress \
-  #     OUT=exp5_sortnregress docker compose run --rm exp5
-  exp5:
+  calendarbench-log-fidelity:
+    <<: *data
+    command: >-
+      python -m experiments.exp12_fidelity --csv data/dynamic_patterns/event_log.tsv
+      --subjects 8 --replicates 64 --weeks 12 --workers ${JOBS:-4}
+      --budget-seconds ${BUDGET_SECONDS:-86400} --output-dir results/paper/calendarbench-log-fidelity
+
+  cross-resolution-coherence:
     <<: *common
     command: >-
-      python -m experiments.exp5_algorithm_comparison
-      --jobs ${JOBS:-4} --algorithms ${ALGORITHMS:-default}
-      --output-dir results/${OUT:-exp5}
+      python -m experiments.exp17_coherence_gap --replicates 3
+      --output-dir results/paper/cross-resolution-coherence
 
-  # Fit from an observed event log CSV rather than from a generated scenario.
-  # CSV names the file under the mounted data directory, BRANCHING the ladder
-  # it is laid on, and MANIFEST an optional declared manifest beside it, which
-  # turns the structural section on:
-  #   CSV=data/dynamic_patterns/event_log.tsv \
-  #   MANIFEST=data/dynamic_patterns/manifest_declared.json \
-  #   BRANCHING=60,24,7 docker compose run --rm exp6
-  exp6:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.exp6_real_log
-      --csv ${CSV:-data/events.csv} --manifest "${MANIFEST:-}"
-      --branching ${BRANCHING:-10,6} --output-dir results/exp6
-
-  # Do the learned conditional distributions match the ones that generated the
-  # data.  Structure recovery alone cannot answer that.
-  exp7:
-    <<: *common
-    command: >-
-      python -m experiments.exp7_parameter_recovery
-      --output-dir results/exp7
-
-  # External ground truth: a bnlearn network tiled into a 2TBN, whose exact
-  # conditional probability tables pgmpy vendors inside the wheel.
-  exp8:
-    <<: *common
-    command: >-
-      python -m experiments.exp8_bnlearn_tiling
-      --output-dir results/exp8
-
-  # What pooling buys: one graph fitted over a roster, on two arms over one
-  # cross, scored against the declared manifest and against the pre-registered
-  # sufficiency ledger.  SUBJECT_ARM sweeps the roster at a fixed horizon and
-  # HORIZON_ARM sweeps the weeks at the largest roster.  DRY_RUN prints the
-  # cells, the subject-week total and the estimated wall clock without fitting:
-  #   DRY_RUN=--dry-run docker compose run --rm exp11
-  # The smallest sweep that still answers the question:
-  #   SUBJECT_ARM=1,6,12,24,30 HORIZON_ARM=4,8 ITERS=4 \
-  #     docker compose run --rm exp11
-  exp11:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
+  calendarbench-pooled-recovery:
+    <<: *data
     command: >-
       python -m experiments.exp11_pooling
-      --csv ${CSV:-data/dynamic_patterns/event_log.tsv}
-      --manifest ${MANIFEST:-data/dynamic_patterns/manifest_declared.json}
-      --subject-arm ${SUBJECT_ARM:-1,3,6,12,18,24,30}
-      --horizon-arm ${HORIZON_ARM:-2,4,6,8,12}
-      --weeks ${WEEKS:-12} --iters ${ITERS:-4} --workers ${JOBS:-4}
-      ${DRY_RUN:-} --output-dir results/exp11
+      --subject-arm 1,2,3,4,5,6,8,10,12,15,18,20,24,27,30 --horizon-arm ""
+      --weeks 12 --iters 4 --workers ${JOBS:-4}
+      --output-dir results/paper/calendarbench-pooled-recovery
 
-  # Published structure learners on the day scale of the benchmark, scored
-  # against its declared manifest.  ALGORITHMS names a subset, `all` adds the
-  # three learners that search the full node set and run for hours here:
-  #   ALGORITHMS=hc-bic,granger docker compose run --rm exp13
-  exp13:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
+  calendarbench-structure-baselines:
+    <<: *data
     command: >-
-      python -m experiments.exp13_classical_on_benchmark
-      --csv ${CSV:-data/dynamic_patterns/event_log.tsv}
-      --manifest ${MANIFEST:-data/dynamic_patterns/manifest_declared.json}
-      --algorithms ${ALGORITHMS:-default}
-      --max-lag ${MAX_LAG:-2} --max-indegree ${MAX_INDEGREE:-2}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp13
+      python -m experiments.exp13_classical_on_benchmark --max-lag 2 --max-indegree 2
+      --algorithms hc-bic,exhaustive,hc-aic,granger,hc-bdeu,hc-k2,dynotears,tree
+      --budget-seconds ${BUDGET_SECONDS:-86400} --output-dir results/paper/calendarbench-structure-baselines
 
-  # Whether the record holds enough epochs to answer at all, on the observed
-  # log and on a copy of it clipped short enough to fail the screen.
-  exp10:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
+  quito-traffic-forecast:
+    <<: *data
     command: >-
-      python -m experiments.exp10_sufficiency_ledger
-      --csv ${CSV:-data/events.csv}
-      --branching ${BRANCHING:-10,6} --max-lag ${MAX_LAG:-2}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp10
+      python -m experiments.exp19_quito_forecast --panel min --split ${SPLIT:-cutoff}
+      --limit ${LIMIT:-40} --device cpu --horizon-blocks 2 --score-units 6
+      --output-dir results/paper/quito-traffic-forecast
 
-  # Posterior predictive fidelity: fit a roster, generate replicate logs and
-  # score the two against each other.  QUICK=--quick runs two subjects over
-  # five replicates and two weeks, which is what continuous integration runs.
-  exp12:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./paper:/workspace/paper
-      - ./data:/workspace/data:ro
+  quito-forecast-reconciliation:
+    <<: *data
     command: >-
-      python -m experiments.exp12_fidelity
-      --csv ${CSV:-data/dynamic_patterns/event_log.tsv}
-      --subjects ${SUBJECTS:-8} --replicates ${REPLICATES:-80}
-      --weeks ${WEEKS:-12} --workers ${JOBS:-8}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp12
+      python -m experiments.exp19_quito_forecast --compare-reconciliation
+      --panel min --split ${SPLIT:-cutoff} --limit ${LIMIT:-40} --device cpu
+      --horizon-blocks 2 --score-units 6 --output-dir results/paper/quito-forecast-reconciliation
 
-  # The observational arm's data path: the collapse, the ladder on participant
-  # time, the gap audit, the frozen anchors, the coarse ordering and the shift
-  # placebo.  Nothing here needs a fit.
-  exp14:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
+  lifesnaps-observation-audit:
+    <<: *data
     command: >-
-      python -m experiments.exp14_arm1_lifesnaps
-      --participants ${PARTICIPANTS:-51}
-      --merge ${MERGE:-max}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp14
+      python -m experiments.lifesnaps_observation_audit
+      --output-dir results/paper/lifesnaps-observation-audit
 
-  # The observational arm's fit and the battery it has to survive: the search
-  # over the balanced panel, then R1, R2, R3, R4, R7, R9 and R10, then the
-  # three-way calendar ablation.
-  exp15:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
+  lifesnaps-preparation:
+    <<: *data
     command: >-
-      python -m experiments.exp15_arm1_fit
-      --pairs ${PAIRS:-8}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp15
+      python -m experiments.exp14_arm1_lifesnaps --participants 51 --merge max
+      --output-dir results/paper/lifesnaps-preparation
 
-  # The fit-then-simulate round trip: three legs drawn from the arm 1 fit,
-  # written as raw logs, read back through the panel reader and put to the
-  # nonstationarity grid with the four declared negative controls.
-  exp16:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
+  lifesnaps-graph-stability:
+    <<: *data
     command: >-
-      python -m experiments.exp16_round_trip
-      --replicates ${REPLICATES:-5}
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp16
+      python -m experiments.exp15_arm1_fit --pairs 8 --budget-seconds ${BUDGET_SECONDS:-86400}
+      --output-dir results/paper/lifesnaps-graph-stability
 
-  # What fitting one granularity at a time costs in coherence: each scale's own
-  # prediction, summed over a block, against the prediction of the scale above.
-  exp17:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
+  lifesnaps-log-fidelity:
+    <<: *data
     command: >-
-      python -m experiments.exp17_coherence_gap
-      --replicates ${REPLICATES:-3}
-      ${QUICK:-}
-      --output-dir results/exp17
+      python -m experiments.exp16_round_trip --replicates 5 --budget-seconds ${BUDGET_SECONDS:-86400}
+      --output-dir results/paper/lifesnaps-log-fidelity
 
-  # Forecasting published application traffic on a nested ladder, against two of
-  # QuitoBench's own deep forecasters fitted one resolution at a time.  SPLIT
-  # defaults to the benchmark's declared cutoff, which is the arm that may be
-  # set beside a published number.  SPLIT=extended trains on 39 days and holds
-  # out the last two, which reads epochs the published protocol assigns to its
-  # test block, so it is comparable between arms and to no published number.
-  # The parquet splits are not redistributed here, so data/quito/ has to hold
-  # `test_min.parquet` and `test_hour.parquet` before this runs.
-  exp19:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
-    command: >-
-      python -m experiments.exp19_quito_forecast
-      --split ${SPLIT:-cutoff} --limit ${LIMIT:-40}
-      --device ${DEVICE:-cpu}
-      ${QUICK:-}
-      --output-dir results/exp19
-
-  # What limits structure recovery: block length, penalty, stability.  The
-  # search table is closed; see the module docstring for the measurement.
-  exp9:
-    <<: *common
-    command: >-
-      python -m experiments.exp9_selection_and_search
-      ${QUICK:-} ${BUDGET:-}
-      --output-dir results/exp9
-
-  exp-all:
-    <<: *common
-    command: >-
-      sh -c "python -m experiments.exp1_ideal_recovery    --jobs ${JOBS:-4} --output-dir results/exp1 &&
-             python -m experiments.exp2_hierarchy_benefit --jobs ${JOBS:-4} --output-dir results/exp2 &&
-             python -m experiments.exp3_ablation          --jobs ${JOBS:-4} --output-dir results/exp3 &&
-             python -m experiments.exp4_misspecification  --jobs ${JOBS:-4} --output-dir results/exp4 &&
-             python -m experiments.exp5_algorithm_comparison --jobs ${JOBS:-4} --output-dir results/exp5 &&
-             python -m experiments.exp7_parameter_recovery   --output-dir results/exp7 &&
-             python -m experiments.exp8_bnlearn_tiling       --output-dir results/exp8"
-
-  # The quick grid of every experiment that declares a budget.  This is what
-  # continuous integration runs, so a change that breaks an experiment fails
-  # here in minutes.  A published run would take hours to reach the same break.
-  exp-quick:
-    <<: *common
-    volumes:
-      - ./results:/workspace/results
-      - ./data:/workspace/data:ro
-    command: >-
-      sh -c "python -m experiments.exp9_selection_and_search  --quick --output-dir results/quick/exp9 &&
-             python -m experiments.exp10_sufficiency_ledger   --quick --output-dir results/quick/exp10 &&
-             python -m experiments.exp12_fidelity             --quick --output-dir results/quick/exp12 &&
-             python -m experiments.exp13_classical_on_benchmark --quick --algorithms ${ALGORITHMS:-empty,tree} --max-lag 1 --output-dir results/quick/exp13 &&
-             python -m experiments.exp14_arm1_lifesnaps      --quick --output-dir results/quick/exp14 &&
-             python -m experiments.exp15_arm1_fit            --quick --output-dir results/quick/exp15 &&
-             python -m experiments.exp16_round_trip          --quick --output-dir results/quick/exp16"
-
-  # Re-render the figures of a finished experiment from its stored results,
-  # without refitting: EXP names the results directory under results/.
-  plots:
-    <<: *common
-    command: >-
-      python -c "from src.utils.temporal_viz import experiment_plots;
-      import os; exp = os.environ.get('EXP', 'exp1');
-      paths = experiment_plots(f'results/{exp}/{exp}_results.json',
-      f'results/{exp}/plots');
-      print('\n'.join(paths))"
-    environment:
-      PYTHONPATH: /workspace
-      PYTHONHASHSEED: "0"
-      OMP_NUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      MKL_NUM_THREADS: "1"
-      NUMEXPR_NUM_THREADS: "1"
-      MPLBACKEND: Agg
-      EXP: ${EXP:-exp1}
-
-  # --------------------------------------------------------- LIFESNAPS ----
-  # The observed log is derived from the published LifeSnaps MongoDB dump, and
-  # the derived CSV is not redistributed here.  Two services rebuild it:
-  #   docker compose run --rm lifesnaps-restore   fetch the dump, load mongo
-  #   docker compose run --rm lifesnaps-build     write the event log
-  # The restore needs about 12 GiB under the `lifesnaps` volume and runs once.
   mongo:
     image: mongo:7
     command: ["mongod", "--quiet"]
@@ -580,32 +218,6 @@ services:
     command: >-
       latexmk -pdf -interaction=nonstopmode sigconf.tex
 
-  # ---------------------------------------------------------------- GPU ----
-  gpu-info:
-    <<: *gpu
-    command: python -m src.utils.resources
-
-  gpu-tests:
-    <<: *gpu
-    volumes:
-      - .:/workspace
-      - ./results:/workspace/results
-    command: >-
-      python -m pytest tests/ -q --cov=src --cov-report=term-missing
-
-  exp5-gpu:
-    <<: *gpu
-    command: >-
-      python -m experiments.exp5_algorithm_comparison
-      --jobs ${JOBS:-4} --device cuda --output-dir results/exp5_gpu
-
-  gpu-shell:
-    <<: *gpu
-    volumes:
-      - .:/workspace
-    command: bash
-    stdin_open: true
-    tty: true
 
 volumes:
   mongo-data:

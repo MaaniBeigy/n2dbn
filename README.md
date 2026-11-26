@@ -1,61 +1,43 @@
 # N²DBN: Nested Non-Stationary Dynamic Bayesian Networks
 
-**Manuscript revision:** use the corrected top-down count/duration model in
-`src/nested/` and the `revision-*` Docker Compose services. The complete commands,
-audits and claim report are documented in
-[RUN_REVISIONS.md](paper/WSDM/RUN_REVISIONS.md). Full revised experiments have not
-yet been run. The descriptions and `exp*` commands below document historical
-implementations and outputs, including the former LifeSnaps intensity model.
+The WSDM manuscript reports synthetic structure recovery with a top-down allocation model, QuitoBench point forecasts, and event-log studies with a finest-minute start and duration model. The experiment commands below use the implementations that produced those comparisons.
 
-Behavioral event logs read differently at every timescale, and a dynamic Bayesian network is defined at just one of them. N²DBN writes a single likelihood over episode starts and durations at the finest resolution, so every count and duration above it is a sum of that one and the scales always agree. Trend, seasonality and lagged dependence share one predictor, each priced at the scale that identifies it.
+## Paper experiments
 
-Reference implementation, benchmarks and evaluation protocol for [paper/WSDM/sigconf.pdf](paper/WSDM/sigconf.pdf).
-
-## Quick start
-
-Everything runs through Docker Compose, so Docker and the compose plugin are the only local requirements.
+From the repository root on the server, record the input files and build the CPU image once.
 
 ```bash
-docker compose build tests        # n2dbn:cpu
-docker compose run --rm cpu-info   # what this machine offers
-docker compose run --rm tests      # the suite, with coverage
-docker compose run --rm exp-quick  # every budgeted experiment on its quick grid
+git rev-parse HEAD
+sha256sum data/observed_lifesnaps_event_log.csv data/quito/test_min.parquet
+docker compose build tests
 ```
 
-## The experiments the paper reports
+Run the following checks on the server's copies of the data. Both QuitoBench commands refit all methods on the same series, including the original independent deep forecasts. Each output records the parquet SHA-256, training window, forecast origin, per-series errors and coherence. The extended split has a different origin and uses observations from the benchmark test period for training.
 
-Each command is self-contained and writes to `results/<exp>/`.
+```bash
+docker compose run --rm lifesnaps-observation-audit
+docker compose run --rm latent-matched-recovery
+docker compose run --rm quito-forecast-reconciliation
+SPLIT=extended docker compose run --rm quito-forecast-reconciliation
+```
 
-| Paper          | Measures                                                                                                 | Command                                                                                                                |
-| -------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| §5.1, Table 1 | Structure recovery on the simulated grid, N²DBN against eight published learners over 540 fits          | `docker compose run --rm exp5`                                                                                       |
-| §5.1          | The three sorting baselines, which test whether a variance ordering wins the grid                        | `ALGORITHMS=var-sortnregress,r2-sortnregress,random-sortnregress OUT=exp5_sortnregress docker compose run --rm exp5` |
-| §5.2          | Fidelity of a drawn log to the patterns the benchmark declares before any fit                            | `REPLICATES=64 docker compose run --rm exp12`                                                                        |
-| §5.3          | What fitting one granularity at a time costs in coherence, nested against per-granularity                | `docker compose run --rm exp17`                                                                                      |
-| §5.4, Table 3 | Eight published structure learners on the declared benchmark                                             | `docker compose run --rm exp13`                                                                                      |
-| §5.4, Table 3 | The N²DBN row of the same table, with the roster swept from 1 to 30 participants                        | `docker compose run --rm exp11`                                                                                      |
-| §5.5, Table 2 | Forecasting two held-out days of QuitoBench traffic, with the coherence column                           | `docker compose run --rm exp19`                                                                                      |
-| §6.1          | The LifeSnaps data path: the collapse, the ladder on participant time, the gap audit, the frozen anchors | `docker compose run --rm exp14`                                                                                      |
-| §6.2          | The LifeSnaps fit, the falsification battery and the three-way calendar ablation                         | `docker compose run --rm exp15`                                                                                      |
-| §6.3, §6.4   | The fit-then-simulate round trip: episode volume, the non-stationarity grid, the changepoint agreement   | `docker compose run --rm exp16`                                                                                      |
+The LifeSnaps audit compares raw annotation counts with occupied participant-label-minutes on the observation mask used by the event model. Its `audit.json` records the source SHA-256, denominator for each label, simultaneous starts and duration recodings. The paired structure experiment writes `paired.csv` with both arms and their differences for each of 18 scenarios and three seeds. The forecast JSON distinguishes the sum of ten-minute predictions, the independent hourly prediction and its least-squares reconciliation. The summary includes the number of nonfinite errors per metric. New runs write under `results/paper/<service>/`. The archived per-series scores are in [the cutoff forecast output](results/exp19/exp19_min_cutoff.json) and [the extended forecast output](results/exp19/exp19_min_extended.json). The submitted LifeSnaps fit records input SHA-256 `fe8a2b019cec94b78968a40f55245eb8f5a6e4b5919eb6e94155eaafce10fb06`. The separate annotation audit cited in the text records `d2d28bef4db292f0ca838c23d9655485a6e3050fca82344baf6fe45766d1de7d`.
 
-Prefix any experiment with `JOBS=7` to fit seven (scenario, replicate) pairs at once.
+| Paper comparison | Compose service |
+| --- | --- |
+| Simulated structure recovery, Table 1 | `synthetic-structure-recovery` |
+| Ordering baselines and sortability measures | `ordering-baselines`, `benchmark-sortability` |
+| Recovery with matched latent orders | `latent-matched-recovery` |
+| CalendarBench log fidelity | `calendarbench-log-fidelity` |
+| Agreement across resolutions | `cross-resolution-coherence` |
+| CalendarBench declared-rule recovery | `calendarbench-pooled-recovery`, `calendarbench-structure-baselines` |
+| QuitoBench original forecast comparison | `quito-traffic-forecast` |
+| QuitoBench independent, bottom-up and reconciled predictions | `quito-forecast-reconciliation` |
+| LifeSnaps coverage, recoding and multiplicity | `lifesnaps-preparation`, `lifesnaps-observation-audit` |
+| LifeSnaps graph, falsification and half-panel stability | `lifesnaps-graph-stability` |
+| LifeSnaps simulation, volume and changepoints | `lifesnaps-log-fidelity` |
 
-## Supporting experiments
-
-These are not cited in the submission and are kept for the record.
-
-| Measures                                                            | Command                                                                                    |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Ideal structural and latent recovery on families I to III           | `docker compose run --rm exp1`                                                           |
-| Hierarchy benefit against a single-scale DBN                        | `docker compose run --rm exp2`                                                           |
-| Ablation: remove the factor, the regime or the graph                | `docker compose run --rm exp3`                                                           |
-| Behavior under misspecification                                     | `docker compose run --rm exp4`                                                           |
-| Fit an observed event log CSV                                       | `CSV=data/dynamic_patterns/event_log.tsv BRANCHING=60,24,7 docker compose run --rm exp6` |
-| Parameter recovery, on a sample-size ladder                         | `docker compose run --rm exp7`                                                           |
-| External ground truth: bnlearn networks tiled into 2TBNs            | `docker compose run --rm exp8`                                                           |
-| What limits recovery: block length, penalty, stability, sortability | `docker compose run --rm exp9`                                                           |
-| The sufficiency ledger, judged before anything is fitted            | `docker compose run --rm exp10`                                                          |
+Run a service with `docker compose run --rm SERVICE`. Set `JOBS` for the parallel recovery and CalendarBench services. The two forecast services default to the declared cutoff and 40 series. For a short server check, `LIMIT=1 docker compose run --rm quito-forecast-reconciliation` fits all forecast methods on the first eligible series. A subsequent full run replaces that split's JSON.
 
 ## Data
 
@@ -63,7 +45,7 @@ These are not cited in the submission and are kept for the record.
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `data/dynamic_patterns/`                | the declared benchmark: 30 simulated participants over 12 weeks, 60 labels, with its manifest                   | yes                        |
 | `data/observed_lifesnaps_event_log.csv` | the observed log derived from the LifeSnaps MongoDB dump                                                        | no, rebuild it (below)     |
-| `data/quito/`                           | QuitoBench `test_min.parquet` and `test_hour.parquet` ([arXiv:2603.26017](https://arxiv.org/abs/2603.26017)) | no, fetch before `exp19` |
+| `data/quito/`                           | QuitoBench `test_min.parquet` ([arXiv:2603.26017](https://arxiv.org/abs/2603.26017)) | no, supply the server's copy |
 
 ## Rebuilding the LifeSnaps log
 
@@ -82,18 +64,8 @@ docker compose run --rm lifesnaps-build     # write data/observed_lifesnaps_even
 docker compose run --rm paper        # paper/WSDM/sigconf.pdf, the submission
 ```
 
-## Notes on running
+## Running the test suite
 
-- Every `JOBS` worker holds its own copy of the dataset, so memory is the ceiling; `cpu-info` prints what this machine allows.
-- `QUICK=--quick` cuts any experiment that declares a budget down to minutes, and `exp-quick` runs that grid over all of them, which is what CI runs.
-- The experiment services do not mount the working tree, so they run the source baked into `n2dbn:cpu` and an edit takes effect only after a rebuild. This check names which source a run would execute:
-
-  ```bash
-  docker compose run --rm --entrypoint python shell -m src.utils.provenance --check
-  GIT_REV=$(git rev-parse --short HEAD) docker compose build tests   # if it says STALE
-  ```
-- Every run writes `results/<exp>/provenance.json` recording which source actually executed, the git revision, and the versions of the packages that can move a number.
-- `EXP=exp3 docker compose run --rm plots` re-renders a finished run's figures from its stored results, with no refit.
-- `docker compose run --rm shell` opens an interactive session with the working tree mounted, for a one-off command.
-
-[CONTRIBUTING.md](CONTRIBUTING.md) covers the test suite, the invariants a change has to preserve, and where each kind of change belongs.
+```bash
+docker compose run --rm tests
+```

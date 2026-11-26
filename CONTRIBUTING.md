@@ -1,12 +1,6 @@
 # Contributing
 
-For the manuscript revision, `src/nested/` implements the corrected normalized
-top-down model and `experiments/revision.py` is its experiment entry point.
-The frozen allocation modules remain historical; the new implementation does
-not import them. Use `docker compose run --rm revision-tests` for focused
-probability and pipeline checks. Historical coverage totals below do not
-describe the new module. Full experiment execution is separate from tests;
-see [RUN_REVISIONS.md](paper/WSDM/RUN_REVISIONS.md).
+The paper experiment commands and required input files are listed in [README.md](README.md). The full test suite also covers the alternative model in `src/nested/`.
 
 Development notes for the N²DBN implementation. The model, the benchmark and
 the reported results are described in [README.md](README.md).
