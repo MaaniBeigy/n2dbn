@@ -17,14 +17,14 @@ x-common: &common
     NUMEXPR_NUM_THREADS: "1"
     MPLBACKEND: Agg
   volumes:
-    - ./results:/workspace/results
+    - ./results/paper:/workspace/results/paper
     - ./paper:/workspace/paper
   shm_size: "2gb"
 
 x-data: &data
   <<: *common
   volumes:
-    - ./results:/workspace/results
+    - ./results/paper:/workspace/results/paper
     - ./data:/workspace/data:ro
 
 services:
@@ -128,6 +128,13 @@ services:
       python -m experiments.exp19_quito_forecast --panel min --split ${SPLIT:-cutoff}
       --limit ${LIMIT:-40} --device cpu --horizon-blocks 2 --score-units 6
       --output-dir results/paper/quito-traffic-forecast
+
+  bpic2017-workflow-forecast:
+    <<: *data
+    command: >-
+      python -m experiments.bpic2017_workflow_forecast
+      --input data/bpic2017/workflow.xes.gz
+      --output-dir results/paper/bpic2017-workflow-forecast
 
   quito-forecast-reconciliation:
     <<: *data

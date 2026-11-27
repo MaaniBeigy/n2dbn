@@ -1,8 +1,4 @@
-"""Revised-paper experiments. Legacy exp* results are never read or overwritten.
-
-python -m experiments.revision --help
-Full runs are deliberately opt-in through the named Docker Compose services.
-"""
+"""Experiments for the separate nested-model implementation."""
 
 from __future__ import annotations
 
@@ -1226,7 +1222,7 @@ def parser():
             "report",
         ],
     )
-    p.add_argument("--output", default="results/revision")
+    p.add_argument("--output", help="Experiment directory, or the collection root for report")
     p.add_argument(
         "--jobs",
         type=int,
@@ -1286,6 +1282,12 @@ def parser():
 
 def main(argv=None):
     args = parser().parse_args(argv)
+    if args.output is None:
+        root = Path("results/nested-model-evaluation")
+        name = args.experiment
+        if name == "forecast" and args.split == "extended":
+            name = "forecast-extended"
+        args.output = str(root if name == "report" else root / name)
     if args.experiment == "report":
         from src.nested.report import report
 
